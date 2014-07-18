@@ -1,10 +1,10 @@
 from os import urandom
 
 
-class Config:
+class Config(object):
     DEBUG = False
     TESTING = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///tweets.sqlite'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///tweets.db'
     SECRET_KEY = str(urandom(32))
 
 
