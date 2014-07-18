@@ -1,6 +1,6 @@
 import tweepy
 from flask import render_template
-from tweetTrack import app
+from tweetTrack.app import app
 
 
 consumer_key = 'hWMHWIJYoJ4UIG0KNwXcC4pbg'

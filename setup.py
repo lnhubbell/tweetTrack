@@ -1,16 +1,11 @@
 from setuptools import setup
 
 
-long_description = """
-A Flask app that uses sentiment analysis to try and locate twitter users by
-examining their tweets.
-"""
-
 setup(
-    name="tweetTrack",
-    version="0.1-dev",
-    description="tweetTrack",
-    long_description=long_description,
+    name='tweetTrack',
+    version='0.1-dev',
+    description='tweetTrack',
+    long_description='A Flask app that uses sentiment analysis',
     url='https://github.com/lnhubbell/tweetTrack',
     # Author details
     author='Ian Auld, Nathan Hubbell, Corinne ',
