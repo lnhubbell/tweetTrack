@@ -70,9 +70,9 @@ class StdOutListener(StreamListener):
                 # myfile.write("Bounding box: {}\n".format(bounding_box))
                 # myfile.write("***************************************************\n")
             print "*" * 20
-            #time_elapsed = (end_time - self.start_time)
+            time_elapsed = (end_time - self.start_time)
             print time_elapsed
-            if time_elapsed > 60:
+            if time_elapsed >= 1.0:
                 print "*" * 10
                 print "*" * 10
                 print self.count, " tweets in ", time_elapsed, " seconds!"
