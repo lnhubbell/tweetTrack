@@ -12,6 +12,7 @@ ecdsa==0.11
 itsdangerous==0.24
 kombu==3.0.21
 paramiko==1.14.0
+pika==0.9.14
 psycopg2==2.5.3
 pycrypto==2.6.1
 pytz==2014.4
