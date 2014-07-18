@@ -1,3 +1,4 @@
 #!venv/bin/python
-from app import app
+from tweetTrack import app
+
 app.run(debug=True)
