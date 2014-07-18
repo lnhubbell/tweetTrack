@@ -8,8 +8,9 @@ __pycache__/
 # IDE Files
 .idea/
 
-# DB File
+# Super Secret Files
 tweets.sqlite
+
 
 # Distribution / packaging
 .Python

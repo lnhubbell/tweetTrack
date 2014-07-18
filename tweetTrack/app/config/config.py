@@ -6,7 +6,7 @@ class Config:
 
 
 class ProductionConfig(Config):
-    DATABASE_URI = 'mysql://user@localhost/foo'
+    DATABASE_URI = 'postgres://user@localhost/foo'
 
 
 class DevelopmentConfig(Config):

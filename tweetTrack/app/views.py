@@ -1,12 +1,20 @@
 import tweepy
 from flask import render_template
 from tweetTrack.app import app
+from tweetTrack.app.config.keys import TwitterKeys
 
 
-consumer_key = 'hWMHWIJYoJ4UIG0KNwXcC4pbg'
-consumer_secret = '85E7dAk4ZkJEyNkQ0EbxYvavL7FeKUwEEJlXOs9QnXDwIcWL5c'
-access_key = '249913463-xJhkkoiipEVF0xIJeZc9dys8N1qovmZGmgqiSLaV'
-access_secret = 'q4CleTUfctg4BfQz6R5cRpa8EekBylIRzr63fCuargyDa'
+def get_twitter_api():
+    auth = tweepy.OAuthHandler(
+        TwitterKeys.consumer_key,
+        TwitterKeys.consumer_secret
+    )
+    auth.set_access_token(
+        TwitterKeys.access_key,
+        TwitterKeys.access_secret
+    )
+    return tweepy.API(auth)
+
 
 @app.route('/')
 @app.route('/index')
@@ -16,17 +24,13 @@ def index():
 
 @app.route('/user/tweets/<user_name>')
 def user_tweets(user_name):
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_key, access_secret)
-    api = tweepy.API(auth)
+    api = get_twitter_api()
     new_tweets = api.user_timeline(screen_name=user_name, count=200)
     return render_template('tweets.html', tweets=new_tweets)
 
 
 @app.route('/user/followers/<user_name>')
 def user_followers(user_name):
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_key, access_secret)
-    api = tweepy.API(auth)
+    api = get_twitter_api()
     followers = api.followers(screen_name=user_name, count=5000)
     return render_template('followers.html', followers=followers)

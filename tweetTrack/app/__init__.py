@@ -1,6 +1,6 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
-import config
+from config import config
 
 
 app = Flask(__name__)
