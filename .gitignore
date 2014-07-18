@@ -5,6 +5,13 @@ __pycache__/
 # C extensions
 *.so
 
+# IDE Files
+.idea/
+
+# Super Secret Files
+tweets.sqlite
+tweetTrack/config
+
 # Distribution / packaging
 .Python
 env/
@@ -18,6 +25,7 @@ lib64/
 parts/
 sdist/
 var/
+venv/
 *.egg-info/
 .installed.cfg
 *.egg
