@@ -10,7 +10,7 @@ __pycache__/
 
 # Super Secret Files
 tweets.sqlite
-
+tweetTrack/config
 
 # Distribution / packaging
 .Python
