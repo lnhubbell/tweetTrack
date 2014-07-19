@@ -46,7 +46,7 @@ class StdOutListener(StreamListener):
         if place:
             country_code = place.get('country_code', None)
 
-        if location and (language == 'en'):
+        if location and (language == 'en') and country_code:
             self.count += 1
             end_time = time.clock()
             #print json_data
