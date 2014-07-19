@@ -9,7 +9,7 @@ class Config(object):
 
 
 class ProductionConfig(Config):
-    DATABASE_URI = 'postgres://user@localhost/foo'
+    SQLALCHEMY_DATABASE_URI = """postgres://tweetstalkers:9BBewrkivHctaesd12N7@tweetstalk.cvf1ij0yeyiq.us-west-2.rds.amazonaws.com:5432/lil_tweetstalker"""
 
 
 class DevelopmentConfig(Config):
