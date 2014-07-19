@@ -5,6 +5,7 @@ from fabric.api import execute
 from fabric.api import sudo
 from fabric.api import settings
 from fabric import contrib
+from fabric.contrib.project import rsync_project
 import boto.ec2
 import time
 import boto
@@ -63,14 +64,14 @@ def provision_instance(wait_for_running=True, timeout=120, interval=2):
                 instance.update()
 
 
-def list_aws_instances(verbose=False, state='all'):
+def list_aws_instances(verbose=False, state='running'):
     conn = get_ec2_connection()
 
     reservations = conn.get_all_reservations()
     instances = []
     for res in reservations:
         for instance in res.instances:
-            if state == 'all' or instance.state == state:
+            if instance.state == state:
                 print instance
                 instance = {
                     'id': instance.id,
@@ -111,12 +112,13 @@ def select_instance(state='running'):
     env.active_instance = env.instances[choice - 1]['instance']
 
 
-def run_command_on_selected_server(command):
+def run_command_on_selected_server(command, *args, **kwargs):
     select_instance()
     selected_hosts = [
         'ubuntu@' + env.active_instance.public_dns_name
     ]
-    execute(command, hosts=selected_hosts)
+    kwargs['hosts'] = selected_hosts
+    execute(command, *args, **kwargs)
 
 
 # def run_psql_command_on_selected_server(command):
@@ -233,7 +235,7 @@ def deploy():
 
     install_nginx()
     generate_nginx_config()
-    run_command_on_selected_server(contrib.project.upload_project)
+    run_command_on_selected_server(rsync_project, remote_dir="~/", exclude=[".git"])
     mass_install()
     install_supervisor()
     move_nginx_files()

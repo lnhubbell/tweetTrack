@@ -1,4 +1,3 @@
-import pprint
 import time
 import json
 
@@ -36,11 +35,18 @@ class StdOutListener(StreamListener):
         self.data_count = 0
         self.location_count = 0
         self.seattle_count = 0
+        self.count = 0
+        self.start_time = time.clock()
 
     def on_data(self, data):
         json_data = json.loads(data)
+
+        language = json_data.get('lang', None)
         location = json_data.get('geo', None)
-        if location:
+        place = json_data.get('place', None)
+        if place:
+            country_code = place.get('country_code', None)
+        if location and (language == 'en') and (country_code == 'US':
             location = location.get('coordinates', None)
             screen_name = json_data.get('user', None).get('screen_name', None)
             text = json_data.get('text', None)
@@ -67,6 +73,7 @@ class StdOutListener(StreamListener):
 
             print "Sending to database..."
             execute_query(sql, data_list)
+
 
     def on_error(self, status):
         error_counter = 0
