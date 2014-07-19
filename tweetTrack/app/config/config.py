@@ -6,6 +6,10 @@ class Config(object):
     TESTING = False
     SQLALCHEMY_DATABASE_URI = "sqlite:///tweets.db"
     SECRET_KEY = str(urandom(32))
+    CSRF_ENABLED = True
+    MAIL_SERVER = "smtp.gmail.com"
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
 
 
 class ProductionConfig(Config):

@@ -1,7 +1,9 @@
 import tweepy
-from flask import render_template
+from flask import render_template, redirect, url_for
+from flask.ext.mail import Message, Mail
 from tweetTrack.app import app
 from tweetTrack.app.config.keys import TwitterKeys
+from tweetTrack.app.forms import TwitterForm, ContactForm
 
 
 def get_twitter_api():
@@ -34,6 +36,9 @@ def about():
     return render_template('about.html')
 
 
-@app.route('/contact/')
+@app.route('/contact/', methods=['GET', 'POST'])
 def contact():
-    render_template('contact.html')
+    form = ContactForm()
+    if form.validate_on_submit():
+        return redirect(url_for(contact))
+    return render_template('contact.html', form=form)
