@@ -91,7 +91,7 @@ def execute_query(sql, args=None):
     connection_string.append("host=tweetstalk.cvf1ij0yeyiq.us-west-2.rds.amazonaws.com")
     connection_string.append("dbname=lil_tweetstalker")
     connection_string.append("user=tweetstalkers")
-    connection_string.append("password=9BBewrkivHctaesd12N7")
+    connection_string.append("password=<password>")
     connection_string.append("port=5432")
     connection = " ".join(connection_string)
 
