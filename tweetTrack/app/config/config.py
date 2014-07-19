@@ -4,7 +4,7 @@ from os import urandom
 class Config(object):
     DEBUG = False
     TESTING = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///tweets.db'
+    SQLALCHEMY_DATABASE_URI = "sqlite:///tweets.db"
     SECRET_KEY = str(urandom(32))
 
 

@@ -22,15 +22,18 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/user/tweets/<user_name>')
+@app.route('/tweets/<user_name>')
 def user_tweets(user_name):
     api = get_twitter_api()
     new_tweets = api.user_timeline(screen_name=user_name, count=200)
     return render_template('tweets.html', tweets=new_tweets)
 
 
-@app.route('/user/followers/<user_name>')
-def user_followers(user_name):
-    api = get_twitter_api()
-    followers = api.followers(screen_name=user_name, count=5000)
-    return render_template('followers.html', followers=followers)
+@app.route('/about/', methods=['GET'])
+def about():
+    return render_template('about.html')
+
+
+@app.route('/contact/')
+def contact():
+    render_template('contact.html')
