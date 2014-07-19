@@ -1,16 +1,29 @@
 import pprint
 import time
 import json
+
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 from header import consumer_key, consumer_secret, access_token, access_token_secret
+from send_data import _build_save_tweet_sql, execute_query
 
 
 req_tok_url = 'https://api.twitter.com/oauth/request_token'
 oauth_url = 'https://api.twitter.com/oauth/authorize'
 acc_tok_url = 'https://api.twitter.com/oauth/access_token'
+# DB_CONFIG = {}
 
+# connection_string = []
+# connection_string.append("host=tweetstalk.cvf1ij0yeyiq.us-west-2.rds.amazonaws.com:5432")
+# connection_string.append("dbname=lil_tweetstalker")
+# connection_string.append("user=tweetstalker")
+# connection_string.append("password=9BBewrkivHctaesd12N7")
+# connection = " ".join(connection_string)
+
+
+
+# DB_CONFIG['DB_CONNECTION_STRING']=connection
 
 class StdOutListener(StreamListener):
     """ A listener handles tweets are the received from the stream.
@@ -25,55 +38,35 @@ class StdOutListener(StreamListener):
         self.seattle_count = 0
 
     def on_data(self, data):
-
         json_data = json.loads(data)
-
-        tweet_id = json_data.get('id', None)
-        text = json_data.get('text', None)
-        try:
-            hashtags = [i['text'] for i in json_data.get('entities', None).get('hashtags', None)]
-        except AttributeError:
-            print "I HAD THIS ERROR"
-            return
-        user_mentions = [i['screen_name'] for i in json_data.get('entities', None).get('user_mentions', None)]
-        created_at = json_data.get('created_at', None)
-        screen_name = json_data.get('user', None).get('screen_name', None)
-        url = [i['display_url'] for i in json_data.get('entities', None).get('urls', None)]
         location = json_data.get('geo', None)
         if location:
             location = location.get('coordinates', None)
-            self.location_count += 1
-        in_reply_to_screen_name = json_data.get('in_reply_to_screen_name', None)
-        retweets = json_data.get('retweet_count', None)
+            screen_name = json_data.get('user', None).get('screen_name', None)
+            text = json_data.get('text', None)
+            # I'M NOT SURE WHICH LOCATION IS LAT AND WHICH IS LNG, JUST GUESSING FOR NOW!!!
+            location_lat = location[0]
+            location_lng = location[1]
+            created_at = json_data.get('created_at', None)
+            try:
+                hashtags = [i['text'] for i in json_data.get('entities', None).get('hashtags', None)]
+            except AttributeError:
+                print "I HAD THIS ERROR"
+                return
 
-        if hashtags:
-            self.hashtags_count += 1
-        if 'Seattle' in text or 'Seattle' in hashtags:
-            self.seattle_count += 1
-        self.data_count += 1
+            data_list = (
+                            screen_name,
+                            text,
+                            location_lat,
+                            location_lng,
+                            created_at,
+                            hashtags
+                        )
 
-        if location:
-            print json_data
-            print "Twitter Name: ", screen_name, type(screen_name)
-            # print "Tweet ID: ", tweet_id, type(tweet_id)
-            print "Hashtags: ", hashtags, type(hashtags)
-            print "URLs :", url, type(url)
-            print "Text: ", text, type(text)
-            # print "retweets: ", retweets, type(retweets)
-            print "User mentions: ", user_mentions, type(user_mentions)
-            # print "Created at: ", created_at, type(created_at)
-            print "Location: ", location, type(location)
-            print "In reply to: ", in_reply_to_screen_name, type(in_reply_to_screen_name)
-            # print '*'*20
-            # print "Data count: ", self.data_count
-            # print "Hashtag count: ", self.hashtags_count
-            # print "Location count: ", self.location_count
-            # print "Seattle Count: ", self.seattle_count
-            with open("output.txt", "a") as myfile:
-                myfile.write("Twitter Name:")
-                myfile.write(screen_name)
-                myfile.write("\n")
-            print "*"*20
+            sql = """INSERT INTO "Tweet" (screen_name, text, location_lat, location_lng, created_at, hashtags) VALUES (%s, %s, %s, %s, %s, %s); """
+
+            print "Sending to database..."
+            execute_query(sql, data_list)
 
     def on_error(self, status):
         error_counter = 0
@@ -93,4 +86,4 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_token_secret)
 
     stream = Stream(auth, l)
-    stream.filter(locations=[-70.93044414,41.65536809,-70.9231071,41.66316909])
+    stream.filter(locations=[-124.848974, 24.396308, -66.885444, 49.384358])
