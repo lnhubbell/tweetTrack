@@ -21,7 +21,13 @@ def get_twitter_api():
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html')
+    contact_form = ContactForm()
+    twitter_form = TwitterForm()
+    return render_template(
+        'index.html',
+        contact_form=contact_form,
+        twitter_form=twitter_form
+        )
 
 
 @app.route('/tweets/<user_name>')

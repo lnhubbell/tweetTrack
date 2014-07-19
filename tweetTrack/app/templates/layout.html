@@ -35,18 +35,21 @@
                 <ul class="clearfix">
                     <li><a href="">Track Me!</a></li>
                     <li><a href="{{ url_for('about') }}">About</a></li>
-                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                    <li><a href="{{ url_for('contact') }}" data-toggle="modal" data-target="#contact-modal">Contact</a></li>
                 </ul>
             </nav>
         </header><!-- /header -->
         <main class="wrapper">
             {% block content %}
-            {% endblock %}
+            {% endblock content %}
         </main><!-- /wrapper -->
         <footer>
             <p>Created at Codefellows Python Dev Accelerator</p>
         </footer><!-- /footer -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        {% block modals %}
+            {% include 'contact.html' %}
+        {% endblock modals %}
     </body>
 </html>

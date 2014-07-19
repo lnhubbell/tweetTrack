@@ -109,6 +109,11 @@ nav ul li:hover {
     z-index: 0;
 }
 
+#message {
+    height: 120px;
+    width: 100%;
+}
+
 footer{
     bottom: 0;
     position: absolute;
