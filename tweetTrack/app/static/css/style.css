@@ -13,7 +13,8 @@ html, body, .wrapper, #map-canvas {
 
 a:focus, a:active {
     text-decoration: none;
-    border: 0;
+    border: none;
+    outline: none;
 }
 
 header, footer {
@@ -106,8 +107,11 @@ nav ul li {
 }
 
 nav ul li:hover {
-
     box-shadow: inset 0 0 15px rgba(255,255,255,.3)
+}
+
+nav ul li:active {
+    box-shadow: inset 0 0 15px rgba(255,255,255,.8)
 }
 
 .wrapper {

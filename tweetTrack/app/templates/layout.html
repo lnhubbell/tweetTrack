@@ -23,11 +23,7 @@
                 }
             google.maps.event.addDomListener(window, 'load', initialize);
         </script>
-        <script type="text/javascript">
-            $(window).load(function(){
-                $('#about-modal').modal('show');
-            });
-        </script>
+
     </head>
     <body>
         <header class="clearfix">
@@ -58,6 +54,11 @@
             {% include 'contact.html' %}
             {% include 'twitter.html' %}
             {% include 'about.html' %}
+            <script type="text/javascript">
+                $(window).load(function(){
+                    $('#about-modal').modal('show');
+                });
+            </script>
         {% endblock modals %}
     </body>
 </html>
