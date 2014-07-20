@@ -8,6 +8,10 @@ __pycache__/
 # IDE Files
 .idea/
 
+# Super Secret Files
+tweets.db
+tweetTrack/config
+
 # Distribution / packaging
 .Python
 env/
