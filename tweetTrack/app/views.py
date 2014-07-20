@@ -36,7 +36,7 @@ def user_tweets(user_name):
     api = get_twitter_api()
     # Will need the below twitter api call once classifier is ready
     # new_tweets = api.user_timeline(screen_name=user_name, count=200)
-    lat = random() * 40
+    lat = random() * 80
     lng = random() * -80
     context = {
         'screen_name': user_name,
@@ -53,12 +53,15 @@ def about():
 
 @app.route('/contact/', methods=['GET', 'POST'])
 def contact():
+    name = request.args.get('name', 'Name error')
+    subject = request.args.get('subject', 'Subject Error')
+    email = request.args.get('email', 'Email Error')
+    full_subject = '{} - From: {} @ {}'.format(subject, name, email)
     msg = Message(
-        request.args.get('subject', 'Subject Error'),
-        sender=request.args.get('email', 'Email Error'),
+        full_subject,
+        sender=email,
         recipients=['tweet.track@gmail.com']
     )
     msg.body = request.args.get('message', 'Message error')
     mail.send(msg)
-    name = request.args.get('name', 'Name error')
     return render_template('message_sent.html', name=name)
