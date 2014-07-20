@@ -11,18 +11,7 @@ from send_data import _build_save_tweet_sql, execute_query
 req_tok_url = 'https://api.twitter.com/oauth/request_token'
 oauth_url = 'https://api.twitter.com/oauth/authorize'
 acc_tok_url = 'https://api.twitter.com/oauth/access_token'
-# DB_CONFIG = {}
 
-# connection_string = []
-# connection_string.append("host=tweetstalk.cvf1ij0yeyiq.us-west-2.rds.amazonaws.com:5432")
-# connection_string.append("dbname=lil_tweetstalker")
-# connection_string.append("user=tweetstalker")
-# connection_string.append("password=9BBewrkivHctaesd12N7")
-# connection = " ".join(connection_string)
-
-
-
-# DB_CONFIG['DB_CONNECTION_STRING']=connection
 
 class StdOutListener(StreamListener):
     """ A listener handles tweets are the received from the stream.
@@ -46,7 +35,7 @@ class StdOutListener(StreamListener):
         place = json_data.get('place', None)
         if place:
             country_code = place.get('country_code', None)
-        if location and (language == 'en') and (country_code == 'US':
+        if location and (language == 'en') and (country_code == 'US'):
             location = location.get('coordinates', None)
             screen_name = json_data.get('user', None).get('screen_name', None)
             text = json_data.get('text', None)
