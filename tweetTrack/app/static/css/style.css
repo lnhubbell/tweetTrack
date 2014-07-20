@@ -11,8 +11,9 @@ html, body, .wrapper, #map-canvas {
     display: block;
 }
 
-a:focus {
+a:focus, a:active {
     text-decoration: none;
+    border: 0;
 }
 
 header, footer {

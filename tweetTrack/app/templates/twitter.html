@@ -35,6 +35,13 @@
                                 success: function(response) {
                                     twitter.trigger("reset");
                                     modal.modal('hide');
+                                    var location = new google.maps.LatLng(response.location_lat, response.location_lng);
+                                    map.setCenter(location);
+                                    var marker = new google.maps.Marker({
+                                        position: location,
+                                        map: map,
+                                        title:"Hello World!"
+                                    });
                                 }
                             });
                       });
