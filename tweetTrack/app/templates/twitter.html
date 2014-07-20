@@ -1,0 +1,46 @@
+<div class="modal fade" id="twitter-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Enter you twitter handle below</h4>
+            </div>
+            <div id="twitter-modal-body" class="modal-body">
+                <p>
+                    We will read your old tweets to try and see if we can
+                    determine your location by analyzing what you tweet about
+                </p>
+                <p>
+                    We will not save your tweets or share them with anyone. No
+                    human eyes will even read them.
+                </p>
+                <form id="twitter-form" action="">
+                {{ twitter_form.csrf_token }}
+                <fieldset class="form-group">
+                    {{ twitter_form.screen_name.label }}<br />
+                    {{ twitter_form.screen_name }}
+                </fieldset>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    {{ twitter_form.submit(class_='btn btn-primary') }}
+                </div>
+                <script>
+                      var modal = $("#twitter-modal");
+                      var twitter = $("#twitter-form");
+                      twitter.on("submit", function(event){
+                            var screen_name = $("#screen_name").val();
+                            event.preventDefault();
+                            $.ajax('/twitter/' + screen_name, {
+                                data: twitter.serialize(),
+                                success: function(response) {
+                                    twitter.trigger("reset");
+                                    modal.modal('hide');
+                                }
+                            });
+                      });
+                </script>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

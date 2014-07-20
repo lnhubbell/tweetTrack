@@ -11,6 +11,10 @@ html, body, .wrapper, #map-canvas {
     display: block;
 }
 
+a:focus {
+    text-decoration: none;
+}
+
 header, footer {
     z-index: 1;
 }

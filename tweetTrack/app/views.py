@@ -1,5 +1,5 @@
 import tweepy
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, jsonify
 from flask.ext.mail import Message
 from tweetTrack.app import app, mail
 from tweetTrack.app.config.keys import TwitterKeys
@@ -30,11 +30,12 @@ def index():
         )
 
 
-@app.route('/tweets/<user_name>')
+@app.route('/twitter/<user_name>')
 def user_tweets(user_name):
     api = get_twitter_api()
     new_tweets = api.user_timeline(screen_name=user_name, count=200)
-    return render_template('tweets.html', tweets=new_tweets)
+    context = {'screen_name': user_name}
+    return jsonify(context)
 
 
 @app.route('/about/', methods=['GET'])

@@ -33,8 +33,8 @@
             </h1>
             <nav class="pull-right">
                 <ul class="clearfix">
-                    <li><a href="">Track Me!</a></li>
-                    <li><a href="{{ url_for('about') }}">About</a></li>
+                    <li><a href="" data-toggle="modal" data-target="#twitter-modal">Track Me!</a></li>
+                    <li><a href="" >About</a></li>
                     <li><a href="" data-toggle="modal" data-target="#contact-modal">Contact</a></li>
                 </ul>
             </nav>
@@ -50,6 +50,7 @@
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         {% block modals %}
             {% include 'contact.html' %}
+            {% include 'twitter.html' %}
         {% endblock modals %}
     </body>
 </html>
