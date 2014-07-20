@@ -36,8 +36,8 @@ def user_tweets(user_name):
     api = get_twitter_api()
     # Will need the below twitter api call once classifier is ready
     # new_tweets = api.user_timeline(screen_name=user_name, count=200)
-    lat = random() * 80
-    lng = random() * -80
+    lat = random() * 39
+    lng = random() * -98
     context = {
         'screen_name': user_name,
         'location_lat': lat,
