@@ -1,7 +1,7 @@
 import tweepy
-from flask import render_template, redirect, url_for
-from flask.ext.mail import Message, Mail
-from tweetTrack.app import app
+from flask import render_template, redirect, url_for, request
+from flask.ext.mail import Message
+from tweetTrack.app import app, mail
 from tweetTrack.app.config.keys import TwitterKeys
 from tweetTrack.app.forms import TwitterForm, ContactForm
 
@@ -44,7 +44,12 @@ def about():
 
 @app.route('/contact/', methods=['GET', 'POST'])
 def contact():
-    form = ContactForm()
-    if form.validate_on_submit():
-        return redirect(url_for(contact))
-    return render_template('contact.html', form=form)
+    msg = Message(
+        request.args.get('subject', 'Subject Error'),
+        sender=request.args.get('email', 'Email Error'),
+        recipients=['tweet.track@gmail.com']
+    )
+    msg.body = request.args.get('message', 'Message error')
+    mail.send(msg)
+    name = request.args.get('name', 'Name error')
+    return render_template('message_sent.html', name=name)

@@ -1,35 +1,49 @@
 <div class="modal fade" id="contact-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Have a question? Contact us.</h4>
-      </div>
-      <div class="modal-body">
-          <form action="{{ url_for('contact') }}">
-            {{ contact_form.csrf_token }}
-            <fieldset class="form-group">
-                {{ contact_form.name.label }}<br />
-                {{ contact_form.name }}
-            </fieldset>
-            <fieldset class="form-group">
-                {{ contact_form.email.label }}<br />
-                {{ contact_form.email }}
-            </fieldset>
-            <fieldset class="form-group">
-                {{ contact_form.subject.label }}<br />
-                {{ contact_form.subject }}
-            </fieldset>
-            <fieldset class="form-group">
-                {{ contact_form.message.label }}<br />
-                {{ contact_form.message }}
-            </fieldset>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                {{ contact_form.send(class_='btn btn-primary') }}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Have a question? Contact us.</h4>
             </div>
-        </form>
-      </div>
+            <div id="contact-modal-body" class="modal-body">
+                <form id="contact-form" action="">
+                {{ contact_form.csrf_token }}
+                <fieldset class="form-group">
+                    {{ contact_form.name.label }}<br />
+                    {{ contact_form.name }}
+                </fieldset>
+                <fieldset class="form-group">
+                    {{ contact_form.email.label }}<br />
+                    {{ contact_form.email }}
+                </fieldset>
+                <fieldset class="form-group">
+                    {{ contact_form.subject.label }}<br />
+                    {{ contact_form.subject }}
+                </fieldset>
+                <fieldset class="form-group">
+                    {{ contact_form.message.label }}<br />
+                    {{ contact_form.message }}
+                </fieldset>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    {{ contact_form.send(class_='btn btn-primary') }}
+                </div>
+                <script>
+                      var modal = $("#contact-modal");
+                      var contact = $("#contact-form");
+                      contact.on("submit", function(event){
+                            event.preventDefault();
+                            $.ajax('/contact', {
+                                data: contact.serialize(),
+                                success: function(response) {
+                                    contact.trigger('reset');
+                                    $("#contact-modal-body").html(response).fadeIn().delay(2);
+                                }
+                            });
+                      });
+                </script>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

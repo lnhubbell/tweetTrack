@@ -18,7 +18,8 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     DEBUG = True
-
+    MAIL_USERNAME = 'tweet.track@gmail.com'
+    MAIL_PASSWORD = 'DoMoreFaster'
 
 class TestingConfig(Config):
     TESTING = True
