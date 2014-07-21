@@ -10,6 +10,8 @@ class Config(object):
     MAIL_SERVER = "smtp.gmail.com"
     MAIL_PORT = 465
     MAIL_USE_SSL = True
+    MAIL_USERNAME = 'tweet.track@gmail.com'
+    MAIL_PASSWORD = 'DoMoreFaster'
 
 
 class ProductionConfig(Config):
@@ -18,8 +20,7 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    MAIL_USERNAME = 'tweet.track@gmail.com'
-    MAIL_PASSWORD = 'DoMoreFaster'
+
 
 class TestingConfig(Config):
     TESTING = True

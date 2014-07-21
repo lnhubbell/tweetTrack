@@ -1,3 +1,4 @@
+import time
 from fabric.api import run
 from fabric.api import env
 from fabric.api import prompt
@@ -7,7 +8,6 @@ from fabric.api import settings
 from fabric import contrib
 from fabric.contrib.project import rsync_project
 import boto.ec2
-import time
 import boto
 
 env.hosts = ['localhost', ]
@@ -121,14 +121,6 @@ def run_command_on_selected_server(command, *args, **kwargs):
     execute(command, *args, **kwargs)
 
 
-# def run_psql_command_on_selected_server(command):
-#     select_instance()
-#     selected_hosts = [
-#         'postgres@' + env.active_instance.public_dns_name
-#     ]
-#     execute(command, hosts=selected_hosts)
-
-
 def _install_nginx():
     sudo('apt-get -y install nginx')
     print "installed nginx"
@@ -142,7 +134,7 @@ def install_nginx():
 def _install_supervisor():
     sudo('apt-get -y install supervisor')
     print "installed supervisor"
-    sudo('mv supervisord.conf /etc/supervisor/conf.d/tweetTrack.conf')
+    sudo('mv tweetTrack/deploy/supervisord.conf /etc/supervisor/conf.d/tweetTrack.conf')
     sudo('/etc/init.d/supervisor stop')
     sudo('/etc/init.d/supervisor start')
 
@@ -154,19 +146,13 @@ def install_supervisor():
 def _move_nginx_files():
     sudo('mv /etc/nginx/sites-available/default \
         /etc/nginx/sites-available/default.orig')
-    sudo('mv simple_nginx_config /etc/nginx/sites-available/default')
+    sudo('mv tweetTrack/deploy/simple_nginx_config /etc/nginx/sites-available/default')
     sudo('/etc/init.d/nginx restart')
     # sudo('python ./tweetTrack/tweetTrack.py')
 
 
 def move_nginx_files():
     run_command_on_selected_server(_move_nginx_files)
-
-
-def _psql_setup():
-    sudo('psql < ~/tweetTrack/setup.sql', user='postgres')
-    sudo('/usr/bin/python tweetTrack/manage.py syncdb --noinput')
-    sudo('/usr/bin/python tweetTrack/manage.py loaddata tweetTrack/user.json')
 
 
 def _mass_install():
@@ -226,6 +212,7 @@ def deploy():
     generate_nginx_config()
     run_command_on_selected_server(
         rsync_project,
+        local_dir='../../tweetTrack',
         remote_dir="~/",
         exclude=[".git"]
     )
