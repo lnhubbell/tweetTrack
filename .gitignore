@@ -11,6 +11,7 @@ __pycache__/
 # Super Secret Files
 tweets.sqlite
 tweetTrack/config
+streamScript/config
 
 # Distribution / packaging
 .Python
