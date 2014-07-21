@@ -17,7 +17,7 @@ acc_tok_url = 'https://api.twitter.com/oauth/access_token'
 # connection_string.append("host=tweetstalk.cvf1ij0yeyiq.us-west-2.rds.amazonaws.com:5432")
 # connection_string.append("dbname=lil_tweetstalker")
 # connection_string.append("user=tweetstalker")
-# connection_string.append("password=9BBewrkivHctaesd12N7")
+# connection_string.append("password=<password>")
 # connection = " ".join(connection_string)
 
 
