@@ -71,6 +71,7 @@ class StdOutListener(StreamListener):
 
             # print "Sending to database..."
             execute_query(sql, data_list)
+            print "yay"
 
     def on_error(self, status):
         error_counter = 0
