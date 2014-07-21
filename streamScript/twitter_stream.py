@@ -11,18 +11,17 @@ from send_data import _build_save_tweet_sql, execute_query
 req_tok_url = 'https://api.twitter.com/oauth/request_token'
 oauth_url = 'https://api.twitter.com/oauth/authorize'
 acc_tok_url = 'https://api.twitter.com/oauth/access_token'
-# DB_CONFIG = {}
 
-# connection_string = []
-# connection_string.append("host=tweetstalk.cvf1ij0yeyiq.us-west-2.rds.amazonaws.com:5432")
-# connection_string.append("dbname=lil_tweetstalker")
-# connection_string.append("user=tweetstalker")
-# connection_string.append("password=<password>")
-# connection = " ".join(connection_string)
-
+connection_string = []
+connection_string.append("host=tweetstalk.cvf1ij0yeyiq.us-west-2.rds.amazonaws.com:5432")
+connection_string.append("dbname=lil_tweetstalker")
+connection_string.append("user=tweetstalker")
+connection_string.append("password=<password>")
+connection = " ".join(connection_string)
 
 
-# DB_CONFIG['DB_CONNECTION_STRING']=connection
+
+DB_CONFIG['DB_CONNECTION_STRING']=connection
 
 class StdOutListener(StreamListener):
     """ A listener handles tweets are the received from the stream.
@@ -38,7 +37,7 @@ class StdOutListener(StreamListener):
         self.count = 0
         self.start_time = time.clock()
 
-    def on_data(self, data):
+    def get_data(self, data):
         json_data = json.loads(data)
 
         language = json_data.get('lang', None)
@@ -46,7 +45,7 @@ class StdOutListener(StreamListener):
         place = json_data.get('place', None)
         if place:
             country_code = place.get('country_code', None)
-        if location and (language == 'en') and (country_code == 'US':
+        if location and (language == 'en') and (country_code == 'US'):
             location = location.get('coordinates', None)
             screen_name = json_data.get('user', None).get('screen_name', None)
             text = json_data.get('text', None)
@@ -59,7 +58,6 @@ class StdOutListener(StreamListener):
             except AttributeError:
                 print "I HAD THIS ERROR"
                 return
-
             data_list = (
                             screen_name,
                             text,
@@ -68,12 +66,17 @@ class StdOutListener(StreamListener):
                             created_at,
                             hashtags
                         )
+            return data_list
+        else:
+            return None
 
+    def on_data(self, data):
+        data_list = self.get_data(data)
+        if data_list:
             sql = """INSERT INTO "Tweet" (screen_name, text, location_lat, location_lng, created_at, hashtags) VALUES (%s, %s, %s, %s, %s, %s); """
 
             print "Sending to database..."
             execute_query(sql, data_list)
-
 
     def on_error(self, status):
         error_counter = 0

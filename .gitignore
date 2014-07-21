@@ -9,7 +9,7 @@ __pycache__/
 .idea/
 
 # Super Secret Files
-tweets.sqlite
+tweets.db
 tweetTrack/config
 streamScript/config
 
@@ -60,4 +60,7 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+#misc files
+/rabbit_practice
 
