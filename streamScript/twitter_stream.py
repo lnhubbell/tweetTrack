@@ -27,6 +27,7 @@ class StdOutListener(StreamListener):
         language = json_data.get('lang', None)
         location = json_data.get('geo', None)
         place = json_data.get('place', None)
+        country_code = None
         if place:
             country_code = place.get('country_code', None)
         if location and (language == 'en') and (country_code == 'US'):
@@ -76,4 +77,6 @@ if __name__ == '__main__':
 
     stream = Stream(auth, l)
     # print "Streaming..."
-    stream.filter(locations=[-124.848974, 24.396308, -66.885444, 49.384358])
+    stream.filter(locations=[
+        -124.848974, 24.396308, -66.885444, 49.384358, -150.011947, 61.040969,
+        -149.6861, 61.234443, -157.966444, 21.255358, -157.663132, 21.373863])
