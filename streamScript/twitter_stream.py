@@ -5,24 +5,13 @@ from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 from header import consumer_key, consumer_secret, access_token, access_token_secret
-from send_data import _build_save_tweet_sql, execute_query
+from send_data import execute_query
 
 
 req_tok_url = 'https://api.twitter.com/oauth/request_token'
 oauth_url = 'https://api.twitter.com/oauth/authorize'
 acc_tok_url = 'https://api.twitter.com/oauth/access_token'
-# DB_CONFIG = {}
 
-# connection_string = []
-# connection_string.append("host=tweetstalk.cvf1ij0yeyiq.us-west-2.rds.amazonaws.com:5432")
-# connection_string.append("dbname=lil_tweetstalker")
-# connection_string.append("user=tweetstalker")
-# connection_string.append("password=<password>")
-# connection = " ".join(connection_string)
-
-
-
-# DB_CONFIG['DB_CONNECTION_STRING']=connection
 
 class StdOutListener(StreamListener):
     """ A listener handles tweets are the received from the stream.
@@ -30,12 +19,6 @@ class StdOutListener(StreamListener):
 
     """
     def __init__(self):
-
-        self.hashtags_count = 0
-        self.data_count = 0
-        self.location_count = 0
-        self.seattle_count = 0
-        self.count = 0
         self.start_time = time.clock()
 
     def on_data(self, data):
@@ -46,11 +29,10 @@ class StdOutListener(StreamListener):
         place = json_data.get('place', None)
         if place:
             country_code = place.get('country_code', None)
-        if location and (language == 'en') and (country_code == 'US':
+        if location and (language == 'en') and (country_code == 'US'):
             location = location.get('coordinates', None)
             screen_name = json_data.get('user', None).get('screen_name', None)
             text = json_data.get('text', None)
-            # I'M NOT SURE WHICH LOCATION IS LAT AND WHICH IS LNG, JUST GUESSING FOR NOW!!!
             location_lat = location[0]
             location_lng = location[1]
             created_at = json_data.get('created_at', None)
@@ -93,4 +75,5 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_token_secret)
 
     stream = Stream(auth, l)
+    print "Streaming..."
     stream.filter(locations=[-124.848974, 24.396308, -66.885444, 49.384358])
