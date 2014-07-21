@@ -6,6 +6,7 @@ from fabric.api import execute
 from fabric.api import sudo
 from fabric.api import settings
 from fabric import contrib
+from fabric.contrib.files import upload_template
 from fabric.contrib.project import rsync_project
 import boto.ec2
 import boto
@@ -131,10 +132,19 @@ def install_nginx():
     run_command_on_selected_server(_install_nginx)
 
 
+def env_vars():
+    with open('env_vars.txt') as f:
+        return str(f.read().rstrip())
+
+
 def _install_supervisor():
     sudo('apt-get -y install supervisor')
     print "installed supervisor"
-    sudo('mv tweetTrack/deploy/supervisord.conf /etc/supervisor/conf.d/tweetTrack.conf')
+    upload_template(
+        'supervisord.conf', '~/',
+        context={'host_envs': env_vars()}
+    )
+    sudo('mv supervisord.conf /etc/supervisor/conf.d/tweetTrack.conf')
     sudo('/etc/init.d/supervisor stop')
     sudo('/etc/init.d/supervisor start')
 
@@ -148,7 +158,6 @@ def _move_nginx_files():
         /etc/nginx/sites-available/default.orig')
     sudo('mv tweetTrack/deploy/simple_nginx_config /etc/nginx/sites-available/default')
     sudo('/etc/init.d/nginx restart')
-    # sudo('python ./tweetTrack/tweetTrack.py')
 
 
 def move_nginx_files():
@@ -162,7 +171,7 @@ def _mass_install():
     sudo('apt-get -y install python-pip')
     sudo('apt-get -y install libpq-dev')
     with settings(warn_only=True):
-        sudo('pip install -r ~/tweetTrack/tweetTrack/requirements.txt')
+        sudo('pip install -r ~/tweetTrack/requirements.txt')
 
 
 def mass_install():
@@ -183,18 +192,18 @@ def terminate_instance():
 
 def generate_nginx_config():
     config_file = """
-server {
-    listen 80;
-    server_name http://%s/;
-    access_log  /var/log/nginx/test.log;
+        server {
+            listen 80;
+            server_name http://%s/;
+            access_log  /var/log/nginx/test.log;
 
-    location / {
-        proxy_pass http://127.0.0.1:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-}""" % env.active_instance.public_dns_name
+            location / {
+                proxy_pass http://127.0.0.1:8000;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            }
+        }""" % env.active_instance.public_dns_name
     with open("simple_nginx_config", 'w') as outfile:
         outfile.write(config_file)
 
@@ -214,7 +223,7 @@ def deploy():
         rsync_project,
         local_dir='../../tweetTrack',
         remote_dir="~/",
-        exclude=[".git"]
+        exclude=[".git", "tweetTrack/app/config"]
     )
     mass_install()
     install_supervisor()

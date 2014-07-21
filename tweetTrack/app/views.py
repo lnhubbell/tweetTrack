@@ -1,3 +1,4 @@
+from os import environ
 from random import random
 import tweepy
 from flask import render_template, redirect, url_for, request, jsonify
@@ -9,12 +10,12 @@ from tweetTrack.app.forms import TwitterForm, ContactForm
 
 def get_twitter_api():
     auth = tweepy.OAuthHandler(
-        TwitterKeys.consumer_key,
-        TwitterKeys.consumer_secret
+        environ.get('CONSUMER_KEY', TwitterKeys.consumer_key),
+        environ.get('CONSUMER_SECRET', TwitterKeys.consumer_secret)
     )
     auth.set_access_token(
-        TwitterKeys.access_key,
-        TwitterKeys.access_secret
+        environ.get('ACCESS_KEY', TwitterKeys.access_key),
+        environ.get('ACCESS_SECRET', TwitterKeys.access_secret)
     )
     return tweepy.API(auth)
 
