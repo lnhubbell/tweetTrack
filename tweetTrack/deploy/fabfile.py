@@ -35,7 +35,7 @@ def provision_instance(wait_for_running=True, timeout=120, interval=2):
     timeout_val = int(timeout)
     conn = get_ec2_connection()
     instance_type = 't1.micro'
-    key_name = 'pk-aws'
+    key_name = 'imagr'
     security_group = 'ssh-access'
     image_id = 'ami-d0d8b8e0'
 
@@ -142,7 +142,7 @@ def install_nginx():
 def _install_supervisor():
     sudo('apt-get -y install supervisor')
     print "installed supervisor"
-    sudo('mv ./tweetTrack/supervisord.conf /etc/supervisor/conf.d/tweetTrack.conf')
+    sudo('mv .supervisord.conf /etc/supervisor/conf.d/tweetTrack.conf')
     sudo('/etc/init.d/supervisor stop')
     sudo('/etc/init.d/supervisor start')
 
@@ -154,7 +154,7 @@ def install_supervisor():
 def _move_nginx_files():
     sudo('mv /etc/nginx/sites-available/default \
         /etc/nginx/sites-available/default.orig')
-    sudo('mv ./tweetTrack/simple_nginx_config /etc/nginx/sites-available/default')
+    sudo('mv .simple_nginx_config /etc/nginx/sites-available/default')
     sudo('/etc/init.d/nginx restart')
     # sudo('python ./tweetTrack/tweetTrack.py')
 
@@ -169,29 +169,18 @@ def _psql_setup():
     sudo('/usr/bin/python tweetTrack/manage.py loaddata tweetTrack/user.json')
 
 
-
 def _mass_install():
     sudo('apt-get update')
-    # sudo('apt-get -y install postgresql postgresql-contrib')
-    # sudo('mv /etc/postgresql/9.1/main/pg_hba.conf /etc/postgresql/9.1/main/pg_hba.back')
-    # sudo('mv tweetTrack/pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf')
-    # sudo('service postgresql restart')
     sudo('apt-get -y install python-setuptools')
     sudo('apt-get -y install python-dev')
     sudo('apt-get -y install python-pip')
     sudo('apt-get -y install libpq-dev')
-    sudo('apt-get -y install libjpeg-dev')
     with settings(warn_only=True):
-        sudo('pip install -r ~/tweetTrack/requirements.txt')
-    # sudo('pip install django-configurations')
-    # sudo('pip install sorl-thumbnail')
-    # sudo('pip install psycopg2')
+        sudo('pip install -r ~/tweetTrack/tweetTrack/requirements.txt')
 
 
 def mass_install():
     run_command_on_selected_server(_mass_install)
-    # run_command_on_selected_server(_psql_setup)
-
 
 
 def stop_instance():
@@ -235,7 +224,11 @@ def deploy():
 
     install_nginx()
     generate_nginx_config()
-    run_command_on_selected_server(rsync_project, remote_dir="~/", exclude=[".git"])
+    run_command_on_selected_server(
+        rsync_project,
+        remote_dir="~/",
+        exclude=[".git"]
+    )
     mass_install()
     install_supervisor()
     move_nginx_files()
