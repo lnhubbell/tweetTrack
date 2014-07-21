@@ -9,7 +9,7 @@ __pycache__/
 .idea/
 
 # Super Secret Files
-tweets.sqlite
+tweets.db
 tweetTrack/config
 streamScript/config
 
