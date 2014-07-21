@@ -144,7 +144,7 @@ def install_nginx():
 def _install_supervisor():
     sudo('apt-get -y install supervisor')
     print "installed supervisor"
-    sudo('mv ./tweetTrack/supervisord.conf /etc/supervisor/conf.d/tweetTrack.conf')
+    sudo('mv ./streamScript/supervisord.conf /etc/supervisor/conf.d/tweetTrack.conf')
     sudo('/etc/init.d/supervisor stop')
     sudo('/etc/init.d/supervisor start')
 
@@ -156,7 +156,7 @@ def install_supervisor():
 def _move_nginx_files():
     sudo('mv /etc/nginx/sites-available/default \
         /etc/nginx/sites-available/default.orig')
-    sudo('mv ./tweetTrack/simple_nginx_config /etc/nginx/sites-available/default')
+    sudo('mv ./streamScript/simple_nginx_config /etc/nginx/sites-available/default')
     sudo('/etc/init.d/nginx restart')
     # sudo('python ./tweetTrack/tweetTrack.py')
 
@@ -172,8 +172,8 @@ def _mass_install():
     sudo('apt-get -y install python-pip')
     sudo('apt-get -y install libpq-dev')
     sudo('apt-get -y install libjpeg-dev')
-    with settings(warn_only=True):
-        sudo('pip install -r ~/tweetTrack/requirements.txt')
+    # with settings(warn_only=True):
+    sudo('pip install -r ~/streamScript/requirements.txt')
 
 
 def mass_install():

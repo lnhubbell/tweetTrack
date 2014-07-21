@@ -5,7 +5,7 @@ from config import config
 
 
 app = Flask(__name__)
-app.config.from_object(config.DevelopmentConfig)
+app.config.from_object(config.ProductionConfig)
 db = SQLAlchemy(app)
 mail = Mail(app)
 
