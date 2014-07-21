@@ -15,7 +15,7 @@ acc_tok_url = 'https://api.twitter.com/oauth/access_token'
 
 class StdOutListener(StreamListener):
     """ A listener handles tweets are the received from the stream.
-    This is a basic listener that just prints received tweets to stdout.
+    # This is a basic listener that just prints received tweets to stdout.
 
     """
     def __init__(self):
@@ -39,7 +39,7 @@ class StdOutListener(StreamListener):
             try:
                 hashtags = [i['text'] for i in json_data.get('entities', None).get('hashtags', None)]
             except AttributeError:
-                print "I HAD THIS ERROR"
+                # print "I HAD THIS ERROR"
                 return
 
             data_list = (
@@ -53,7 +53,7 @@ class StdOutListener(StreamListener):
 
             sql = """INSERT INTO "Tweet" (screen_name, text, location_lat, location_lng, created_at, hashtags) VALUES (%s, %s, %s, %s, %s, %s); """
 
-            print "Sending to database..."
+            # print "Sending to database..."
             execute_query(sql, data_list)
 
 
@@ -75,5 +75,5 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_token_secret)
 
     stream = Stream(auth, l)
-    print "Streaming..."
+    # print "Streaming..."
     stream.filter(locations=[-124.848974, 24.396308, -66.885444, 49.384358])
