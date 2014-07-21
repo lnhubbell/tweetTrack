@@ -142,7 +142,7 @@ def install_nginx():
 def _install_supervisor():
     sudo('apt-get -y install supervisor')
     print "installed supervisor"
-    sudo('mv .supervisord.conf /etc/supervisor/conf.d/tweetTrack.conf')
+    sudo('mv supervisord.conf /etc/supervisor/conf.d/tweetTrack.conf')
     sudo('/etc/init.d/supervisor stop')
     sudo('/etc/init.d/supervisor start')
 
@@ -154,7 +154,7 @@ def install_supervisor():
 def _move_nginx_files():
     sudo('mv /etc/nginx/sites-available/default \
         /etc/nginx/sites-available/default.orig')
-    sudo('mv .simple_nginx_config /etc/nginx/sites-available/default')
+    sudo('mv simple_nginx_config /etc/nginx/sites-available/default')
     sudo('/etc/init.d/nginx restart')
     # sudo('python ./tweetTrack/tweetTrack.py')
 
