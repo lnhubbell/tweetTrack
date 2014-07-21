@@ -60,3 +60,6 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+#misc files
+/rabbit_practice
+
