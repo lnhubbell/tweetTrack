@@ -108,4 +108,4 @@ def execute_query(sql, args=None):
 
 
 # if __name__ == '__main__':
-    print _get_pasword()
+    # print _get_pasword()
