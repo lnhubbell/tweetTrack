@@ -12,6 +12,16 @@ req_tok_url = 'https://api.twitter.com/oauth/request_token'
 oauth_url = 'https://api.twitter.com/oauth/authorize'
 acc_tok_url = 'https://api.twitter.com/oauth/access_token'
 
+connection_string = []
+connection_string.append("host=tweetstalk.cvf1ij0yeyiq.us-west-2.rds.amazonaws.com:5432")
+connection_string.append("dbname=lil_tweetstalker")
+connection_string.append("user=tweetstalker")
+connection_string.append("password=<password>")
+connection = " ".join(connection_string)
+
+
+
+DB_CONFIG['DB_CONNECTION_STRING']=connection
 
 class StdOutListener(StreamListener):
     """ A listener handles tweets are the received from the stream.
