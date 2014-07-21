@@ -27,7 +27,7 @@ class StdOutListener(StreamListener):
         self.count = 0
         self.start_time = time.clock()
 
-    def on_data(self, data):
+    def get_data(self, data):
         json_data = json.loads(data)
 
         language = json_data.get('lang', None)
@@ -48,7 +48,6 @@ class StdOutListener(StreamListener):
             except AttributeError:
                 print "I HAD THIS ERROR"
                 return
-
             data_list = (
                             screen_name,
                             text,
@@ -57,12 +56,17 @@ class StdOutListener(StreamListener):
                             created_at,
                             hashtags
                         )
+            return data_list
+        else:
+            return None
 
+    def on_data(self, data):
+        data_list = self.get_data(data)
+        if data_list:
             sql = """INSERT INTO "Tweet" (screen_name, text, location_lat, location_lng, created_at, hashtags) VALUES (%s, %s, %s, %s, %s, %s); """
 
             print "Sending to database..."
             execute_query(sql, data_list)
-
 
     def on_error(self, status):
         error_counter = 0
