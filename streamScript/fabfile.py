@@ -5,7 +5,6 @@ from fabric.api import execute
 from fabric.api import sudo
 from fabric.api import settings
 from fabric import contrib
-from fabric.contrib.project import rsync_project
 import boto.ec2
 import time
 import boto
@@ -64,14 +63,14 @@ def provision_instance(wait_for_running=True, timeout=120, interval=2):
                 instance.update()
 
 
-def list_aws_instances(verbose=False, state='running'):
+def list_aws_instances(verbose=False, state='all'):
     conn = get_ec2_connection()
 
     reservations = conn.get_all_reservations()
     instances = []
     for res in reservations:
         for instance in res.instances:
-            if instance.state == state:
+            if state == 'all' or instance.state == state:
                 print instance
                 instance = {
                     'id': instance.id,
@@ -112,21 +111,24 @@ def select_instance(state='running'):
     env.active_instance = env.instances[choice - 1]['instance']
 
 
-def run_command_on_selected_server(command, *args, **kwargs):
+def stop_instance():
+    conn = get_ec2_connection()
+    select_instance('running')
+    conn.stop_instances(env.active_instance.id)
+
+
+def terminate_instance():
+    conn = get_ec2_connection()
+    select_instance('stopped')
+    conn.terminate_instances(env.active_instance.id)
+
+
+def run_command_on_selected_server(command):
     select_instance()
     selected_hosts = [
         'ubuntu@' + env.active_instance.public_dns_name
     ]
-    kwargs['hosts'] = selected_hosts
-    execute(command, *args, **kwargs)
-
-
-# def run_psql_command_on_selected_server(command):
-#     select_instance()
-#     selected_hosts = [
-#         'postgres@' + env.active_instance.public_dns_name
-#     ]
-#     execute(command, hosts=selected_hosts)
+    execute(command, hosts=selected_hosts)
 
 
 def _install_nginx():
@@ -163,19 +165,8 @@ def move_nginx_files():
     run_command_on_selected_server(_move_nginx_files)
 
 
-def _psql_setup():
-    sudo('psql < ~/tweetTrack/setup.sql', user='postgres')
-    sudo('/usr/bin/python tweetTrack/manage.py syncdb --noinput')
-    sudo('/usr/bin/python tweetTrack/manage.py loaddata tweetTrack/user.json')
-
-
-
 def _mass_install():
     sudo('apt-get update')
-    # sudo('apt-get -y install postgresql postgresql-contrib')
-    # sudo('mv /etc/postgresql/9.1/main/pg_hba.conf /etc/postgresql/9.1/main/pg_hba.back')
-    # sudo('mv tweetTrack/pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf')
-    # sudo('service postgresql restart')
     sudo('apt-get -y install python-setuptools')
     sudo('apt-get -y install python-dev')
     sudo('apt-get -y install python-pip')
@@ -183,43 +174,26 @@ def _mass_install():
     sudo('apt-get -y install libjpeg-dev')
     with settings(warn_only=True):
         sudo('pip install -r ~/tweetTrack/requirements.txt')
-    # sudo('pip install django-configurations')
-    # sudo('pip install sorl-thumbnail')
-    # sudo('pip install psycopg2')
 
 
 def mass_install():
     run_command_on_selected_server(_mass_install)
-    # run_command_on_selected_server(_psql_setup)
-
-
-
-def stop_instance():
-    conn = get_ec2_connection()
-    select_instance('running')
-    conn.stop_instances(env.active_instance.id)
-
-
-def terminate_instance():
-    conn = get_ec2_connection()
-    select_instance('stopped')
-    conn.terminate_instances(env.active_instance.id)
 
 
 def generate_nginx_config():
     config_file = """
-server {
-    listen 80;
-    server_name http://%s/;
-    access_log  /var/log/nginx/test.log;
+        server {
+            listen 80;
+            server_name http://%s/;
+            access_log  /var/log/nginx/test.log;
 
-    location / {
-        proxy_pass http://127.0.0.1:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-}""" % env.active_instance.public_dns_name
+            location / {
+                proxy_pass http://127.0.0.1:8000;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            }
+        }""" % env.active_instance.public_dns_name
     with open("simple_nginx_config", 'w') as outfile:
         outfile.write(config_file)
 
@@ -235,7 +209,7 @@ def deploy():
 
     install_nginx()
     generate_nginx_config()
-    run_command_on_selected_server(rsync_project, remote_dir="~/", exclude=[".git"])
+    run_command_on_selected_server(contrib.project.upload_project)
     mass_install()
     install_supervisor()
     move_nginx_files()
