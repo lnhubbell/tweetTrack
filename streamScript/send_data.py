@@ -80,7 +80,7 @@ def execute_query(sql, args=None):
         cur = _get_cursor()
         # print "executing the following on cursor:"
         try:
-            # print "SQL STRING: {}".format(sql)
+            test_formatting = "SQL STRING: {}".format(sql)
         except UnicodeEncodeError:
             return "Could not deal with emojis"
         cur.execute(sql, args)
