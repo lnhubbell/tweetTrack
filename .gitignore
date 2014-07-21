@@ -10,7 +10,7 @@ __pycache__/
 
 # Super Secret Files
 tweets.db
-tweetTrack/config
+tweetTrack/app/config/
 streamScript/config
 
 # Distribution / packaging
