@@ -11,7 +11,6 @@ DB_CONFIG = {}
 
 ROOT_DIR = os.path.abspath(os.getcwd())
 
-
 def _get_pasword():
     password = open(ROOT_DIR + '/config').read().split()
     return password[1]
@@ -62,12 +61,13 @@ def _get_cursor():
 def execute_query(sql, args=None, need_results=False):
     u"""execute the passed in SQL using the current cursor.
     If the query string takes any args pass those to the cursor as well."""
-    # print "executing query..."
+    password = _get_pasword()
     connection_string = []
     connection_string.append("host=tweetstalk.cvf1ij0yeyiq.us-west-2.rds.amazonaws.com")
     connection_string.append("dbname=lil_tweetstalker")
     connection_string.append("user=tweetstalkers")
-    connection_string.append("password=9BBewrkivHctaesd12N7")
+    connection_string.append("password=")
+    connection_string.append(password)
     connection_string.append("port=5432")
     connection = " ".join(connection_string)
 

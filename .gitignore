@@ -65,4 +65,5 @@ docs/_build/
 /rabbit_practice
 /locations/twitter_keys.py
 /papers/MiningSocialMedia.pdf
+/streamScript/locations/twitter_keys.py
 
