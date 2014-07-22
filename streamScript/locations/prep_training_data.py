@@ -1,5 +1,4 @@
 import tweepy
-from streamScript.twitter_stream import get_data
 from streamScript.send_data import execute_query
 
 u"""Reads in a file of cities and their bounding boxes. Queries the database
@@ -8,11 +7,7 @@ to get 200 tweets from each user, then inserts 200 tweets for up to 100 users pe
 into a separate database table called "Tweet200."""
 
 
-class TwitterKeys(object):
-    consumer_key = 'hWMHWIJYoJ4UIG0KNwXcC4pbg'
-    consumer_secret = '85E7dAk4ZkJEyNkQ0EbxYvavL7FeKUwEEJlXOs9QnXDwIcWL5c'
-    access_key = '249913463-xJhkkoiipEVF0xIJeZc9dys8N1qovmZGmgqiSLaV'
-    access_secret = 'q4CleTUfctg4BfQz6R5cRpa8EekBylIRzr63fCuargyDa'
+
 
 
 def get_twitter_api():
@@ -36,7 +31,7 @@ def read_in_bb_file():
     f.close()
 
     bb_dict = {}
-    for line in bbs:
+    for line in bbs[:1]:
         spl = line.strip().split(",")
         city = spl[0].title()
         place_name = city + ", " + spl[1]
@@ -58,7 +53,7 @@ def query_db():
         vals = (lats[0], lats[1], longs[0], longs[1])
         sql = """SELECT * FROM "Tweet" WHERE (location_lat BETWEEN %s AND %s) AND (location_lng BETWEEN %s AND %s); """
         print "Querying database..."
-        data = execute_query(sql, vals)
+        data = execute_query(sql, vals, need_results=True)
         data_set[key] = data
     return data_set
 
@@ -80,64 +75,71 @@ def get_unique_handles(data):
 
 
 def query_twitter_for_histories(data):
+    u"""Calls function to return a dict of cities and the unique users for each
+    city. Iterates over the dict to extract the tweet text/locations/timestamps
+    for each tweet, bundles results into DB-friendly tuples."""
     users_by_city = get_unique_handles(data)
     api = get_twitter_api()
     whole_set = {}
     for city, users in users_by_city.items():
         city_tweets = []
         user_count = 0
-        while user_count < 1:
-            for user in users:
-                tweet_his = []
-                history = []
-                try:
-                    history = api.user_timeline(screen_name=user, count=20)
-                except tweepy.error.TweepError as err:
-                    print "got a tweepy error"
-                    print err.message
-                if len(history) >= 20:
-                    user_count += 1
-                    for tweet in history:
-                        screen_name = user
-                        text = tweet.text
-                        created_at = tweet.created_at
-                        location = tweet.geo
-                        if location:
-                            location_lat = location['coordinates'][0]
-                            location_lng = location['coordinates'][1]
-                        hashtags = []
-                        # try:
-                        #     hashtags = [i['text'] for i in tweet.entities.hashtags]
-                        # except AttributeError:
-                        #     print "attribute error"
-                        if location:
-                            blob = (
-                                screen_name, text, location_lat, location_lng,
-                                created_at, hashtags, city
-                            )
-                            tweet_his.append(blob)
-                    if len(tweet_his):
-                        city_tweets.append(tweet_his)
-                        print "added one!"
-                        print city_tweets
+        for user in users:
+            if user_count > 1:
+                break
+            tweet_his = []
+            history = []
+            try:
+                history = api.user_timeline(screen_name=user, count=200)
+            except tweepy.error.TweepError as err:
+                print "Tweepy Error"
+                print err.message
+                continue
+            if len(history) >= 200:
+                user_count += 1
+                for tweet in history:
+                    screen_name = user
+                    text = tweet.text
+                    created_at = tweet.created_at.strftime('%m/%d/%Y')
+                    location = tweet.geo
+                    if location:
+                        location_lat = location['coordinates'][0]
+                        location_lng = location['coordinates'][1]
+                    hashtags = []
+                    # try:
+                    #     hashtags = [i['text'] for i in tweet.entities.hashtags]
+                    # except AttributeError:
+                    #     print "attribute error"
+                    if location:
+                        blob = (
+                            screen_name, text, location_lat, location_lng,
+                            created_at, hashtags, city
+                        )
+                        tweet_his.append(blob)
+            if len(tweet_his):
+                city_tweets.append(tweet_his)
+                print "added one!"
         whole_set[city] = city_tweets
     return whole_set
 
 
 def send_user_queries_to_db(tweet_set):
-    for city, blobs in tweet_set:
+    u"""Sends formatted tweets into DB."""
+    for city, blobs in tweet_set.items():
         for blob in blobs:
             if blob:
-                sql = """INSERT INTO "Tweet200" (screen_name, text, location_lat, location_lng, created_at, hashtags, city) VALUES (%s, %s, %s, %s, %s, %s, %s); """
-                execute_query(sql, blob)
-                print "Sending to database..."
+                for tweet in blob:
+                    if tweet:
+                        sql = """INSERT INTO "Tweet200" (screen_name, text, location_lat, location_lng, created_at, hashtags, city) VALUES (%s, %s, %s, %s, %s, %s, %s); """
+                        execute_query(sql, tweet)
+                        print "Sending to database..."
 
 
 if __name__ == "__main__":
     data = query_db()
-    our_outs = get_unique_handles(data)
-    #our_outs = query_twitter_for_histories(data)
-    #send_user_queries_to_db(our_outs)
+    #our_outs = get_unique_handles(data)
+    our_outs = query_twitter_for_histories(data)
+    send_user_queries_to_db(our_outs)
 
     for city, users in our_outs.items():
         print city, len(users)
