@@ -9,6 +9,7 @@ try:
     app.config.from_object(config.DevelopmentConfig)
 except ImportError:
     pass
+app.config.from_object(config.ProductionConfig)
 db = SQLAlchemy(app)
 mail = Mail(app)
 
