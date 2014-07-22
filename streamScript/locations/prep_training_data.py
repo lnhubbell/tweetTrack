@@ -1,8 +1,13 @@
-from send_data import execute_query
+import json
 from tweetTrack.app.config.keys import TwitterKeys
 from tweetTrack.app.views import get_twitter_api
-from .streamScript.twitter_stream import StdOutListener
-import json
+from streamScript.twitter_stream import get_data
+from streamScript.send_data import execute_query
+
+u"""Reads in a file of cities and their bounding boxes. Queries the database
+to get a list of all unique users who have tweeted from that city. Queries Twitter api
+to get 200 tweets from each user, then inserts 200 tweets for up to 100 users per city
+into a separate database table called "Tweet200."""
 
 
 def read_in_bb_file():
