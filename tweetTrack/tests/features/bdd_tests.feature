@@ -12,10 +12,9 @@ Feature: tweetTrack
         And an email
         And a subject
         And a message
-        When I click the contact button
-        And I see the form
+        And I fill out the contact form
         When I click the send button
-        Then receive a response
+        Then I receive a response
 
     Scenario: User clicks the about button
         Given a user
@@ -30,7 +29,6 @@ Feature: tweetTrack
     Scenario: User submits the track form
         Given a user
         And a twitter handle
-        When I click the track me button
-        And I see the form
+        And I fill out the twitter form
         When I click the submit button
         Then I see a new location on the map
