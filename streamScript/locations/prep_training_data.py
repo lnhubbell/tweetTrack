@@ -91,6 +91,64 @@ def get_unique_handles(data):
     return users_by_city
 
 
+def build_vocab(data, n=1000):
+    u"""Takes in a dict with locations as the keys and a list of tweets
+    as the values. Returns a list of tuples (word, word count) for the
+    top n words."""
+    vocab = {}
+    stopwords = open('stopwords.txt').read().lower().split()
+    # print data
+    for key, val in data.items():
+        # print "++++++++++++++"
+        # print "Val: " + str(val)
+        for tweet in val:
+            # print "Tweet:" + str(tweet)
+            the_text = tweet[2]
+            print the_text
+            the_text = the_text.lower().split()
+            # print "The Text: " + str(the_text)
+            for word in the_text:
+                # print "Word: " + str(word)
+                if word not in stopwords:
+                    vocab[word] = vocab.setdefault(word, 0) + 1
+    the_list = sorted(vocab.items(), key=lambda x: -x[1])
+    return the_list[:n]
+
+
+def build_matrix(data, n=1000):
+    stopwords = open('stopwords.txt').read().lower().split()
+    user_matrix = []
+    user_array = []
+    tweet_count = 0
+    for key, val in data.items():
+        for tweet in val:
+            if not tweet_count % 200:
+                user_array.append(key)
+                user_matrix.append(" ")
+            user_matrix[-1] += tweet[2].lower()
+            tweet_count += 1
+
+    vec = CV(analyzer='word',
+        stop_words=stopwords,
+        max_features=n)
+    print "Building X, Y..."
+    # print user_matrix
+    # print len(user_matrix)
+    X = vec.fit_transform(user_matrix).toarray()
+    print X
+    print len(X)
+    for x in X:
+        print len(x)
+    Y = np.array(user_array)
+    print Y
+    print len(Y)
+    print "Done"
+    return X, Y, vec.get_feature_names()
+
+
+
+
+
 def query_twitter_for_histories(data):
     users_by_city = get_unique_handles(data)
     api = get_twitter_api()
