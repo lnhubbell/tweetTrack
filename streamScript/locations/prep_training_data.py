@@ -75,6 +75,26 @@ def get_unique_handles(vals):
     return heavy_users
 
 
+def format_blob(history, user):
+    tweet_his = []
+    for tweet in history:
+        screen_name = user
+        text = tweet.text
+        created_at = tweet.created_at.strftime('%m/%d/%Y')
+        location = tweet.geo
+        if location:
+            location_lat = location['coordinates'][0]
+            location_lng = location['coordinates'][1]
+        hashtags = []
+        if location:
+            blob = (
+                screen_name, text, location_lat, location_lng,
+                created_at, hashtags, city
+            )
+            tweet_his.append(blob)
+    return tweet_his
+
+
 def query_twitter_for_histories(users, city):
     u"""Calls function to return a dict of cities and the unique users for each
     city. Iterates over the dict to extract the tweet text/locations/timestamps
@@ -86,7 +106,6 @@ def query_twitter_for_histories(users, city):
     for user in users:
         if user_count > 100:
             break
-        tweet_his = []
         history = []
         try:
             history = api.user_timeline(screen_name=user, count=200)
@@ -98,21 +117,7 @@ def query_twitter_for_histories(users, city):
             continue
         if len(history) >= 200:
             user_count += 1
-            for tweet in history:
-                screen_name = user
-                text = tweet.text
-                created_at = tweet.created_at.strftime('%m/%d/%Y')
-                location = tweet.geo
-                if location:
-                    location_lat = location['coordinates'][0]
-                    location_lng = location['coordinates'][1]
-                hashtags = []
-                if location:
-                    blob = (
-                        screen_name, text, location_lat, location_lng,
-                        created_at, hashtags, city
-                    )
-                    tweet_his.append(blob)
+            tweet_his = format_blob(history, user)
         if len(tweet_his):
             city_tweets.append(tweet_his)
             print user_count
