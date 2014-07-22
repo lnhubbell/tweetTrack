@@ -207,6 +207,15 @@ def generate_nginx_config():
         outfile.write(config_file)
 
 
+def _install_app():
+    sudo('mv tweetTrack/setup.py setup.py')
+    sudo('python setup.py develop')
+
+
+def install_app():
+    run_command_on_selected_server(_install_app)
+
+
 def deploy():
     list_aws_instances()
     not_running = True
@@ -230,4 +239,5 @@ def deploy():
     mass_install()
     install_supervisor()
     move_nginx_files()
+    install_app()
 
