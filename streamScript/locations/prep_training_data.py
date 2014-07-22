@@ -204,13 +204,34 @@ def send_user_queries_to_db(tweet_set):
 
 
 if __name__ == "__main__":
-    data = query_db()
-    our_outs = get_unique_handles(data)
+    try:
+        pickle_file = open('pickle','rb')
+        print "Loading Pickle..."
+        data = cPickle.load(pickle_file)
+        print "Pickle loaded."
+        pickle_file.close()
+    except IOError:
+        data = query_db(True)
+
+    top_words = build_matrix(data,5000)
+    print "Pickling..."
+    pickle_file = open('xypickle', 'w')
+    cPickle.dump(top_words,pickle_file)
+    pickle_file.close()
+    print "Pickled."
+
     #our_outs = query_twitter_for_histories(data)
     #send_user_queries_to_db(our_outs)
 
-    for city, users in our_outs.items():
-        print city, len(users)
+    alphas = [1E-4, 1E-3, 1E-2, 1E-1, 1]
+    for alpha in alphas:
+        mnb = MNB(alpha)
+        print alpha, np.mean(cross_val_score(mnb, top_words[0], top_words[1], cv=5))
+
+    
+
+    # for city, users in our_outs.items():
+    #     print city, len(users)
 
     # for city, tweets in our_outs.items:
     #     print "\n\n", "*" * 10, "\n\n"
