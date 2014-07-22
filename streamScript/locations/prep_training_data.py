@@ -50,21 +50,28 @@ def read_in_bb_file():
     return bb_dict
 
 
-def query_db():
+def query_db(new_pickle=False):
     u"""Calls the file reading function to get in a dict of bounding boxes
     for the 100 most populous US cities. Returns a dict containing all tweets
     collected from each city (with the key being the city name and the value
     being a list of tweets)."""
+    i = 0
     bb_dict = read_in_bb_file()
     data_set = {}
     for key, values in bb_dict.items():
         lats = values[0]
         longs = values[1]
         vals = (lats[0], lats[1], longs[0], longs[1])
-        sql = """SELECT * FROM "Tweet" WHERE (location_lat BETWEEN %s AND %s) AND (location_lng BETWEEN %s AND %s); """
-        print "Querying database..."
+        sql = """SELECT * FROM "Tweet" WHERE (location_lat BETWEEN %s AND %s) AND (location_lng BETWEEN %s AND %s) LIMIT 10000; """
+        print "Querying database..." + str(i)
         data = execute_query(sql, vals)
         data_set[key] = data
+        i += 1
+    if new_pickle:
+        pickle_file = open('pickle','w')
+        cPickle.dump(data_set, pickle_file)
+        pickle_file.close()
+        print "Created Pickle"
     return data_set
 
 
