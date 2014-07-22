@@ -20,7 +20,8 @@ psycopg2==2.5.3
 py==1.4.22
 pycrypto==2.6.1
 pytest==2.6.0
+selenium==2.42.1
 sure==1.2.7
 tweepy==2.3.0
--e git+https://github.com/lnhubbell/tweetTrack.git@33be48332496473ba9bdb04af92cc87d88c06af2#egg=tweetTrack-lettuce
+-e git+https://github.com/lnhubbell/tweetTrack.git@e9c85f0a259b89d4a573b1d2ba7e66a8bebe7b05#egg=tweetTrack-lettuce
 wsgiref==0.1.2
