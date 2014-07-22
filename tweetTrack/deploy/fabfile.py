@@ -1,13 +1,13 @@
+import time
 from fabric.api import run
 from fabric.api import env
 from fabric.api import prompt
 from fabric.api import execute
 from fabric.api import sudo
 from fabric.api import settings
-from fabric import contrib
+from fabric.contrib.files import upload_template
 from fabric.contrib.project import rsync_project
 import boto.ec2
-import time
 import boto
 
 env.hosts = ['localhost', ]
@@ -35,7 +35,7 @@ def provision_instance(wait_for_running=True, timeout=120, interval=2):
     timeout_val = int(timeout)
     conn = get_ec2_connection()
     instance_type = 't1.micro'
-    key_name = 'pk-aws'
+    key_name = 'imagr'
     security_group = 'ssh-access'
     image_id = 'ami-d0d8b8e0'
 
@@ -121,14 +121,6 @@ def run_command_on_selected_server(command, *args, **kwargs):
     execute(command, *args, **kwargs)
 
 
-# def run_psql_command_on_selected_server(command):
-#     select_instance()
-#     selected_hosts = [
-#         'postgres@' + env.active_instance.public_dns_name
-#     ]
-#     execute(command, hosts=selected_hosts)
-
-
 def _install_nginx():
     sudo('apt-get -y install nginx')
     print "installed nginx"
@@ -139,10 +131,19 @@ def install_nginx():
     run_command_on_selected_server(_install_nginx)
 
 
+def env_vars():
+    with open('env_vars.txt') as f:
+        return str(f.read().rstrip())
+
+
 def _install_supervisor():
     sudo('apt-get -y install supervisor')
     print "installed supervisor"
-    sudo('mv ./tweetTrack/supervisord.conf /etc/supervisor/conf.d/tweetTrack.conf')
+    upload_template(
+        'supervisord.conf', '~/',
+        context={'host_envs': env_vars()}
+    )
+    sudo('mv supervisord.conf /etc/supervisor/conf.d/tweetTrack.conf')
     sudo('/etc/init.d/supervisor stop')
     sudo('/etc/init.d/supervisor start')
 
@@ -154,44 +155,26 @@ def install_supervisor():
 def _move_nginx_files():
     sudo('mv /etc/nginx/sites-available/default \
         /etc/nginx/sites-available/default.orig')
-    sudo('mv ./tweetTrack/simple_nginx_config /etc/nginx/sites-available/default')
+    sudo('mv tweetTrack/deploy/simple_nginx_config /etc/nginx/sites-available/default')
     sudo('/etc/init.d/nginx restart')
-    # sudo('python ./tweetTrack/tweetTrack.py')
 
 
 def move_nginx_files():
     run_command_on_selected_server(_move_nginx_files)
 
 
-def _psql_setup():
-    sudo('psql < ~/tweetTrack/setup.sql', user='postgres')
-    sudo('/usr/bin/python tweetTrack/manage.py syncdb --noinput')
-    sudo('/usr/bin/python tweetTrack/manage.py loaddata tweetTrack/user.json')
-
-
-
 def _mass_install():
     sudo('apt-get update')
-    # sudo('apt-get -y install postgresql postgresql-contrib')
-    # sudo('mv /etc/postgresql/9.1/main/pg_hba.conf /etc/postgresql/9.1/main/pg_hba.back')
-    # sudo('mv tweetTrack/pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf')
-    # sudo('service postgresql restart')
     sudo('apt-get -y install python-setuptools')
     sudo('apt-get -y install python-dev')
     sudo('apt-get -y install python-pip')
     sudo('apt-get -y install libpq-dev')
-    sudo('apt-get -y install libjpeg-dev')
     with settings(warn_only=True):
-        sudo('pip install -r ~/tweetTrack/requirements.txt')
-    # sudo('pip install django-configurations')
-    # sudo('pip install sorl-thumbnail')
-    # sudo('pip install psycopg2')
+        sudo('pip install -r tweetTrack/requirements.txt')
 
 
 def mass_install():
     run_command_on_selected_server(_mass_install)
-    # run_command_on_selected_server(_psql_setup)
-
 
 
 def stop_instance():
@@ -208,18 +191,18 @@ def terminate_instance():
 
 def generate_nginx_config():
     config_file = """
-server {
-    listen 80;
-    server_name http://%s/;
-    access_log  /var/log/nginx/test.log;
+        server {
+            listen 80;
+            server_name http://%s/;
+            access_log  /var/log/nginx/test.log;
 
-    location / {
-        proxy_pass http://127.0.0.1:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-}""" % env.active_instance.public_dns_name
+            location / {
+                proxy_pass http://127.0.0.1:5000;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            }
+        }""" % env.active_instance.public_dns_name
     with open("simple_nginx_config", 'w') as outfile:
         outfile.write(config_file)
 
@@ -235,7 +218,15 @@ def deploy():
 
     install_nginx()
     generate_nginx_config()
-    run_command_on_selected_server(rsync_project, remote_dir="~/", exclude=[".git"])
+    run_command_on_selected_server(
+        rsync_project,
+        local_dir='../../tweetTrack',
+        remote_dir="~/",
+        exclude=[
+            ".git",
+            "tweetTrack/deploy/env_vars.txt"
+        ]
+    )
     mass_install()
     install_supervisor()
     move_nginx_files()
