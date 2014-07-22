@@ -10,6 +10,9 @@ __pycache__/
 
 # Super Secret Files
 tweets.db
+tweetTrack/deploy/env_vars.txt
+tweetTrack/deploy/simple_nginx_config
+tweetTrack/deploy/supervisord.conf
 tweetTrack/app/config/
 streamScript/config
 
