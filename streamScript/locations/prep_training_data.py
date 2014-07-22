@@ -1,4 +1,5 @@
 import tweepy
+<<<<<<< HEAD
 from streamScript.twitter_stream import get_data
 from streamScript.send_data import execute_query
 from sklearn.feature_extraction.text import CountVectorizer as CV
@@ -8,7 +9,6 @@ import numpy as np
 import cPickle
 from streamScript.send_data import execute_query, _get_connection
 from twitter_keys import my_keys
-
 
 u"""Reads in a file of cities and their bounding boxes. Queries the database
 to get a list of all unique users who have tweeted from that city. Queries Twitter api
@@ -49,10 +49,6 @@ def read_in_bb_file():
 
 
 def query_all_db(new_pickle=False):
-    u"""Calls the file reading function to get in a dict of bounding boxes
-    for the 100 most populous US cities. Returns a dict containing all tweets
-    collected from each city (with the key being the city name and the value
-    being a list of tweets)."""
     i = 0
     bb_dict = read_in_bb_file()
     data_set = {}
