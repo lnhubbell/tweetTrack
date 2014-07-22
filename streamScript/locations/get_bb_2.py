@@ -1,3 +1,8 @@
+u"""Reads in the locations of interest from locs.txt, reads in the bounding boxes
+from a csv file of bounding boxes as determined by the min/max latitudes and longitudes
+of all addresses located within each city, and prints the cities with their min/max latitudes
+and longitudes to the file "bounding_boxes.txt"""
+
 
 def read_in_input_files():
     our_locs = []

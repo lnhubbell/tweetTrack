@@ -1,3 +1,7 @@
+u"""Uses a Census bureau list of US cities by population to return a formatted
+list of the 100 most populous US cities. Uses a csv file of states and their abbreviations
+to return the 2-letter mailing abbr for each state."""
+
 
 with open('US_census_cities_by_pop.csv', "r") as nfile:
     lines = nfile.readlines()[1:]
