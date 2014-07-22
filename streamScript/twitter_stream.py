@@ -21,9 +21,7 @@ acc_tok_url = 'https://api.twitter.com/oauth/access_token'
 
 
 # DB_CONFIG['DB_CONNECTION_STRING']=connection
-def get_data(data):
-    json_data = json.loads(data)
-
+def get_data(json_data):
     language = json_data.get('lang', None)
     location = json_data.get('geo', None)
     place = json_data.get('place', None)
@@ -64,7 +62,8 @@ class StdOutListener(StreamListener):
         self.start_time = time.clock()
 
     def on_data(self, data):
-        data_list = get_data(data)
+        json_data = json.loads(data)
+        data_list = get_data(json_data)
         if data_list:
             sql = """INSERT INTO "Tweet" (screen_name, text, location_lat, location_lng, created_at, hashtags) VALUES (%s, %s, %s, %s, %s, %s); """
             execute_query(sql, data_list)
