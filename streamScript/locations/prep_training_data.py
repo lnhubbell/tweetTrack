@@ -1,5 +1,4 @@
 import tweepy
-import os
 from streamScript.send_data import execute_query, _get_connection
 from twitter_keys import my_keys
 
@@ -10,8 +9,7 @@ into a separate database table called "Tweet200."""
 
 
 def get_twitter_api():
-    #key_sets = [AltTwitterKeys, TwitterKeys, OtherAltTwitterKeys, NathansTwitterKeys]
-
+    u"""Gets twitter keys from key file."""
     for our_set, our_keys in my_keys.items():
         auth = tweepy.OAuthHandler(
             our_keys['consumer_key'],
@@ -75,7 +73,8 @@ def get_unique_handles(vals):
     return heavy_users
 
 
-def format_blob(history, user):
+def format_blob(history, user, city):
+    u"""Formats tweets pieces to be fed to sql query."""
     tweet_his = []
     for tweet in history:
         screen_name = user
@@ -110,14 +109,13 @@ def query_twitter_for_histories(users, city):
         try:
             history = api.user_timeline(screen_name=user, count=200)
         except tweepy.error.TweepError as err:
-            print "Tweepy Error"
-            print err.message
+            print "Tweepy Error: ", err.message
             if err.message == "[{u'message': u'Rate limit exceeded', u'code': 88}]":
                 api = get_twitter_api().next()
             continue
         if len(history) >= 200:
             user_count += 1
-            tweet_his = format_blob(history, user)
+            tweet_his = format_blob(history, user, city)
         if len(tweet_his):
             city_tweets.append(tweet_his)
             print user_count
@@ -150,6 +148,7 @@ def send_user_queries_to_db(tweet_set, city):
 
 
 def process_each_city():
+    u"""Calls functions to insert user data into Tweet200 table."""
     bb_dict = read_in_bb_file()
     for city, values in bb_dict.items():
         with open("stop_cities.txt", "r") as ffff:
