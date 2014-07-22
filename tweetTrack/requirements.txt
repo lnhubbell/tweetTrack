@@ -12,12 +12,15 @@ argparse==1.2.1
 blinker==1.3
 boto==2.29.1
 ecdsa==0.11
+fuzzywuzzy==0.2
 itsdangerous==0.24
+lettuce==0.2.19
 paramiko==1.14.0
 psycopg2==2.5.3
 py==1.4.22
 pycrypto==2.6.1
 pytest==2.6.0
+sure==1.2.7
 tweepy==2.3.0
--e git+https://github.com/lnhubbell/tweetTrack.git@1090b6b24f2ad4447fee9c62d0c1d1286af82bff#egg=tweetTrack-deploy-front
+-e git+https://github.com/lnhubbell/tweetTrack.git@33be48332496473ba9bdb04af92cc87d88c06af2#egg=tweetTrack-lettuce
 wsgiref==0.1.2
