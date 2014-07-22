@@ -76,13 +76,11 @@ def execute_query(sql, args=None, need_results=False):
 
     try:
         cur = _get_cursor()
-        print "executing the following on cursor:"
         try:
-            print "SQL STRING: {}".format(sql)
+            a = "SQL STRING: {}".format(sql)
         except UnicodeEncodeError:
             return "Could not deal with emojis"
         cur.execute(sql, args)
-        print "Success!"
         if need_results:
             results = cur.fetchall()
     except psycopg2.Error as x:
@@ -98,6 +96,8 @@ def execute_query(sql, args=None, need_results=False):
         while conn is None:
             conn = _get_connection()
             time.sleep(5)
+    else:
+        DB_CONFIG['DB_CONNECTION'].commit()
     return results
 
 
