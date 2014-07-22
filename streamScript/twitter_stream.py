@@ -1,6 +1,6 @@
 import time
 import json
-
+import httplib
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
@@ -73,6 +73,7 @@ class StdOutListener(StreamListener):
 
             # print "Sending to database..."
             execute_query(sql, data_list)
+            print "execute"
 
     def on_error(self, status):
         error_counter = 0
@@ -93,6 +94,12 @@ if __name__ == '__main__':
 
     stream = Stream(auth, l)
     # print "Streaming..."
-    stream.filter(locations=[
-        -124.848974, 24.396308, -66.885444, 49.384358, -150.011947, 61.040969,
-        -149.6861, 61.234443, -157.966444, 21.255358, -157.663132, 21.373863])
+    while True:
+        try:
+            stream.filter(locations=[
+                -124.848974, 24.396308, -66.885444, 49.384358, -150.011947, 61.040969,
+                -149.6861, 61.234443, -157.966444, 21.255358, -157.663132, 21.373863])
+        except httplib.IncompleteRead:
+            pass;
+
+
