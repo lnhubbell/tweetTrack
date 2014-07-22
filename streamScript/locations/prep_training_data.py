@@ -1,8 +1,30 @@
-from send_data import execute_query
-from tweetTrack.app.config.keys import TwitterKeys
-from tweetTrack.app.views import get_twitter_api
-from .streamScript.twitter_stream import StdOutListener
-import json
+import tweepy
+from streamScript.twitter_stream import get_data
+from streamScript.send_data import execute_query
+
+u"""Reads in a file of cities and their bounding boxes. Queries the database
+to get a list of all unique users who have tweeted from that city. Queries Twitter api
+to get 200 tweets from each user, then inserts 200 tweets for up to 100 users per city
+into a separate database table called "Tweet200."""
+
+
+class TwitterKeys(object):
+    consumer_key = 'hWMHWIJYoJ4UIG0KNwXcC4pbg'
+    consumer_secret = '85E7dAk4ZkJEyNkQ0EbxYvavL7FeKUwEEJlXOs9QnXDwIcWL5c'
+    access_key = '249913463-xJhkkoiipEVF0xIJeZc9dys8N1qovmZGmgqiSLaV'
+    access_secret = 'q4CleTUfctg4BfQz6R5cRpa8EekBylIRzr63fCuargyDa'
+
+
+def get_twitter_api():
+    auth = tweepy.OAuthHandler(
+        TwitterKeys.consumer_key,
+        TwitterKeys.consumer_secret
+    )
+    auth.set_access_token(
+        TwitterKeys.access_key,
+        TwitterKeys.access_secret
+    )
+    return tweepy.API(auth)
 
 
 def read_in_bb_file():
@@ -38,7 +60,6 @@ def query_db():
         print "Querying database..."
         data = execute_query(sql, vals)
         data_set[key] = data
-
     return data_set
 
 
@@ -61,7 +82,6 @@ def get_unique_handles(data):
 def query_twitter_for_histories(data):
     users_by_city = get_unique_handles(data)
     api = get_twitter_api()
-    #l = StdOutListener()
     whole_set = {}
     for city, users in users_by_city.items():
         city_tweets = []
@@ -69,27 +89,64 @@ def query_twitter_for_histories(data):
         while user_count < 1:
             for user in users:
                 tweet_his = []
-                history = api.user_timeline(screen_name=user, count=200)
-                if len(history) >= 200:
+                history = []
+                try:
+                    history = api.user_timeline(screen_name=user, count=20)
+                except tweepy.error.TweepError as err:
+                    print "got a tweepy error"
+                    print err.message
+                if len(history) >= 20:
                     user_count += 1
                     for tweet in history:
-                        #blob = get_data(tweet)
-                        #tweet_his.append(blob)
-                        tweet_his.append(tweet)
-                    city_tweets.append(tweet_his)
+                        screen_name = user
+                        text = tweet.text
+                        created_at = tweet.created_at
+                        location = tweet.geo
+                        if location:
+                            location_lat = location['coordinates'][0]
+                            location_lng = location['coordinates'][1]
+                        hashtags = []
+                        # try:
+                        #     hashtags = [i['text'] for i in tweet.entities.hashtags]
+                        # except AttributeError:
+                        #     print "attribute error"
+                        if location:
+                            blob = (
+                                screen_name, text, location_lat, location_lng,
+                                created_at, hashtags, city
+                            )
+                            tweet_his.append(blob)
+                    if len(tweet_his):
+                        city_tweets.append(tweet_his)
+                        print "added one!"
+                        print city_tweets
         whole_set[city] = city_tweets
     return whole_set
 
 
+def send_user_queries_to_db(tweet_set):
+    for city, blobs in tweet_set:
+        for blob in blobs:
+            if blob:
+                sql = """INSERT INTO "Tweet200" (screen_name, text, location_lat, location_lng, created_at, hashtags, city) VALUES (%s, %s, %s, %s, %s, %s, %s); """
+                execute_query(sql, blob)
+                print "Sending to database..."
+
+
 if __name__ == "__main__":
     data = query_db()
-    our_outs = query_twitter_for_histories(data)
+    our_outs = get_unique_handles(data)
+    #our_outs = query_twitter_for_histories(data)
+    #send_user_queries_to_db(our_outs)
 
-    for city, tweets in our_outs.items:
-        print "\n\n", "*" * 10, "\n\n"
-        print city, "\n\n"
-        print tweets
-        print "\n\n", "*" * 20, "\n\n"
+    for city, users in our_outs.items():
+        print city, len(users)
+
+    # for city, tweets in our_outs.items:
+    #     print "\n\n", "*" * 10, "\n\n"
+    #     print city, "\n\n"
+    #     print len(tweets)
+    #     print "\n\n", "*" * 20, "\n\n"
     # nulls = 0
     # null_keys = []
     # for key, vals in data.items():
