@@ -76,6 +76,7 @@ def execute_query(sql, args=None, need_results=False):
 
     try:
         cur = _get_cursor()
+
         try:
             a = "SQL STRING: {}".format(sql)
         except UnicodeEncodeError:
