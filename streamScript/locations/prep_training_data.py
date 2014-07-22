@@ -1,6 +1,11 @@
 import tweepy
 from streamScript.twitter_stream import get_data
 from streamScript.send_data import execute_query
+from sklearn.feature_extraction.text import CountVectorizer as CV
+from sklearn.naive_bayes import MultinomialNB as MNB
+from sklearn.cross_validation import cross_val_score
+import numpy as np
+import cPickle
 
 u"""Reads in a file of cities and their bounding boxes. Queries the database
 to get a list of all unique users who have tweeted from that city. Queries Twitter api
