@@ -4,7 +4,7 @@ Feature: tweetTrack
     Scenario: User clicks the contact button
         Given a user
         When I click the Contact button
-        Then I see a the Contact Form
+        Then I see the Contact Form
 
     Scenario: User clicks the send message button
         Given a user
@@ -12,6 +12,8 @@ Feature: tweetTrack
         And an email
         And a subject
         And a message
+        When I click the contact button
+        And I see the form
         When I click the send button
         Then receive a response
 
