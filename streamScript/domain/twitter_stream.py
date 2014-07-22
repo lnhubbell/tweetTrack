@@ -1,11 +1,12 @@
 import time
 import json
 import httplib
+
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 from header import consumer_key, consumer_secret, access_token, access_token_secret
-from send_data import execute_query
+from streamScript.domain.send_data import execute_query
 
 
 req_tok_url = 'https://api.twitter.com/oauth/request_token'
