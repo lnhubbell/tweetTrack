@@ -4,11 +4,14 @@ import tweepy
 from flask import render_template, redirect, url_for, request, jsonify
 from flask.ext.mail import Message
 from tweetTrack.app import app, mail
-from tweetTrack.app.config.keys import TwitterKeys
 from tweetTrack.app.forms import TwitterForm, ContactForm
 
 
 def get_twitter_api():
+    try:
+        from tweetTrack.app.config.keys import TwitterKeys
+    except ImportError:
+        pass
     auth = tweepy.OAuthHandler(
         environ.get('CONSUMER_KEY', TwitterKeys.consumer_key),
         environ.get('CONSUMER_SECRET', TwitterKeys.consumer_secret)

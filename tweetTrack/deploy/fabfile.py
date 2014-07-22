@@ -5,7 +5,6 @@ from fabric.api import prompt
 from fabric.api import execute
 from fabric.api import sudo
 from fabric.api import settings
-from fabric import contrib
 from fabric.contrib.files import upload_template
 from fabric.contrib.project import rsync_project
 import boto.ec2
@@ -171,7 +170,7 @@ def _mass_install():
     sudo('apt-get -y install python-pip')
     sudo('apt-get -y install libpq-dev')
     with settings(warn_only=True):
-        sudo('pip install -r ~/tweetTrack/requirements.txt')
+        sudo('pip install -r tweetTrack/requirements.txt')
 
 
 def mass_install():
@@ -198,7 +197,7 @@ def generate_nginx_config():
             access_log  /var/log/nginx/test.log;
 
             location / {
-                proxy_pass http://127.0.0.1:8000;
+                proxy_pass http://127.0.0.1:5000;
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -223,7 +222,10 @@ def deploy():
         rsync_project,
         local_dir='../../tweetTrack',
         remote_dir="~/",
-        exclude=[".git", "tweetTrack/app/config"]
+        exclude=[
+            ".git",
+            "tweetTrack/deploy/env_vars.txt"
+        ]
     )
     mass_install()
     install_supervisor()
