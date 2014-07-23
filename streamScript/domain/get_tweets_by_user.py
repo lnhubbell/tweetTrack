@@ -66,7 +66,10 @@ def get_unique_handles(vals):
 
 
 def format_blob(history, user, city):
-    u"""Formats tweets pieces to be fed to sql query."""
+    u"""Formats tweets pieces to be fed to sql query.
+
+    History is a list-like set of tweets. User is the screen name 
+    as a string. City is the string name of the city we querried for."""
     tweet_his = []
     for tweet in history:
         screen_name = user
