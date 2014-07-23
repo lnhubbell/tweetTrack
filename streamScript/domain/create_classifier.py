@@ -66,9 +66,9 @@ def return_data_sets(read_pickle=False, make_new_pickles=False):
     if read_pickle:
         try:
             pickle_file = open('pickles/pickle', 'rb')
-            print "Loading Pickle..."
+            print "Loading data pickle..."
             data = cPickle.load(pickle_file)
-            print "Pickle loaded."
+            print "Data pickle loaded."
             pickle_file.close()
         except IOError as err:
             return "Cannot read from existing pickle.", err.message
@@ -84,11 +84,11 @@ def return_matrix(data, make_new_pickles=False):
     per users, a Y array of labels, and a vocabulary list."""
     top_words = build_matrix(data, 10000)
     if make_new_pickles:
-        print "Pickling..."
-        pickle_file = open('pickles/xypickle', 'w')
+        print "Pickling X, y, vocab..."
+        pickle_file = open('pickles/xypickle', 'wb')
         cPickle.dump(top_words, pickle_file)
         pickle_file.close()
-        print "Pickled."
+        print "Pickled X, y, vocab."
     return top_words
 
 
@@ -120,7 +120,7 @@ def get_raw_classifier(
     if readXYpickle:
         try:
             pickle_file = open('pickles/xypickle', 'rb')
-            print "Loading Pickle..."
+            print "Loading X, y, vocab pickle..."
             X, y, vocab = cPickle.load(pickle_file)
             print "X, y, vocab pickle loaded."
             pickle_file.close()
@@ -131,11 +131,11 @@ def get_raw_classifier(
         X, y, vocab = return_matrix(data, make_new_pickles)
         mnb, score = fit_classifier(X, y)
     if make_new_pickles:
-        print "Pickling..."
-        pickle_file = open('pickles/classifier_pickle', 'w')
+        print "Pickling classifier..."
+        pickle_file = open('pickles/classifier_pickle', 'wb')
         cPickle.dump(mnb, pickle_file)
         pickle_file.close()
-        print "Pickled."
+        print "Pickled classifier."
     return mnb
 
 

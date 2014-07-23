@@ -1,6 +1,7 @@
 import os
 import psycopg2
 import time
+import cPickle
 # from filters_json import filter_list as FilterMap
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
@@ -10,6 +11,23 @@ QUERY_STRINGS = {}
 DB_CONFIG = {}
 
 ROOT_DIR = os.path.abspath(os.getcwd())
+
+def read_in_bb_file():
+    u"""Reads in a file containing the 100 most populous cities in the US
+    and returns a dict with the lat/long points describig the bounding box
+    for each location."""
+    with open("text/bounding_boxes.txt", 'r') as f:
+        bbs = f.readlines()
+    f.close()
+
+    bb_dict = {}
+    for line in bbs:
+        spl = line.strip().split(",")
+        city = spl[0].title()
+        place_name = city + ", " + spl[1]
+        lats_longs = [(spl[2], spl[3]), (spl[4], spl[5])]
+        bb_dict[place_name] = lats_longs
+    return bb_dict
 
 
 def query_all_db(new_pickle=False):
@@ -44,6 +62,26 @@ def query_db(city, values):
     print "Querying database for ", city
     data = execute_query(sql, vals, need_results=True)
     return data
+
+
+def send_user_queries_to_db(tweet_set, city):
+    u"""Sends formatted tweets into DB."""
+    for blob in tweet_set:
+        if blob:
+            for tweet in blob:
+                if tweet:
+                    sql = """INSERT INTO "Tweet200" (screen_name,
+                        text, location_lat, location_lng, created_at,
+                        hashtags, city) VALUES (%s, %s, %s, %s, %s, %s, %s)
+                        ; """
+                    execute_query(sql, tweet, autocommit=False)
+                    print "Sending to database..."
+    commit_queries()
+    with open('text/stop_cities.txt', 'a') as fff:
+        fff.write(city)
+        fff.write("\n")
+    print "writing city to stop_cities file"
+    print "committed tweets from ", city, " to DB"
 
 
 def execute_query(sql, args=None, need_results=False, autocommit=True):
