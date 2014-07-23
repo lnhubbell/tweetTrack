@@ -16,7 +16,7 @@ def dummy_data(screen_name):
 
 @app.route('/get/location/<screen_name>')
 def get_location(screen_name):
-    req = request.get_json()
+    req = request.args
     print(req)
     context = dummy_data(screen_name)
     return jsonify(context)

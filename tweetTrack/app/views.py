@@ -38,9 +38,9 @@ def index():
 
 @app.route('/twitter/<user_name>')
 def user_tweets(user_name):
-    url = 'http://ec2-54-191-185-42.us-west-2.compute.amazonaws.com/get/location/{}'
+    url = app.config['TRACKING_API_URL']
     url = url.format(user_name)
-    response = requests.get(url).json()
+    response = requests.get(url, data={'screen_name': user_name}).json()
     return jsonify(response=response)
 
 
