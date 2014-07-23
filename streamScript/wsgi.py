@@ -10,6 +10,6 @@ application = DispatcherMiddleware(app)
 if __name__ == '__main__':
     run_simple(
         'localhost',
-        5000,
+        8000,
         application
     )
