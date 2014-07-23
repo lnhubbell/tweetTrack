@@ -18,6 +18,7 @@ tweetTrack/deploy/supervisord.conf
 streamScript/deploy/supervisor.conf
 tweetTrack/app/config/
 streamScript/webAPI/config/
+streamScript/webAPI/keys.sqlite
 
 # Distribution / packaging
 .Python
