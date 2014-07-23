@@ -240,4 +240,3 @@ def deploy():
     install_supervisor()
     move_nginx_files()
     install_app()
-
