@@ -1,4 +1,5 @@
 from os import environ
+import json
 from random import random
 import tweepy
 import requests
@@ -39,9 +40,15 @@ def index():
 @app.route('/twitter/<user_name>')
 def user_tweets(user_name):
     url = app.config['TRACKING_API_URL']
-    url = url.format(user_name)
-    response = requests.get(url, data={'screen_name': user_name}).json()
-    return jsonify(response=response)
+    data = json.dumps({'screen_name': user_name})
+    headers = {
+        'Content-Type': 'application/json',
+        'Content-Length': len(data)
+    }
+    response = requests.get(url, data=data, headers=headers)
+    response.raise_for_status()
+    print(response.json())
+    return jsonify(response=response.json())
 
 
 @app.route('/about/', methods=['GET'])

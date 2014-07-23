@@ -1,11 +1,12 @@
 from random import random
 from flask import jsonify, request
 from streamScript.webAPI import app
+from streamScript.webAPI.auth.exceptions import HTTP401
 
 
 def dummy_data(screen_name):
-    lat = random() * 39
-    lng = random() * -98
+    lat = random() * 49
+    lng = random() * -122
     context = {
         'screen_name': screen_name,
         'location_lat': lat,
@@ -14,9 +15,12 @@ def dummy_data(screen_name):
     return context
 
 
-@app.route('/get/location/<screen_name>')
-def get_location(screen_name):
-    req = request.args
-    print(req)
-    context = dummy_data(screen_name)
+@app.route('/get/location/', methods=['PUT', 'GET'])
+def get_location():
+    print(request.headers)
+    try:
+        screen_name = request.get_json().get('screen_name', False)
+        context = dummy_data(screen_name)
+    except:
+        context = HTTP401()
     return jsonify(context)
