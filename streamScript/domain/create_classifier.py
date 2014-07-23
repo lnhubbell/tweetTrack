@@ -112,14 +112,40 @@ def fit_classifier(X, y):
     return best, best_score
 
 
-def generate_predictions():
-    data = return_data_sets()
-    X, y, vocab = return_matrix(data)
-    mnb, score = fit_classifier(X, y)
+def get_raw_classifier(
+    read_pickle=True, make_new_pickles=False, readXYpickle=True
+):
+    u"""Takes in keyword arguments to determine to source of data. Returns a
+    trained classifier."""
+    if readXYpickle:
+        try:
+            pickle_file = open('pickles/xypickle', 'rb')
+            print "Loading Pickle..."
+            X, y, vocab = cPickle.load(pickle_file)
+            print "X, y, vocab pickle loaded."
+            pickle_file.close()
+        except IOError as err:
+            return "Cannot read from existing pickle.", err.message
+    else:
+        data = return_data_sets(read_pickle, make_new_pickles)
+        X, y, vocab = return_matrix(data, make_new_pickles)
+        mnb, score = fit_classifier(X, y)
+    if make_new_pickles:
+        print "Pickling..."
+        pickle_file = open('pickles/classifier_pickle', 'w')
+        cPickle.dump(mnb, pickle_file)
+        pickle_file.close()
+        print "Pickled."
+    return mnb
 
+
+def generate_predictions(userTestdata):
+    mnb = get_raw_classifier()
+    X, y, vocab = return_matrix(userTestdata)
+    return X
 
 if __name__ == "__main__":
-    generate_predictions()
+    print get_raw_classifier(make_new_pickles=True, read_pickle=False, readXYpickle=False)
 
     #our_outs = query_twitter_for_histories(data)
     #send_user_queries_to_db(our_outs)
