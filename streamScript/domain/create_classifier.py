@@ -6,27 +6,12 @@ from sklearn.feature_extraction.text import CountVectorizer as CV
 from sklearn.naive_bayes import MultinomialNB as MNB
 from sklearn.cross_validation import cross_val_score
 
+from streamScript.domain.send_data import query_all_db
 
 u"""Reads in a file of cities and their bounding boxes. Queries the
 database to get a list of all tweets from those cities. Generates a vocabulary
 set and builds a feature matrix. Creates a classifier and returns
 cross-validated predictions. Pickles dataset and matrix as necessary."""
-
-
-def query_all_db(new_pickle=False):
-    i = 0
-    bb_dict = read_in_bb_file()
-    data_set = {}
-    for key, values in bb_dict.items():
-        data = query_db(key, values)
-        data_set[key] = data
-        i += 1
-    if new_pickle:
-        pickle_file = open('pickles/pickle', 'w')
-        cPickle.dump(data_set, pickle_file)
-        pickle_file.close()
-        print "Created Pickle"
-    return data_set
 
 
 def build_vocab(data, n=1000):
