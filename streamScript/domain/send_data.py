@@ -12,52 +12,40 @@ DB_CONFIG = {}
 ROOT_DIR = os.path.abspath(os.getcwd())
 
 
-def _get_pasword():
-    password = open(ROOT_DIR + '/our_keys/config').read().split()
-    return password[1]
+def query_all_db(new_pickle=False):
+    u"""Returns a dictionary with keys as city names and values as a list of 
+    tweets from that city."""
+    i = 0
+    bb_dict = read_in_bb_file()
+    data_set = {}
+    for key, values in bb_dict.items():
+        data = query_db(key, values)
+        data_set[key] = data
+        i += 1
+    if new_pickle:
+        pickle_file = open('pickles/pickle', 'w')
+        cPickle.dump(data_set, pickle_file)
+        pickle_file.close()
+        print "Created Pickle"
+    return data_set
 
 
-def _connect_db():
-    try:
-        # print "establishing a new connection..."
-        conn = psycopg2.connect(DB_CONFIG['DB_CONNECTION_STRING'])
-    except Exception:
-        raise Exception("Error connecting to DB: " +
-                        str(DB_CONFIG['DB_CONNECTION_STRING']))
-    # print "Connection established and stored..."
-    DB_CONFIG['DB_CONNECTION'] = conn
-    return conn
+def query_db(city, values):
+    u"""Calls the file reading function to get in a dict of bounding boxes
+    for the 100 most populous US cities. Returns a dict containing all tweets
+    collected from each city (with the key being the city name and the value
+    being a list of tweets)."""
+    lats = values[0]
+    longs = values[1]
+    vals = (lats[0], lats[1], longs[0], longs[1])
+    sql = """SELECT * FROM "Tweet" WHERE
+        (location_lat BETWEEN %s AND %s)
+        AND (location_lng BETWEEN %s AND %s); """
+    print "Querying database for ", city
+    data = execute_query(sql, vals, need_results=True)
+    return data
 
 
-def _get_connection():
-    """get the current connection if it exists, else connect."""
-    conn = DB_CONFIG.get('DB_CONNECTION')
-    if conn is not None:
-        # print "connection exists, so reusing it..."
-        return conn
-    else:
-        # print "no connection found..."
-        return _connect_db()
-
-
-def _create_cursor():
-    """create a new cursor and store it"""
-    conn = _get_connection()
-    # print "creating new cursor..."
-    DB_CONFIG['DB_CURSOR'] = conn.cursor()
-    # print "got new cursor."
-    return DB_CONFIG['DB_CURSOR']
-
-
-def _get_cursor():
-    """get the current cursor if it exist, else create a new cursor"""
-    cur = DB_CONFIG.get('DB_CURSOR')
-    if cur is not None:
-        # print "cursor exists, using that..."
-        return cur
-    else:
-        # print "no cursor found, so creating one..."
-        return _create_cursor()
 
 
 def execute_query(sql, args=None, need_results=False):
@@ -106,5 +94,49 @@ def execute_query(sql, args=None, need_results=False):
     return results
 
 
-# if __name__ == '__main__':
-    # print _get_pasword()
+def _get_pasword():
+    password = open(ROOT_DIR + '/our_keys/config').read().split()
+    return password[1]
+
+
+def _connect_db():
+    try:
+        # print "establishing a new connection..."
+        conn = psycopg2.connect(DB_CONFIG['DB_CONNECTION_STRING'])
+    except Exception:
+        raise Exception("Error connecting to DB: " +
+                        str(DB_CONFIG['DB_CONNECTION_STRING']))
+    # print "Connection established and stored..."
+    DB_CONFIG['DB_CONNECTION'] = conn
+    return conn
+
+
+def _get_connection():
+    """get the current connection if it exists, else connect."""
+    conn = DB_CONFIG.get('DB_CONNECTION')
+    if conn is not None:
+        # print "connection exists, so reusing it..."
+        return conn
+    else:
+        # print "no connection found..."
+        return _connect_db()
+
+
+def _create_cursor():
+    """create a new cursor and store it"""
+    conn = _get_connection()
+    # print "creating new cursor..."
+    DB_CONFIG['DB_CURSOR'] = conn.cursor()
+    # print "got new cursor."
+    return DB_CONFIG['DB_CURSOR']
+
+
+def _get_cursor():
+    """get the current cursor if it exist, else create a new cursor"""
+    cur = DB_CONFIG.get('DB_CURSOR')
+    if cur is not None:
+        # print "cursor exists, using that..."
+        return cur
+    else:
+        # print "no cursor found, so creating one..."
+        return _create_cursor()
