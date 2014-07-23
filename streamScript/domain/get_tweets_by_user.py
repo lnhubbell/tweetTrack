@@ -6,7 +6,7 @@ from sklearn.feature_extraction.text import CountVectorizer as CV
 from sklearn.naive_bayes import MultinomialNB as MNB
 from sklearn.cross_validation import cross_val_score
 
-from streamScript.domain.send_data import query_db, _get_connection
+from streamScript.domain.send_data import query_db, commit_queries
 from our_keys.twitter_keys import my_keys
 
 u"""Reads in a file of cities and their bounding boxes. Queries the
@@ -130,9 +130,9 @@ def send_user_queries_to_db(tweet_set, city):
                         text, location_lat, location_lng, created_at,
                         hashtags, city) VALUES (%s, %s, %s, %s, %s, %s, %s)
                         ; """
-                    execute_query(sql, tweet)
+                    execute_query(sql, tweet, autocommit=False)
                     print "Sending to database..."
-    _get_connection().commit()
+    commit_queries()
     with open('text/stop_cities.txt', 'a') as fff:
         fff.write(city)
         fff.write("\n")
