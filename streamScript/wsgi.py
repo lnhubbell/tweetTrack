@@ -3,7 +3,7 @@
 from werkzeug.serving import run_simple
 from werkzeug.wsgi import DispatcherMiddleware
 
-from tweetTrack.app import app
+from streamScript.webAPI import app
 
 application = DispatcherMiddleware(app)
 
