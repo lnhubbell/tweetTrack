@@ -96,7 +96,7 @@ if __name__ == "__main__":
         data = query_all_db(True)
     top_words = build_matrix(data, 10000)
     print "Pickling..."
-    pickle_file = open('xypickle', 'w')
+    pickle_file = open('pickles/xypickle', 'w')
     cPickle.dump(top_words, pickle_file)
     pickle_file.close()
     print "Pickled."
