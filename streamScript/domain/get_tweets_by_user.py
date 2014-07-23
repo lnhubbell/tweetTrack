@@ -6,7 +6,7 @@ from sklearn.feature_extraction.text import CountVectorizer as CV
 from sklearn.naive_bayes import MultinomialNB as MNB
 from sklearn.cross_validation import cross_val_score
 
-from streamScript.domain.send_data import execute_query, _get_connection
+from streamScript.domain.send_data import query_db, _get_connection
 from our_keys.twitter_keys import my_keys
 
 u"""Reads in a file of cities and their bounding boxes. Queries the
@@ -46,22 +46,6 @@ def read_in_bb_file():
         lats_longs = [(spl[2], spl[3]), (spl[4], spl[5])]
         bb_dict[place_name] = lats_longs
     return bb_dict
-
-
-def query_db(city, values):
-    u"""Calls the file reading function to get in a dict of bounding boxes
-    for the 100 most populous US cities. Returns a dict containing all tweets
-    collected from each city (with the key being the city name and the value
-    being a list of tweets)."""
-    lats = values[0]
-    longs = values[1]
-    vals = (lats[0], lats[1], longs[0], longs[1])
-    sql = """SELECT * FROM "Tweet" WHERE
-        (location_lat BETWEEN %s AND %s)
-        AND (location_lng BETWEEN %s AND %s); """
-    print "Querying database for ", city
-    data = execute_query(sql, vals, need_results=True)
-    return data
 
 
 def get_unique_handles(vals):
