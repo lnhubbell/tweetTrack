@@ -1,30 +1,26 @@
-u"""Reads in the locations of interest from locs.txt, reads in the bounding boxes
-from a csv file of bounding boxes as determined by the min/max latitudes and longitudes
-of all addresses located within each city, and prints the cities with their min/max latitudes
+from get_locations import get_locs
+import sys
+
+u"""Reads in the locations of interest from locs.txt, reads in the
+bounding boxes from a csv file of bounding boxes as determined by the
+min/max latitudes and longitudes of all addresses located within each
+city, and prints the cities with their min/max latitudes
 and longitudes to the file "bounding_boxes.txt"""
 
 
-def read_in_input_files():
-    our_locs = []
-    with open("locs.txt", 'r') as f:
-        lines = f.readlines()
-    f.close()
-
-    for line in lines:
-        div = line.lower().split("\t")
-        our_locs.append(div)
-
-    with open("h.jarvis.csv") as ff:
+def read_in_input_files(n):
+    our_locs = get_locs(n)
+    with open("text/h.jarvis.csv", 'r') as ff:
         bb_lines = str(ff.readlines()).split("\\r")
-    ff.close()
-
     return our_locs, bb_lines
 
 
 def extract_biggest_city_boxes(our_locs, bb_lines):
     found_it = []
     nyc_vals = []
-    nyc_names = ["BRONX", "STATEN ISLAND", "LITTLE NECK", "BROOKLYN", "NEW YORK"]
+    nyc_names = [
+        "BRONX", "STATEN ISLAND", "LITTLE NECK", "BROOKLYN", "NEW YORK"
+    ]
     our_bbs = []
     for line in bb_lines:
         line = line.split(",")
@@ -33,7 +29,8 @@ def extract_biggest_city_boxes(our_locs, bb_lines):
         for loc in our_locs:
             if line[1] == loc[1].upper().strip():
                 w_hp = "-".join(line[0].lower().split())
-                if loc[0].startswith(line[0].lower()) or loc[0].startswith(w_hp):
+                if loc[0].lower().startswith(line[0].lower()) \
+                        or loc[0].lower().startswith(w_hp):
                     our_bbs.append(line)
                     found_it.append(loc[0])
     for idx, city in enumerate(our_bbs):
@@ -68,14 +65,21 @@ def report_accuracy(our_locs, found_it):
 
 
 def write_to_file(our_bbs):
-    with open("bounding_boxes.txt", "w") as fff:
+    with open("text/test_bounding_boxes.txt", "w") as fff:
         for city in our_bbs:
             fff.write(",".join(city))
             fff.write("\r\n")
 
 
-if __name__ == "__main__":
-    our_locs, bb_lines = read_in_input_files()
+def generate_new_bounding_boxes_list(n=100):
+    our_locs, bb_lines = read_in_input_files(n)
     found_it, our_bbs = extract_biggest_city_boxes(our_locs, bb_lines)
     report_accuracy(our_locs, found_it)
     write_to_file(our_bbs)
+
+
+if __name__ == "__main__":
+    n = sys.argv[1:2]
+    if not n:
+        n = 100
+    generate_new_bounding_boxes_list(n)
