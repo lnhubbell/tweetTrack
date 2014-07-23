@@ -1,6 +1,7 @@
 from os import environ
 from random import random
 import tweepy
+import requests
 from flask import render_template, redirect, url_for, request, jsonify
 from flask.ext.mail import Message
 from tweetTrack.app import app, mail
@@ -37,17 +38,10 @@ def index():
 
 @app.route('/twitter/<user_name>')
 def user_tweets(user_name):
-    api = get_twitter_api()
-    # Will need the below twitter api call once classifier is ready
-    # new_tweets = api.user_timeline(screen_name=user_name, count=200)
-    lat = random() * 39
-    lng = random() * -98
-    context = {
-        'screen_name': user_name,
-        'location_lat': lat,
-        'location_lng': lng,
-    }
-    return jsonify(context)
+    url = 'http://ec2-54-191-185-42.us-west-2.compute.amazonaws.com/get/location/{}'
+    url = url.format(user_name)
+    response = requests.get(url).json()
+    return jsonify(response=response)
 
 
 @app.route('/about/', methods=['GET'])
