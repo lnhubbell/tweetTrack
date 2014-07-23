@@ -1,12 +1,6 @@
-import numpy as np
-import cPickle
 import tweepy
 
-from sklearn.feature_extraction.text import CountVectorizer as CV
-from sklearn.naive_bayes import MultinomialNB as MNB
-from sklearn.cross_validation import cross_val_score
-
-from streamScript.domain.send_data import query_db, commit_queries
+from send_data import query_db, send_user_queries_to_db, read_in_bb_file
 from our_keys.twitter_keys import my_keys
 
 u"""Reads in a file of cities and their bounding boxes. Queries the
@@ -28,24 +22,6 @@ def get_twitter_api():
             our_keys['access_secret']
         )
         yield tweepy.API(auth)
-
-
-def read_in_bb_file():
-    u"""Reads in a file containing the 100 most populous cities in the US
-    and returns a dict with the lat/long points describig the bounding box
-    for each location."""
-    with open("text/bounding_boxes.txt", 'r') as f:
-        bbs = f.readlines()
-    f.close()
-
-    bb_dict = {}
-    for line in bbs:
-        spl = line.strip().split(",")
-        city = spl[0].title()
-        place_name = city + ", " + spl[1]
-        lats_longs = [(spl[2], spl[3]), (spl[4], spl[5])]
-        bb_dict[place_name] = lats_longs
-    return bb_dict
 
 
 def get_unique_handles(vals):
@@ -76,23 +52,27 @@ def format_blob(history, user, city):
         text = tweet.text
         created_at = tweet.created_at.strftime('%m/%d/%Y')
         location = tweet.geo
+        location_lat = None
+        location_lng = None
         if location:
             location_lat = location['coordinates'][0]
             location_lng = location['coordinates'][1]
+
         hashtags = []
-        if location:
-            blob = (
-                screen_name, text, location_lat, location_lng,
-                created_at, hashtags, city
-            )
-            tweet_his.append(blob)
+        # if location:
+        blob = (
+            screen_name, text, location_lat, location_lng,
+            created_at, hashtags, city
+        )
+        tweet_his.append(blob)
     return tweet_his
 
 
 def query_twitter_for_histories(users, city=None, cap=100):
     u"""Calls function to return a dict of cities and the unique users for each
     city. Iterates over the dict to extract the tweet text/locations/timestamps
-    for each tweet, bundles results into DB-friendly tuples."""
+    for each tweet, bundles results into DB-friendly tuples. Returns a list of
+    lists of tuples."""
     api = get_twitter_api().next()
     city_tweets = []
     user_count = 0
@@ -101,6 +81,7 @@ def query_twitter_for_histories(users, city=None, cap=100):
         if user_count > cap:
             break
         history = []
+        tweet_his = []
         try:
             history = api.user_timeline(screen_name=user, count=200)
         except tweepy.error.TweepError as err:
@@ -121,26 +102,6 @@ def query_twitter_for_histories(users, city=None, cap=100):
         total = user_count + too_low_count
         print "total requests: ", total
     return city_tweets
-
-
-def send_user_queries_to_db(tweet_set, city):
-    u"""Sends formatted tweets into DB."""
-    for blob in tweet_set:
-        if blob:
-            for tweet in blob:
-                if tweet:
-                    sql = """INSERT INTO "Tweet200" (screen_name,
-                        text, location_lat, location_lng, created_at,
-                        hashtags, city) VALUES (%s, %s, %s, %s, %s, %s, %s)
-                        ; """
-                    execute_query(sql, tweet, autocommit=False)
-                    print "Sending to database..."
-    commit_queries()
-    with open('text/stop_cities.txt', 'a') as fff:
-        fff.write(city)
-        fff.write("\n")
-    print "writing city to stop_cities file"
-    print "committed tweets from ", city, " to DB"
 
 
 def process_each_city():

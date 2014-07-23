@@ -1,41 +1,31 @@
 import datetime
-from get_tweets_by_user import get_unique_handles, query_db
+from get_tweets_by_user import get_unique_handles
+from send_data import query_db, read_in_bb_file
 
 u"""Generates a report on database stats"""
 
 
-def get_data_set():
-    return query_db()
-
-
-
 def write_report():
+    bb_dict = read_in_bb_file()
     header = "Report generated: " + \
         datetime.datetime.now().strftime('%m/%d/%Y') + "\n\n"
-    columns = 
+    columns = "City,Users,Tweets\n"
     with open("text/db_report.txt", "w") as f:
         f.write(header)
-    pass
-
+        f.write(columns)
+        total_tweets = 0
+        total_users = 0
+        for city, values in bb_dict.items():
+            tweets = query_db(city, values)
+            handles = len(get_unique_handles(tweets))
+            city_tweets = len(tweets)
+            total_tweets += city_tweets
+            total_users += handles
+            out = ",".join([str(city), str(handles), str(city_tweets)])
+            f.write(out)
+            f.write("\n")
+        totals = ",".join(["Totals", str(total_users), str(total_tweets)])
+        f.write(totals)
 
 if __name__ == "__main__":
     write_report()
-
-
-
-
-    # for city, users in our_outs.items():
-    #     print city, len(users)
-
-    # for city, tweets in our_outs.items:
-    #     print "\n\n", "*" * 10, "\n\n"
-    #     print city, "\n\n"
-    #     print len(tweets)
-    #     print "\n\n", "*" * 20, "\n\n"
-    # nulls = 0
-    # null_keys = []
-    # for key, vals in data.items():
-    #     if len(vals) < 1:
-    #         nulls += 1
-    #         null_keys.append(key)
-    # print "No values for ", nulls, " cities: ", null_keys
