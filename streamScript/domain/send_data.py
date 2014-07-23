@@ -15,7 +15,7 @@ ROOT_DIR = os.path.abspath(os.getcwd())
 
 def read_in_bb_file():
     u"""Reads in a file containing the 100 most populous cities in the US
-    and returns a dict with the lat/long points describig the bounding box
+    and returns a dict with the lat/long points describing the bounding box
     for each location."""
     with open("text/bounding_boxes.txt", 'r') as f:
         bbs = f.readlines()
@@ -50,9 +50,8 @@ def query_all_db(new_pickle=False):
 
 
 def query_db(city, values):
-    u"""Calls the file reading function to get in a dict of bounding boxes
-    for the 100 most populous US cities. Returns a dict containing all tweets
-    collected from each city (with the key being the city name and the value
+    u"""Takes in a city and Returns a dict containing all tweets
+    collected from the city (with the key being the city name and the value
     being a list of tweets)."""
     lats = values[0]
     longs = values[1]

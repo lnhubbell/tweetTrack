@@ -31,9 +31,10 @@ def serve_predictions(names):
 
 if __name__ == "__main__":
     print
-    user_names = raw_input("Please enter a list of Twitter handles.\n ")
-    if not isinstance(user_names, list):
-        user_names = raw_input("Names must be in a list.")
+    # user_names = raw_input("Please enter a list of Twitter handles.\n ")
+    # if not isinstance(user_names, list):
+    #     user_names = raw_input("Names must be in a list.")
+    user_names = ['crisewing']
     results = make_prediction(user_names)
     for result in results:
         print "For the user: ", result['name']

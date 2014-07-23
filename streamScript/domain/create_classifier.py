@@ -105,16 +105,30 @@ def return_data_sets(read_pickle=False, make_new_pickles=False):
     return data
 
 
+def pickle_matrix_bits(retvals):
+    X, y, vocab = retvals
+    print "Pickling X, y, vocab..."
+    pickle_file = open('pickles/matrix_pickle', 'wb')
+    cPickle.dump(X, pickle_file)
+    pickle_file.close()
+    print "Pickled matrix"
+    pickle_file = open('pickles/labels_pickle', 'wb')
+    cPickle.dump(y, pickle_file)
+    pickle_file.close()
+    print "Pickled y labels"
+    pickle_file = open('pickles/vocab_pickle', 'wb')
+    cPickle.dump(vocab, pickle_file)
+    pickle_file.close()
+    print "Pickled vocab."
+    print "Finished pickling X, y, & vocab."
+
+
 def return_matrix(data, make_new_pickles=False):
     u"""takes in a dataset, returns a tuple containing an X matrix of vectors
     per users, a Y array of labels, and a vocabulary list."""
     top_words = build_matrix(data, 10000)
     if make_new_pickles:
-        print "Pickling X, y, vocab..."
-        pickle_file = open('pickles/xypickle', 'wb')
-        cPickle.dump(top_words, pickle_file)
-        pickle_file.close()
-        print "Pickled X, y, vocab."
+        pickle_matrix_bits(top_words)
     return top_words
 
 
@@ -165,9 +179,23 @@ def get_raw_classifier(
     return mnb
 
 
+def load_pickled_classifier_and_vocab():
+    pickle_file = open('pickles/classifier_pickle', 'rb')
+    print "Loading classifier pickle..."
+    mnb = cPickle.load(pickle_file)
+    print "Classifier pickle loaded."
+    pickle_file.close()
+    pickle_file = open('pickles/vocab_pickle', 'rb')
+    print "Loading vocab pickle..."
+    vocab = cPickle.load(pickle_file)
+    print "Vocab pickle loaded."
+    pickle_file.close()
+    return mnb, vocab
+
+
 def generate_predictions(userTestdata):
-    mnb = get_raw_classifier()
-    X, user_array, user_cities = build_test_matrix(userTestdata)
+    mnb, vocab = load_pickled_classifier_and_vocab()
+    X, user_array, user_cities = build_test_matrix(userTestdata, vocab)
     correct = 0
     incorrect = 0
     got_wrong = []
@@ -183,9 +211,9 @@ def generate_predictions(userTestdata):
     return percent_right, got_wrong
 
 if __name__ == "__main__":
-    print get_raw_classifier(make_new_pickles=True, read_pickle=False, readXYpickle=False)
-
+    #print get_raw_classifier(make_new_pickles=True, read_pickle=False, readXYpickle=False)
+    # user_names = ['crisewing']
+    # print generate_predictions(user_names)
     #our_outs = query_twitter_for_histories(data)
     #send_user_queries_to_db(our_outs)
-
-
+    pass
