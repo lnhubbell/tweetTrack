@@ -11,8 +11,9 @@ DB_CONFIG = {}
 
 ROOT_DIR = os.path.abspath(os.getcwd())
 
+
 def _get_pasword():
-    password = open(ROOT_DIR + '/config').read().split()
+    password = open(ROOT_DIR + 'our_keys/config').read().split()
     return password[1]
 
 
@@ -21,7 +22,8 @@ def _connect_db():
         # print "establishing a new connection..."
         conn = psycopg2.connect(DB_CONFIG['DB_CONNECTION_STRING'])
     except Exception:
-        raise Exception("Error connecting to DB: " + str(DB_CONFIG['DB_CONNECTION_STRING']))
+        raise Exception("Error connecting to DB: " +
+                        str(DB_CONFIG['DB_CONNECTION_STRING']))
     # print "Connection established and stored..."
     DB_CONFIG['DB_CONNECTION'] = conn
     return conn
@@ -63,7 +65,9 @@ def execute_query(sql, args=None, need_results=False):
     If the query string takes any args pass those to the cursor as well."""
     password = _get_pasword()
     connection_string = []
-    connection_string.append("host=tweetstalk.cvf1ij0yeyiq.us-west-2.rds.amazonaws.com")
+    connection_string.append(
+        "host=tweetstalk.cvf1ij0yeyiq.us-west-2.rds.amazonaws.com"
+    )
     connection_string.append("dbname=lil_tweetstalker")
     connection_string.append("user=tweetstalkers")
     connection_string.append("password=")
