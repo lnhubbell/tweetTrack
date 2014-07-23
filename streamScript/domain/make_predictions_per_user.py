@@ -10,17 +10,22 @@ def make_prediction(names):
         names = [names]
     histories = query_twitter_for_histories(names)
     results = []
+    get_preds = []
     for history in histories:
-        if len(history):
+        if len(history) < 100:
             user = {}
-            user['name'] = user[history[0][0]]
-            if len(history) < 100:
-                user['prediction'] = """Not enough tweeting history to
-                                    make a prediction."""
-            else:
-                guesses = generate_predictions(history)
-                user['prediction'] = guesses
+            user['name'] = history[0][0]
+            user['prediction'] = """Not enough tweeting history to
+                                make a prediction."""
             results.append(user)
+        else:
+            get_preds.append(history)
+    percent_right, got_wrong, all_results = generate_predictions(get_preds)
+    for prediction in all_results:
+        user = {}
+        user['name'] = prediction[0]
+        user['prediction'] = prediction[2]
+        results.append(user)
     return results
 
 
@@ -34,7 +39,7 @@ if __name__ == "__main__":
     # user_names = raw_input("Please enter a list of Twitter handles.\n ")
     # if not isinstance(user_names, list):
     #     user_names = raw_input("Names must be in a list.")
-    user_names = ['crisewing']
+    user_names = ['crisewing', 'mermaidydg', 'princess_shaee', 'Parada45']
     results = make_prediction(user_names)
     for result in results:
         print "For the user: ", result['name']

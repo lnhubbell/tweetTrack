@@ -39,20 +39,25 @@ def build_test_matrix(user_data, vocab):
     user_matrix = []
     user_array = []
     user_cities = []
+    #print user_data
     for history in user_data:
+        #print history
         user_name = history[0][0]
         user_array.append(user_name)
         user_cities.append(history[0][5])
         for tweet in history:
             if history[0][0] == user_name:
                 user_matrix.append(" ")
-            user_matrix[-1] += tweet[2].lower()
+                user_matrix[-1] += tweet[1].lower()
     vec = CV(
         analyzer='word',
         vocabulary=vocab
     )
     print "Building test X, Y..."
-    X = vec.fit_transform(user_matrix, vocab).toarray()
+    X = vec.fit_transform(user_matrix, vocab).todense()
+    # print X
+    # print user_array
+    # print user_cities
     return X, user_array, user_cities
 
 
@@ -199,16 +204,18 @@ def generate_predictions(userTestdata):
     correct = 0
     incorrect = 0
     got_wrong = []
+    all_results = []
     predictions = mnb.predict(X)
     for idx, prediction in predictions:
+        report = (user_array[idx], user_cities[idx], prediction)
         if prediction == user_cities[idx]:
             correct += 1
         else:
             incorrect += 1
-            report = (user_array[idx], user_array[idx], prediction)
             got_wrong.append(report)
+        all_results.append(report)
     percent_right = correct / (float(correct) + incorrect)
-    return percent_right, got_wrong
+    return percent_right, got_wrong, all_results
 
 if __name__ == "__main__":
     #print get_raw_classifier(make_new_pickles=True, read_pickle=False, readXYpickle=False)
