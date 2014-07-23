@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.mail import Mail
 from config import config
 
 app = Flask(__name__)
@@ -10,5 +11,6 @@ if flask_config == 'Dev':
 elif flask_config == 'Prod':
     app.config.from_object(config.ProductionConfig)
 db = SQLAlchemy(app)
+mail = Mail(app)
 
 import views
