@@ -13,7 +13,7 @@ ROOT_DIR = os.path.abspath(os.getcwd())
 
 
 def query_all_db(new_pickle=False):
-    u"""Returns a dictionary with keys as city names and values as a list of 
+    u"""Returns a dictionary with keys as city names and values as a list of
     tweets from that city."""
     i = 0
     bb_dict = read_in_bb_file()
@@ -46,33 +46,13 @@ def query_db(city, values):
     return data
 
 
-
-
-def execute_query(sql, args=None, need_results=False):
+def execute_query(sql, args=None, need_results=False, autocommit=True):
     u"""execute the passed in SQL using the current cursor.
     If the query string takes any args pass those to the cursor as well."""
-    password = _get_pasword()
-    connection_string = []
-    connection_string.append(
-        "host=tweetstalk.cvf1ij0yeyiq.us-west-2.rds.amazonaws.com"
-    )
-    connection_string.append("dbname=lil_tweetstalker")
-    connection_string.append("user=tweetstalkers")
-    connection_string.append("password=")
-    connection_string.append(password)
-    connection_string.append("port=5432")
-    connection = " ".join(connection_string)
-
-    DB_CONFIG['DB_CONNECTION_STRING'] = connection
+    _get_connection_string()
     results = None
-
     try:
         cur = _get_cursor()
-
-        try:
-            a = "SQL STRING: {}".format(sql)
-        except UnicodeEncodeError:
-            return "Could not deal with emojis"
         cur.execute(sql, args)
         if need_results:
             results = cur.fetchall()
@@ -90,13 +70,44 @@ def execute_query(sql, args=None, need_results=False):
             conn = _get_connection()
             time.sleep(5)
     else:
-        DB_CONFIG['DB_CONNECTION'].commit()
+        if autocommit:
+            DB_CONFIG['DB_CONNECTION'].commit()
     return results
 
 
-def _get_pasword():
-    password = open(ROOT_DIR + '/our_keys/config').read().split()
-    return password[1]
+def commit_queries():
+    _get_connection.commit()
+
+
+def _get_cursor():
+    """get the current cursor if it exist, else create a new cursor"""
+    cur = DB_CONFIG.get('DB_CURSOR')
+    if cur is not None:
+        # print "cursor exists, using that..."
+        return cur
+    else:
+        # print "no cursor found, so creating one..."
+        return _create_cursor()
+
+
+def _create_cursor():
+    """create a new cursor and store it"""
+    conn = _get_connection()
+    # print "creating new cursor..."
+    DB_CONFIG['DB_CURSOR'] = conn.cursor()
+    # print "got new cursor."
+    return DB_CONFIG['DB_CURSOR']
+
+
+def _get_connection():
+    """Get the current connection if it exists, else connect."""
+    conn = DB_CONFIG.get('DB_CONNECTION')
+    if conn is not None:
+        # print "connection exists, so reusing it..."
+        return conn
+    else:
+        # print "no connection found..."
+        return _connect_db()
 
 
 def _connect_db():
@@ -111,32 +122,22 @@ def _connect_db():
     return conn
 
 
-def _get_connection():
-    """get the current connection if it exists, else connect."""
-    conn = DB_CONFIG.get('DB_CONNECTION')
-    if conn is not None:
-        # print "connection exists, so reusing it..."
-        return conn
-    else:
-        # print "no connection found..."
-        return _connect_db()
+def _get_connection_string():
+    password = _get_pasword()
+    connection_string = []
+    connection_string.append(
+        "host=tweetstalk.cvf1ij0yeyiq.us-west-2.rds.amazonaws.com"
+    )
+    connection_string.append("dbname=lil_tweetstalker")
+    connection_string.append("user=tweetstalkers")
+    connection_string.append("password=")
+    connection_string.append(password)
+    connection_string.append("port=5432")
+    connection = " ".join(connection_string)
+
+    DB_CONFIG['DB_CONNECTION_STRING'] = connection
 
 
-def _create_cursor():
-    """create a new cursor and store it"""
-    conn = _get_connection()
-    # print "creating new cursor..."
-    DB_CONFIG['DB_CURSOR'] = conn.cursor()
-    # print "got new cursor."
-    return DB_CONFIG['DB_CURSOR']
-
-
-def _get_cursor():
-    """get the current cursor if it exist, else create a new cursor"""
-    cur = DB_CONFIG.get('DB_CURSOR')
-    if cur is not None:
-        # print "cursor exists, using that..."
-        return cur
-    else:
-        # print "no cursor found, so creating one..."
-        return _create_cursor()
+def _get_pasword():
+    password = open(ROOT_DIR + '/our_keys/config').read().split()
+    return password[1]
