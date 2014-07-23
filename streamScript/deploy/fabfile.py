@@ -140,10 +140,10 @@ def _install_supervisor():
     sudo('apt-get -y install supervisor')
     print "installed supervisor"
     upload_template(
-        'supervisord.conf', '~/',
+        '/home/ian/Downloads/Projects/tweetTrack/streamScript/deploy/supervisor.conf', '~/',
         context={'host_envs': env_vars()}
     )
-    sudo('mv supervisord.conf /etc/supervisor/conf.d/tweetTrack.conf')
+    sudo('mv supervisor.conf /etc/supervisor/conf.d/streamScript.conf')
     sudo('/etc/init.d/supervisor stop')
     sudo('/etc/init.d/supervisor start')
 
