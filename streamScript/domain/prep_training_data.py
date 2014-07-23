@@ -1,18 +1,18 @@
+import numpy as np
+import cPickle
 import tweepy
-<<<<<<< HEAD
-from streamScript.twitter_stream import get_data
-from streamScript.send_data import execute_query
+
 from sklearn.feature_extraction.text import CountVectorizer as CV
 from sklearn.naive_bayes import MultinomialNB as MNB
 from sklearn.cross_validation import cross_val_score
-import numpy as np
-import cPickle
+
 from streamScript.send_data import execute_query, _get_connection
 from twitter_keys import my_keys
 
-u"""Reads in a file of cities and their bounding boxes. Queries the database
-to get a list of all unique users who have tweeted from that city. Queries Twitter api
-to get 200 tweets from each user, then inserts 200 tweets for up to 100 users per city
+u"""Reads in a file of cities and their bounding boxes. Queries the
+database to get a list of all unique users who have tweeted from that
+city. Queries Twitter api to get 200 tweets from each user, then inserts
+200 tweets for up to 100 users per city
 into a separate database table called "Tweet200."""
 
 
@@ -57,7 +57,7 @@ def query_all_db(new_pickle=False):
         data_set[key] = data
         i += 1
     if new_pickle:
-        pickle_file = open('pickle','w')
+        pickle_file = open('pickle', 'w')
         cPickle.dump(data_set, pickle_file)
         pickle_file.close()
         print "Created Pickle"
@@ -65,7 +65,8 @@ def query_all_db(new_pickle=False):
 
 
 def build_vocab(data, n=1000):
-    u"""MAY BE DEPRECATED Takes in a dict with locations as the keys and a list of tweets
+    u"""MAY BE DEPRECATED Takes in a dict with locations as the keys
+    and a list of tweets
     as the values. Returns a list of tuples (word, word count) for the
     top n words."""
     vocab = {}
@@ -101,7 +102,8 @@ def build_matrix(data, n=1000):
             user_matrix[-1] += tweet[2].lower()
             tweet_count += 1
 
-    vec = CV(analyzer='word',
+    vec = CV(
+        analyzer='word',
         stop_words=stopwords,
         max_features=n)
     print "Building X, Y..."
@@ -189,7 +191,8 @@ def query_twitter_for_histories(users, city):
             history = api.user_timeline(screen_name=user, count=200)
         except tweepy.error.TweepError as err:
             print "Tweepy Error: ", err.message
-            if err.message == "[{u'message': u'Rate limit exceeded', u'code': 88}]":
+            if err.message == "[{u'message': u'Rate limit \
+                    exceeded', u'code': 88}]":
                 api = get_twitter_api().next()
             continue
         if len(history) >= 200:
@@ -248,7 +251,7 @@ def process_each_city():
 
 if __name__ == "__main__":
     try:
-        pickle_file = open('pickle','rb')
+        pickle_file = open('pickle', 'rb')
         print "Loading Pickle..."
         data = cPickle.load(pickle_file)
         print "Pickle loaded."
@@ -256,10 +259,10 @@ if __name__ == "__main__":
     except IOError:
         data = query_db(True)
 
-    top_words = build_matrix(data,5000)
+    top_words = build_matrix(data, 5000)
     print "Pickling..."
     pickle_file = open('xypickle', 'w')
-    cPickle.dump(top_words,pickle_file)
+    cPickle.dump(top_words, pickle_file)
     pickle_file.close()
     print "Pickled."
 
@@ -269,9 +272,10 @@ if __name__ == "__main__":
     alphas = [1E-4, 1E-3, 1E-2, 1E-1, 1]
     for alpha in alphas:
         mnb = MNB(alpha)
-        print alpha, np.mean(cross_val_score(mnb, top_words[0], top_words[1], cv=5))
+        print alpha, np.mean(
+            cross_val_score(mnb, top_words[0], top_words[1], cv=5)
+        )
 
-    
 
     # for city, users in our_outs.items():
     #     print city, len(users)
@@ -288,4 +292,3 @@ if __name__ == "__main__":
     #         nulls += 1
     #         null_keys.append(key)
     # print "No values for ", nulls, " cities: ", null_keys
-
