@@ -8,7 +8,7 @@ setup(
     long_description='A Flask app that uses sentiment analysis',
     url='https://github.com/lnhubbell/tweetTrack',
     # Author details
-    author='Ian Auld, Nathan Hubbell, Corinne ',
+    author='Ian Auld, Nathan Hubbell, Corinne Hutchinson',
     author_email='imauld@gmail.com',
     # Choose your license
     #   and remember to include the license text in a 'docs' directory.
@@ -17,6 +17,8 @@ setup(
     install_requires=[
             'setuptools',
             'Flask',
-            'pytest'
+            'pytest',
+            'scikit-learn',
+            'numpy'
     ]
 )

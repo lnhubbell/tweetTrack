@@ -13,7 +13,7 @@ ROOT_DIR = os.path.abspath(os.getcwd())
 
 
 def _get_pasword():
-    password = open(ROOT_DIR + 'our_keys/config').read().split()
+    password = open(ROOT_DIR + '/our_keys/config').read().split()
     return password[1]
 
 
