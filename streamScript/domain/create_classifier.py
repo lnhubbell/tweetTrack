@@ -31,6 +31,31 @@ def build_vocab(data, n=1000):
     return the_list[:n]
 
 
+def build_test_matrix(user_data, vocab):
+    u"""Takes in a list of lists, with each list containing tuples
+    representing tweets from a single user, and a vocab list. Returns an X
+    matrix of the test user features, a list of the user names, and a Y
+    array of the labels."""
+    user_matrix = []
+    user_array = []
+    user_cities = []
+    for history in user_data:
+        user_name = history[0][0]
+        user_array.append(user_name)
+        user_cities.append(history[0][5])
+        for tweet in history:
+            if history[0][0] == user_name:
+                user_matrix.append(" ")
+            user_matrix[-1] += tweet[2].lower()
+    vec = CV(
+        analyzer='word',
+        vocabulary=vocab
+    )
+    print "Building test X, Y..."
+    X = vec.fit_transform(user_matrix, vocab).toarray()
+    return X, user_array, user_cities
+
+
 def build_matrix(data, n=1000):
     u"""Takes in a raw dataset and an optional parameter to limit the feature
     set to n. Defaults to 1000. Returns a tuple containing a matrix of n features,
@@ -49,7 +74,8 @@ def build_matrix(data, n=1000):
     vec = CV(
         analyzer='word',
         stop_words=stopwords,
-        max_features=n)
+        max_features=n,
+    )
     print "Building X, Y..."
     X = vec.fit_transform(user_matrix).toarray()
     Y = np.array(user_array)
@@ -141,8 +167,20 @@ def get_raw_classifier(
 
 def generate_predictions(userTestdata):
     mnb = get_raw_classifier()
-    X, y, vocab = return_matrix(userTestdata)
-    return X
+    X, user_array, user_cities = build_test_matrix(userTestdata)
+    correct = 0
+    incorrect = 0
+    got_wrong = []
+    predictions = mnb.predict(X)
+    for idx, prediction in predictions:
+        if prediction == user_cities[idx]:
+            correct += 1
+        else:
+            incorrect += 1
+            report = (user_array[idx], user_array[idx], prediction)
+            got_wrong.append(report)
+    percent_right = correct / (float(correct) + incorrect)
+    return percent_right, got_wrong
 
 if __name__ == "__main__":
     print get_raw_classifier(make_new_pickles=True, read_pickle=False, readXYpickle=False)

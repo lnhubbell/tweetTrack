@@ -42,30 +42,34 @@ def get_unique_handles(vals):
 
 
 def format_blob(history, user, city):
-    u"""Formats tweets pieces to be fed to sql query."""
+    u"""Formats tweets pieces to be fed to sql query. Returns a list of tuples."""
     tweet_his = []
     for tweet in history:
         screen_name = user
         text = tweet.text
         created_at = tweet.created_at.strftime('%m/%d/%Y')
         location = tweet.geo
+        location_lat = None
+        location_lng = None
         if location:
             location_lat = location['coordinates'][0]
             location_lng = location['coordinates'][1]
+
         hashtags = []
-        if location:
-            blob = (
-                screen_name, text, location_lat, location_lng,
-                created_at, hashtags, city
-            )
-            tweet_his.append(blob)
+        # if location:
+        blob = (
+            screen_name, text, location_lat, location_lng,
+            created_at, hashtags, city
+        )
+        tweet_his.append(blob)
     return tweet_his
 
 
 def query_twitter_for_histories(users, city=None, cap=100):
     u"""Calls function to return a dict of cities and the unique users for each
     city. Iterates over the dict to extract the tweet text/locations/timestamps
-    for each tweet, bundles results into DB-friendly tuples."""
+    for each tweet, bundles results into DB-friendly tuples. Returns a list of
+    lists of tuples."""
     api = get_twitter_api().next()
     city_tweets = []
     user_count = 0

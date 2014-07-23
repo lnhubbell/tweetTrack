@@ -12,6 +12,7 @@ DB_CONFIG = {}
 
 ROOT_DIR = os.path.abspath(os.getcwd())
 
+
 def read_in_bb_file():
     u"""Reads in a file containing the 100 most populous cities in the US
     and returns a dict with the lat/long points describig the bounding box
