@@ -1,7 +1,6 @@
 import numpy as np
 import cPickle
 
-from get_tweets_by_user import query_db, read_in_bb_file
 from sklearn.feature_extraction.text import CountVectorizer as CV
 from sklearn.naive_bayes import MultinomialNB as MNB
 from sklearn.cross_validation import cross_val_score
@@ -21,18 +20,12 @@ def build_vocab(data, n=1000):
     top n words."""
     vocab = {}
     stopwords = open('text/stopwords.txt').read().lower().split()
-    # print data
     for key, val in data.items():
-        # print "++++++++++++++"
-        # print "Val: " + str(val)
         for tweet in val:
-            # print "Tweet:" + str(tweet)
             the_text = tweet[2]
             print the_text
             the_text = the_text.lower().split()
-            # print "The Text: " + str(the_text)
             for word in the_text:
-                # print "Word: " + str(word)
                 if word not in stopwords:
                     vocab[word] = vocab.setdefault(word, 0) + 1
     the_list = sorted(vocab.items(), key=lambda x: -x[1])
@@ -61,7 +54,8 @@ def build_matrix(data, n=1000):
     print "Done"
     return X, Y, vec.get_feature_names()
 
-if __name__ == "__main__":
+
+def return_data_sets(make_new_pickles=False):
     try:
         pickle_file = open('pickles/pickle', 'rb')
         print "Loading Pickle..."
@@ -69,37 +63,47 @@ if __name__ == "__main__":
         print "Pickle loaded."
         pickle_file.close()
     except IOError:
-        data = query_all_db(True)
+        data = query_all_db(make_new_pickles)
+    return data
+
+
+def return_matrix(data, make_new_pickles=False):
+    u"""takes in a dataset, returns a tuple containing an X matrix of vectors
+    per users, a Y array of labels, and a vocabulary list."""
     top_words = build_matrix(data, 10000)
-    print "Pickling..."
-    pickle_file = open('pickles/xypickle', 'w')
-    cPickle.dump(top_words, pickle_file)
-    pickle_file.close()
-    print "Pickled."
+    if make_new_pickles:
+        print "Pickling..."
+        pickle_file = open('pickles/xypickle', 'w')
+        cPickle.dump(top_words, pickle_file)
+        pickle_file.close()
+        print "Pickled."
+    return top_words
+
+
+def fit_classifier(top_words):
+    best = None
+    best_score = None
+    alphas = [1E-4, 1E-3, 1E-2, 1E-1, 1]
+    for alpha in alphas:
+        mnb = MNB(alpha)
+        score = np.mean(
+            cross_val_score(mnb, top_words[0], top_words[1], cv=10)
+        )
+        if not best:
+            best = mnb
+            best_score = score
+        elif score > best_score:
+            best_score = score
+    return best, best_score
+
+
+def generate_predictions():
+
+
+if __name__ == "__main__":
+
 
     #our_outs = query_twitter_for_histories(data)
     #send_user_queries_to_db(our_outs)
 
-    alphas = [1E-4, 1E-3, 1E-2, 1E-1, 1]
-    for alpha in alphas:
-        mnb = MNB(alpha)
-        print alpha, np.mean(
-            cross_val_score(mnb, top_words[0], top_words[1], cv=10)
-        )
 
-
-    # for city, users in our_outs.items():
-    #     print city, len(users)
-
-    # for city, tweets in our_outs.items:
-    #     print "\n\n", "*" * 10, "\n\n"
-    #     print city, "\n\n"
-    #     print len(tweets)
-    #     print "\n\n", "*" * 20, "\n\n"
-    # nulls = 0
-    # null_keys = []
-    # for key, vals in data.items():
-    #     if len(vals) < 1:
-    #         nulls += 1
-    #         null_keys.append(key)
-    # print "No values for ", nulls, " cities: ", null_keys
