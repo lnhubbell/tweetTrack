@@ -108,7 +108,7 @@ if __name__ == "__main__":
     for alpha in alphas:
         mnb = MNB(alpha)
         print alpha, np.mean(
-            cross_val_score(mnb, top_words[0], top_words[1], cv=5)
+            cross_val_score(mnb, top_words[0], top_words[1], cv=10)
         )
 
 
