@@ -51,22 +51,13 @@ def build_matrix(data, n=1000):
                 user_matrix.append(" ")
             user_matrix[-1] += tweet[2].lower()
             tweet_count += 1
-
     vec = CV(
         analyzer='word',
         stop_words=stopwords,
         max_features=n)
     print "Building X, Y..."
-    # print user_matrix
-    # print len(user_matrix)
     X = vec.fit_transform(user_matrix).toarray()
-    print X
-    print len(X)
-    for x in X:
-        print len(x)
     Y = np.array(user_array)
-    print Y
-    print len(Y)
     print "Done"
     return X, Y, vec.get_feature_names()
 

@@ -86,7 +86,7 @@ def format_blob(history, user, city):
     return tweet_his
 
 
-def query_twitter_for_histories(users, city):
+def query_twitter_for_histories(users, city=None, cap=100):
     u"""Calls function to return a dict of cities and the unique users for each
     city. Iterates over the dict to extract the tweet text/locations/timestamps
     for each tweet, bundles results into DB-friendly tuples."""
@@ -95,7 +95,7 @@ def query_twitter_for_histories(users, city):
     user_count = 0
     too_low_count = 0
     for user in users:
-        if user_count > 100:
+        if user_count > cap:
             break
         history = []
         try:
