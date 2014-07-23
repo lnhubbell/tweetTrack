@@ -8,8 +8,8 @@ try:
     from config import config
     app.config.from_object(config.DevelopmentConfig)
 except ImportError:
-    pass
-app.config.from_object(config.ProductionConfig)
+    app.config.from_object(config.ProductionConfig)
+
 db = SQLAlchemy(app)
 mail = Mail(app)
 

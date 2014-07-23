@@ -1,2 +1,3 @@
-import key_generator
-import validate
+from key_generator import generate_key
+from validate import validate_key
+import exceptions

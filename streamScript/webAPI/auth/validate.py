@@ -1,1 +1,2 @@
-__author__ = 'ian'
+def validate_key(key):
+    pass
