@@ -1,0 +1,103 @@
+Report generated: 07/23/2014
+
+City,Tweets,UsersFort Wayne, IN,3048,136
+Tulsa, OK,5474,218
+Milwaukee, WI,10756,406
+El Paso, TX,6366,286
+Laredo, TX,2174,93
+Fremont, CA,2092,90
+Seattle, WA,11875,414
+Irving, TX,5839,212
+Washington, DC,25006,789
+Atlanta, GA,36296,1221
+Kansas City, MO,11572,473
+Phoenix, AZ,24923,977
+Norfolk, VA,3724,152
+Boise, ID,2171,99
+Bakersfield, CA,9910,383
+Reno, NV,4609,202
+Houston, TX,68197,2575
+Chandler, AZ,4874,228
+San Antonio, TX,33204,1319
+Henderson, NV,10807,430
+Newark, NJ,10291,390
+Winston Salem, NC,3605,130
+Saint Louis, MO,12344,428
+Oklahoma City, OK,11097,408
+Chesapeake, VA,9721,365
+Stockton, CA,5929,232
+Corpus Christi, TX,7937,299
+Boston, MA,12737,443
+Garland, TX,8182,264
+Anaheim, CA,9881,416
+Memphis, TN,8281,349
+Fort Worth, TX,41773,1580
+Omaha, NE,8353,354
+San Diego, CA,29597,1206
+Birmingham, AL,7953,293
+Detroit, MI,16117,615
+Colorado Springs, CO,5050,184
+Gilbert, AZ,4703,229
+San Bernardino, CA,11878,474
+Virginia Beach, VA,8004,345
+Honolulu, HI,4651,170
+Santa Ana, CA,5992,238
+Plano, TX,8163,337
+Indianapolis, IN,14392,572
+Sacramento, CA,15568,628
+Durham, NC,4516,156
+Pittsburgh, PA,13633,571
+Toledo, OH,6075,268
+Dallas, TX,44246,1566
+Lincoln, NE,2235,97
+Long Beach, CA,11720,477
+Wichita, KS,7292,299
+San Jose, CA,15429,609
+San Francisco, CA,11574,372
+Saint Petersburg, FL,4835,193
+Baton Rouge, LA,8240,276
+Philadelphia, PA,44363,1648
+Riverside, CA,8329,330
+Louisville, KY,13039,551
+Jersey City, NJ,4468,173
+Columbus, OH,16801,651
+Cincinnati, OH,14521,517
+Portland, OR,20292,766
+Buffalo, NY,14446,628
+Lexington, KY,3877,158
+Arlington, TX,13129,434
+Cleveland, OH,24418,881
+Charlotte, NC,15895,587
+Glendale, AZ,6687,298
+Tucson, AZ,10319,436
+Raleigh, NC,10415,379
+Madison, WI,2544,110
+Irvine, CA,3896,178
+New York, NY,124649,4765
+Lubbock, TX,2570,110
+Baltimore, MD,16097,545
+Saint Paul, MN,9608,355
+Minneapolis, MN,14700,548
+Fresno, CA,8855,378
+Tampa, FL,12081,459
+Las Vegas, NV,35550,1393
+Scottsdale, AZ,3155,128
+Oakland, CA,5561,210
+Los Angeles, CA,67093,2456
+Austin, TX,20157,708
+Anchorage, AK,2716,107
+Nashville, TN,7720,294
+Miami, FL,33941,1234
+Chula Vista, CA,4935,236
+New Orleans, LA,20073,610
+Denver, CO,17732,657
+Albuquerque, NM,6196,255
+Aurora, CO,7578,288
+Chicago, IL,46678,1840
+Mesa, AZ,10108,441
+Jacksonville, FL,13000,502
+North Las Vegas, NV,4224,157
+Hialeah, FL,5724,224
+Greensboro, NC,5128,212
+Orlando, FL,24563,981
+Totals,,1452742,55354
