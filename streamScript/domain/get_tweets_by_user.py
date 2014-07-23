@@ -65,8 +65,8 @@ def query_db(city, values):
 
 
 def get_unique_handles(vals):
-    u"""Takes in a dict with locations as the keys and a list of tweets
-    as the values. Returns a dict of unique user handles for each location."""
+    u"""Takes in a list of tweets from a given city. Returns a dict of
+    unique user handles for each location."""
     users = {}
     for tweet in vals:
         name = tweet[1]
