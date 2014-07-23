@@ -47,7 +47,6 @@ def user_tweets(user_name):
     }
     response = requests.get(url, data=data, headers=headers)
     response.raise_for_status()
-    print(response.json())
     return jsonify(response=response.json())
 
 

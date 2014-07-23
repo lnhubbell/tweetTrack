@@ -15,12 +15,13 @@ def dummy_data(screen_name):
     return context
 
 
-@app.route('/get/location/', methods=['PUT', 'GET'])
+@app.route('/get/location/', methods=['GET'])
 def get_location():
     print(request.headers)
     try:
         screen_name = request.get_json().get('screen_name', False)
-        context = dummy_data(screen_name)
+        key = request.get_json().get('api_key', False)
+        context = dummy_data(screen_name, key)
     except:
         context = HTTP401()
     return jsonify(context)
