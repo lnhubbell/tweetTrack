@@ -30,6 +30,7 @@
                         $.ajax('/api-request/' + request_email, {
                             data: api_request.serialize(),
                             success: function(response) {
+                                $("#api-request-modal-body").append(response);
                                 api_request.trigger("reset");
                                 modal.modal('hide');
                                 }
