@@ -43,13 +43,15 @@ def index():
 def user_tweets(user_name):
     try:
         url = app.config['TRACKING_API_URL']
+        print(app.config['SQLALCHEMY_DATABASE_URI'])
+        # url = 'http://ec2-54-191-185-42.us-west-2.compute.amazonaws.com/get/location'
         data = json.dumps({'screen_name': user_name})
         headers = {
             'Content-Type': 'application/json',
             'Content-Length': len(data)
         }
-        response = requests.get(url, data=data, headers=headers)
-        print(response)
+        print(url, data, headers)
+        response = requests.post(url, data=data, headers=headers)
         response.raise_for_status()
         return jsonify(response=response.json())
     except ConnectionError:

@@ -19,6 +19,7 @@ if __name__ == '__main__':
         )
     else:
         os.environ['FLASK_CONFIG'] = argv[1].title()
+        print(os.environ['FLASK_CONFIG'])
         run_simple(
             'localhost',
             5000,
