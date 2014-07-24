@@ -35,10 +35,11 @@
                                 success: function(response) {
                                     twitter.trigger("reset");
                                     modal.modal('hide');
-                                    var location = new google.maps.LatLng(response.location_lat, response.location_lng);
-                                    map.setCenter(location);
+                                    console.log(response.response)
+                                    var loc = new google.maps.LatLng(response.response.location_lat, response.response.location_lng);
+                                    map.setCenter(loc);
                                     var marker = new google.maps.Marker({
-                                        position: location,
+                                        position: loc,
                                         map: map,
                                         title:"Hello World!"
                                     });
