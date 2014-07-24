@@ -112,10 +112,11 @@ def fit_classifier(X, y):
     return mnb.fit(X, y)
 
 
-def get_raw_classifier(make_new_pickles=False, readpickle=True, useTweet200=False):
+
+def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=False):
     u"""Takes in keyword arguments to determine source of data. Returns a
     trained classifier."""
-    if readpickle:
+    if read_pickles:
         X = picklers.load_matrix_pickle()
         y = picklers.load_y_pickle()
         data = picklers.load_data_pickle()
@@ -128,7 +129,7 @@ def get_raw_classifier(make_new_pickles=False, readpickle=True, useTweet200=Fals
     mnb = fit_classifier(X, y)
     if make_new_pickles:
         picklers.pickle_classifier(mnb)
-        if not readpickle:
+        if not read_pickles:
             picklers.pickle_data(data)
             picklers.pickle_matrix(X)
             picklers.pickle_labels(y)
@@ -164,4 +165,4 @@ def generate_predictions(userTestdata):
         return percent_right, got_wrong, all_results, user_cities
 
 if __name__ == "__main__":
-    print get_raw_classifier(make_new_pickles=True, readpickle=False, useTweet200=False)
+    print get_raw_classifier(make_new_pickles=True, read_pickles=False, useTweet200=False)

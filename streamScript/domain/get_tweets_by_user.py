@@ -43,12 +43,12 @@ def get_unique_handles(vals):
     return heavy_users
 
 
-def format_blob(history, user, city):
+def format_tweet_history(history, user, city):
     u"""Formats tweets pieces to be fed to sql query.
 
     History is a list-like set of tweets. User is the screen name
     as a string. City is the string name of the city we querried for."""
-    tweet_his = []
+    tweet_history = []
     for tweet in history:
         screen_name = user
         text = tweet.text
@@ -61,17 +61,17 @@ def format_blob(history, user, city):
             location_lng = location['coordinates'][1]
         hashtags = []
         # if location:
-        blob = (
+        tweet = (
             screen_name, text, location_lat, location_lng,
             created_at, hashtags, city
         )
-        tweet_his.append(blob)
-    return tweet_his
+        tweet_history.append(tweet)
+    return tweet_history
 
 
 def check_list_low_tweeters():
-    with open("text/stop_names.txt", 'r') as f:
-        names = f.read().split("\n")
+    with open("text/stop_names.txt", 'r') as a_file:
+        names = a_file.read().split("\n")
     return names
 
 
@@ -92,7 +92,7 @@ def query_twitter_for_histories(users, city=None, cap=100):
         if user in check_list_low_tweeters():
             continue
         history = []
-        tweet_his = []
+        tweet_history = []
         try:
             history = api.user_timeline(screen_name=user, count=200)
         except tweepy.error.TweepError as err:
@@ -101,15 +101,15 @@ def query_twitter_for_histories(users, city=None, cap=100):
             continue
         if len(history) >= 200:
             user_count += 1
-            tweet_his = format_blob(history, user, city)
-        if len(tweet_his):
-            city_tweets.append(tweet_his)
+            tweet_history = format_tweet_history(history, user, city)
+        if len(tweet_history):
+            city_tweets.append(tweet_history)
             print user_count
         else:
             print "Too few tweets in this user's history."
-            with open("text/stop_names.txt", 'a') as f:
-                f.write(user)
-                f.write("\n")
+            with open("text/stop_names.txt", 'a') as a_file:
+                a_file.write(user)
+                a_file.write("\n")
             too_low_count += 1
         total = user_count + too_low_count
         print "total requests: ", total
