@@ -1,7 +1,6 @@
 import os
 import psycopg2
 import time
-import cPickle
 # from filters_json import filter_list as FilterMap
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
@@ -31,7 +30,7 @@ def read_in_bb_file():
     return bb_dict
 
 
-def query_all_db(new_pickle=False):
+def query_all_db():
     u"""Returns a dictionary with keys as city names and values as a list of
     tweets from that city."""
     i = 0
@@ -41,11 +40,6 @@ def query_all_db(new_pickle=False):
         data = query_db(key, values)
         data_set[key] = data
         i += 1
-    if new_pickle:
-        pickle_file = open('pickles/pickle', 'w')
-        cPickle.dump(data_set, pickle_file)
-        pickle_file.close()
-        print "Created Pickle"
     return data_set
 
 

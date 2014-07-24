@@ -44,3 +44,49 @@ def format_blob(history, user):
         )
         tweet_his.append(blob)
     return tweet_his
+
+
+    ########
+
+    """From create_classifiers""""
+
+
+
+def build_vocab(data, n=1000):
+    u"""MAY BE DEPRECATED Takes in a dict with locations as the keys
+    and a list of tweets
+    as the values. Returns a list of tuples (word, word count) for the
+    top n words."""
+    vocab = {}
+    stopwords = open('text/stopwords.txt').read().lower().split()
+    for key, val in data.items():
+        for tweet in val:
+            the_text = tweet[2]
+            print the_text
+            the_text = the_text.lower().split()
+            for word in the_text:
+                if word not in stopwords:
+                    vocab[word] = vocab.setdefault(word, 0) + 1
+    the_list = sorted(vocab.items(), key=lambda x: -x[1])
+    return the_list[:n]
+
+
+# def fit_classifier(X, y):
+#     u"""Takes in an X matrix and a Y array of labels.
+#     Checks four possible alpha values; returns the
+#     classifier with the highest cross-validated score."""
+#     best = None
+#     best_score = None
+#     alphas = [1E-4, 1E-3, 1E-2, 1E-1, 1]
+#     for alpha in alphas:
+#         mnb = MNB(alpha)
+#         score = np.mean(
+#             cross_val_score(mnb, X, y, cv=10)
+#         )
+#         if not best:
+#             best = mnb
+#             best_score = score
+#         elif score > best_score:
+#             best_score = score
+#     best.fit(X, y)
+#     return best, best_score
