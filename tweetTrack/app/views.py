@@ -52,11 +52,6 @@ def user_tweets(user_name):
     return jsonify(response=response.json())
 
 
-@app.route('/about/', methods=['GET'])
-def about():
-    return render_template('about.html')
-
-
 @app.route('/contact/', methods=['GET', 'POST'])
 def contact():
     name = request.args.get('name', 'Name error')
