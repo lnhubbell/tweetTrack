@@ -50,7 +50,7 @@ def query_db(city, values):
     lats = values[0]
     longs = values[1]
     vals = (lats[0], lats[1], longs[0], longs[1])
-    sql = """SELECT * FROM "TweetTest" WHERE
+    sql = """SELECT * FROM "Tweet" WHERE
         (location_lat BETWEEN %s AND %s)
         AND (location_lng BETWEEN %s AND %s);"""
         ## LIMIT 2000

@@ -42,11 +42,23 @@ def build_test_matrix(user_data, vocab):
     return X, user_array, user_cities
 
 
+def vectorize(user_matrix, user_array, n):
+    stopwords = open('text/stopwords.txt').read().lower().split()
+    vec = CV(
+        analyzer='word',
+        stop_words=stopwords,
+        max_features=n,
+    )
+    print "Building X, Y..."
+    X = vec.fit_transform(user_matrix).toarray()
+    Y = np.array(user_array)
+    return X, Y, vec.get_feature_names()
+
+
 def build_matrix(data, n=1000):
     u"""Takes in a raw dataset and an optional parameter to limit the feature
     set to n. Defaults to 1000. Returns a tuple containing a matrix of n features,
     a vector of labels, and a vocabulary list of the features examined."""
-    stopwords = open('text/stopwords.txt').read().lower().split()
     user_matrix = []
     user_array = []
     tweet_count = 0
@@ -57,16 +69,27 @@ def build_matrix(data, n=1000):
                 user_matrix.append(" ")
             user_matrix[-1] += tweet[2].lower()
             tweet_count += 1
-    vec = CV(
-        analyzer='word',
-        stop_words=stopwords,
-        max_features=n,
-    )
-    print "Building X, Y..."
-    X = vec.fit_transform(user_matrix).toarray()
-    Y = np.array(user_array)
-    print "Done"
-    return X, Y, vec.get_feature_names()
+    return vectorize(user_matrix, user_array, n)
+
+
+def build_matrix_per_user(data, n=1000):
+    user_matrix = []
+    user_array = []
+    for key, val in data.items():
+        count = 0
+        for tweet in val:
+            if count == 0:
+                this_user = tweet[0]
+                user_matrix.append(" ")
+            if (tweet[0] == this_user) and (count < 200):
+                user_matrix[-1] += tweet[2].lower()
+                count += 1
+            elif (tweet[0] != this_user) and (len(user_matrix[-1]) >= 14000):
+                count = 0
+            elif len(user_matrix[-1]) < 14000:
+                user_matrix.pop()
+
+    return vectorize(user_matrix, user_array)
 
 
 def fit_classifier(X, y):
@@ -102,17 +125,13 @@ def generate_predictions(userTestdata):
     u"""Takes in a list of twitter users' last 200 tweets, formatted as
     'blobs'. Returns a percent correct (if known), a list of all incorrect guesses
     (or unknown), and a list of all the city predictions."""
-    mnb = picklers.load_matrix_pickle()
+    mnb = picklers.load_classifier_pickle()
     vocab = picklers.load_vocab_pickle()
     X, user_array, user_cities = build_test_matrix(userTestdata, vocab)
     correct = 0
     incorrect = 0
     got_wrong = []
     all_results = []
-    #print X
-    #y = load_y_pickle()
-    #print y
-    #print "+++++++++++++++++++++++++"
     predictions = mnb.predict_log_proba(X)
     if len(predictions):
         for idx, prediction in enumerate(predictions):
@@ -127,4 +146,4 @@ def generate_predictions(userTestdata):
         return percent_right, got_wrong, all_results
 
 if __name__ == "__main__":
-    print get_raw_classifier(make_new_pickles=True, readpickle=True)
+    print get_raw_classifier(make_new_pickles=True, readpickle=False)
