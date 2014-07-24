@@ -27,12 +27,13 @@ def build_test_matrix(user_data, vocab):
     matrix = []
     user_array = []
     user_cities = []
+    print user_data[0][0]
     for history in user_data:
         user_string = ""
         user_name = history[0][0]
         user_array.append(user_name)
-        if history[0][3] and history[0][4]:
-            actual = check_city_locations(history[0][3], history[0][4])
+        if history[0][2] and history[0][3]:
+            actual = check_city_locations(history[0][2], history[0][3])
             user_cities.append(actual)
         else:
             user_cities.append(history[0][5])
