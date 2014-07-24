@@ -15,6 +15,7 @@ def write_report():
         f.write(columns)
         total_tweets = 0
         total_users = 0
+        out_list = []
         for city, values in bb_dict.items():
             tweets = query_db(city, values)
             handles = len(get_unique_handles(tweets))
@@ -22,8 +23,10 @@ def write_report():
             total_tweets += city_tweets
             total_users += handles
             out = ",".join([str(city), str(handles), str(city_tweets)])
-            f.write(out)
-            f.write("\n")
+            out_list.append(out)
+        out_list.sort(key=lambda x: x[1])
+        joined = "\n".join(out_list)
+        f.write(joined)
         totals = ",".join(["Totals", str(total_users), str(total_tweets)])
         f.write(totals)
 
