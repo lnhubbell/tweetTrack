@@ -6,8 +6,8 @@ from our_keys.twitter_keys import my_keys
 u"""Reads in a file of cities and their bounding boxes. Queries the
 database to get a list of all unique users who have tweeted from that
 city. Queries Twitter api to get 200 tweets from each user, then inserts
-200 tweets for up to 100 users per city
-into a separate database table called "Tweet200."""
+200 tweets for up to 100 users per city into a separate database table
+called "Tweet200."""
 
 
 def get_twitter_api():
