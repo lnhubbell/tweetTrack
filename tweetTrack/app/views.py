@@ -1,11 +1,11 @@
 from os import environ
-from random import random
+import json
 import tweepy
 import requests
-from flask import render_template, redirect, url_for, request, jsonify
+from flask import render_template, request, jsonify
 from flask.ext.mail import Message
 from tweetTrack.app import app, mail
-from tweetTrack.app.forms import TwitterForm, ContactForm
+from tweetTrack.app.forms import TwitterForm, ContactForm, APIRequestForm
 
 
 def get_twitter_api():
@@ -29,24 +29,26 @@ def get_twitter_api():
 def index():
     contact_form = ContactForm()
     twitter_form = TwitterForm()
+    api_request_form = APIRequestForm()
     return render_template(
         'index.html',
         contact_form=contact_form,
-        twitter_form=twitter_form
+        twitter_form=twitter_form,
+        api_request_form=api_request_form
         )
 
 
 @app.route('/twitter/<user_name>')
 def user_tweets(user_name):
-    url = 'http://ec2-54-191-185-42.us-west-2.compute.amazonaws.com/get/location/{}'
-    url = url.format(user_name)
-    response = requests.get(url).json()
-    return jsonify(response=response)
-
-
-@app.route('/about/', methods=['GET'])
-def about():
-    return render_template('about.html')
+    url = app.config['TRACKING_API_URL']
+    data = json.dumps({'screen_name': user_name})
+    headers = {
+        'Content-Type': 'application/json',
+        'Content-Length': len(data)
+    }
+    response = requests.get(url, data=data, headers=headers)
+    response.raise_for_status()
+    return jsonify(response=response.json())
 
 
 @app.route('/contact/', methods=['GET', 'POST'])
@@ -63,3 +65,16 @@ def contact():
     msg.body = request.args.get('message', 'Message error')
     mail.send(msg)
     return render_template('message_sent.html', name=name)
+
+
+@app.route('/api-request/<email>', methods=['GET', 'POST'])
+def api_request(email):
+    url = app.config['REQUEST_API_URL']
+    data = json.dumps({'email': email})
+    headers = {
+        'Content-Type': 'application/json',
+        'Content-Length': len(data)
+    }
+    response = requests.get(url, data=data, headers=headers)
+    response.raise_for_status()
+    return jsonify({'response': '<P>Check your email for your key.</p>'})

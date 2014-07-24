@@ -42,6 +42,7 @@
                     <li><a id="track" href="" data-toggle="modal" data-target="#twitter-modal">Track Me!</a></li>
                     <li><a id="about" href="" data-toggle="modal" data-target="#about-modal">About</a></li>
                     <li><a id="contact" href="" data-toggle="modal" data-target="#contact-modal">Contact</a></li>
+                    <li><a id="request" href="" data-toggle="modal" data-target="#request-modal">Request a Key</a></li>
                 </ul>
             </nav>
         </header><!-- /header -->
@@ -58,6 +59,7 @@
             {% include 'contact.html' %}
             {% include 'twitter.html' %}
             {% include 'about.html' %}
+            {% include 'api_request.html' %}
             <script type="text/javascript">
                 $(window).load(function(){
                     $('#about-modal').modal('show');

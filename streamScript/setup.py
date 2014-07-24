@@ -18,7 +18,7 @@ setup(
             'setuptools',
             'Flask',
             'pytest',
-            'scikit-learn',
-            'numpy'
+            # 'scikit-learn',
+            # 'numpy'
     ]
 )
