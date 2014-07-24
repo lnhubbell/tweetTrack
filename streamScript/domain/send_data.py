@@ -56,9 +56,9 @@ def query_db(city, values):
     lats = values[0]
     longs = values[1]
     vals = (lats[0], lats[1], longs[0], longs[1])
-    sql = """SELECT * FROM "Tweet" WHERE
+    sql = """SELECT * FROM "TweetTest" WHERE
         (location_lat BETWEEN %s AND %s)
-        AND (location_lng BETWEEN %s AND %s); """
+        AND (location_lng BETWEEN %s AND %s);"""
         ## LIMIT 2000
     print "Querying database for ", city
     data = execute_query(sql, vals, need_results=True)
@@ -180,10 +180,19 @@ def _get_pasword():
 
 
 def add_rows():
-    sql = """INSERT INTO "TweetTest2" (screen_name, text, location_lat, location_lng, created_at, hashtags) SELECT screen_name, text, location_lat, location_lng, created_at, hashtags FROM "TweetTest";"""
+    sql = """INSERT INTO "Tweet" (screen_name, text, location_lat, location_lng, created_at, hashtags) SELECT screen_name, text, location_lat, location_lng, created_at, hashtags FROM "TweetTest";"""
+    print "Querying database"
+    execute_query(sql)
+
+
+def change_col_size():
+    sql = """ ALTER TABLE "Tweet" ALTER COLUMN text TYPE varchar(200);"""
     print "Querying database"
     execute_query(sql)
 
 if __name__ == "__main__":
-    add_rows()
+    pass
+    #add_rows()
+    # change_col_size()
+
 
