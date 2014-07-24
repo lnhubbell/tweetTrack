@@ -59,7 +59,6 @@ def format_blob(history, user, city):
         if location:
             location_lat = location['coordinates'][0]
             location_lng = location['coordinates'][1]
-
         hashtags = []
         # if location:
         blob = (
