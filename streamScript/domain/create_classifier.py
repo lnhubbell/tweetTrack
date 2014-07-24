@@ -1,32 +1,15 @@
 import numpy as np
 import cPickle
 
-from get_tweets_by_user import query_db, read_in_bb_file
 from sklearn.feature_extraction.text import CountVectorizer as CV
 from sklearn.naive_bayes import MultinomialNB as MNB
 from sklearn.cross_validation import cross_val_score
 
+from streamScript.domain.send_data import query_all_db
 
-u"""Reads in a file of cities and their bounding boxes. Queries the
-database to get a list of all tweets from those cities. Generates a vocabulary
+u"""Generates a vocabulary
 set and builds a feature matrix. Creates a classifier and returns
 cross-validated predictions. Pickles dataset and matrix as necessary."""
-
-
-def query_all_db(new_pickle=False):
-    i = 0
-    bb_dict = read_in_bb_file()
-    data_set = {}
-    for key, values in bb_dict.items():
-        data = query_db(key, values)
-        data_set[key] = data
-        i += 1
-    if new_pickle:
-        pickle_file = open('pickles/pickle', 'w')
-        cPickle.dump(data_set, pickle_file)
-        pickle_file.close()
-        print "Created Pickle"
-    return data_set
 
 
 def build_vocab(data, n=1000):
@@ -36,25 +19,53 @@ def build_vocab(data, n=1000):
     top n words."""
     vocab = {}
     stopwords = open('text/stopwords.txt').read().lower().split()
-    # print data
     for key, val in data.items():
-        # print "++++++++++++++"
-        # print "Val: " + str(val)
         for tweet in val:
-            # print "Tweet:" + str(tweet)
             the_text = tweet[2]
             print the_text
             the_text = the_text.lower().split()
-            # print "The Text: " + str(the_text)
             for word in the_text:
-                # print "Word: " + str(word)
                 if word not in stopwords:
                     vocab[word] = vocab.setdefault(word, 0) + 1
     the_list = sorted(vocab.items(), key=lambda x: -x[1])
     return the_list[:n]
 
 
+def build_test_matrix(user_data, vocab):
+    u"""Takes in a list of lists, with each list containing tuples
+    representing tweets from a single user, and a vocab list. Returns an X
+    matrix of the test user features, a list of the user names, and a Y
+    array of the labels."""
+    matrix = []
+    user_array = []
+    user_cities = []
+    #print user_data
+    for history in user_data:
+        #print history
+        user_string = ""
+        user_name = history[0][0]
+        user_array.append(user_name)
+        user_cities.append(history[0][5])
+        for tweet in history:
+            if history[0][0] == user_name:
+                user_string += tweet[1].lower()
+        matrix.append(user_string)
+    vec = CV(
+        analyzer='word',
+        vocabulary=vocab
+    )
+    print "Building test X, Y..."
+    X = vec.fit_transform(matrix, vocab).todense()
+    # print X
+    # print user_array
+    # print user_cities
+    return X, user_array, user_cities
+
+
 def build_matrix(data, n=1000):
+    u"""Takes in a raw dataset and an optional parameter to limit the feature
+    set to n. Defaults to 1000. Returns a tuple containing a matrix of n features,
+    a vector of labels, and a vocabulary list of the features examined."""
     stopwords = open('text/stopwords.txt').read().lower().split()
     user_matrix = []
     user_array = []
@@ -66,64 +77,164 @@ def build_matrix(data, n=1000):
                 user_matrix.append(" ")
             user_matrix[-1] += tweet[2].lower()
             tweet_count += 1
-
     vec = CV(
         analyzer='word',
         stop_words=stopwords,
-        max_features=n)
+        max_features=n,
+    )
     print "Building X, Y..."
-    # print user_matrix
-    # print len(user_matrix)
     X = vec.fit_transform(user_matrix).toarray()
-    print X
-    print len(X)
-    for x in X:
-        print len(x)
     Y = np.array(user_array)
-    print Y
-    print len(Y)
     print "Done"
     return X, Y, vec.get_feature_names()
 
-if __name__ == "__main__":
-    try:
-        pickle_file = open('pickles/pickle', 'rb')
-        print "Loading Pickle..."
-        data = cPickle.load(pickle_file)
-        print "Pickle loaded."
-        pickle_file.close()
-    except IOError:
-        data = query_all_db(True)
-    top_words = build_matrix(data, 10000)
-    print "Pickling..."
-    pickle_file = open('pickles/xypickle', 'w')
-    cPickle.dump(top_words, pickle_file)
+
+def return_data_sets(read_pickle=False, make_new_pickles=False):
+    u"""Takes in two optional keyword arguments; will either read in
+    a dataset from disk or will call a function to query the DB to generate
+    a new dataset. If a 'make_new_pickles' keyword arg set to True is passed,
+    the DB function will make a new pickle for future use. Returns a
+    raw dataset."""
+    if read_pickle:
+        try:
+            pickle_file = open('pickles/pickle', 'rb')
+            print "Loading data pickle..."
+            data = cPickle.load(pickle_file)
+            print "Data pickle loaded."
+            pickle_file.close()
+        except IOError as err:
+            return "Cannot read from existing pickle.", err.message
+    elif make_new_pickles:
+        data = query_all_db(make_new_pickles)
+    else:
+        data = query_all_db()
+    return data
+
+
+def pickle_matrix_bits(retvals):
+    X, y, vocab = retvals
+    print "Pickling X, y, vocab..."
+    pickle_file = open('pickles/matrix_pickle', 'wb')
+    cPickle.dump(X, pickle_file)
     pickle_file.close()
-    print "Pickled."
+    print "Pickled matrix"
+    pickle_file = open('pickles/labels_pickle', 'wb')
+    cPickle.dump(y, pickle_file)
+    pickle_file.close()
+    print "Pickled y labels"
+    pickle_file = open('pickles/vocab_pickle', 'wb')
+    cPickle.dump(vocab, pickle_file)
+    pickle_file.close()
+    print "Pickled vocab."
+    print "Finished pickling X, y, & vocab."
 
-    #our_outs = query_twitter_for_histories(data)
-    #send_user_queries_to_db(our_outs)
 
+def return_matrix(data, make_new_pickles=False):
+    u"""takes in a dataset, returns a tuple containing an X matrix of vectors
+    per users, a Y array of labels, and a vocabulary list."""
+    top_words = build_matrix(data, 10000)
+    if make_new_pickles:
+        pickle_matrix_bits(top_words)
+    return top_words
+
+
+def fit_classifier(X, y):
+    u"""Takes in an X matrix and a Y array of labels.
+    Checks four possible alpha values; returns the
+    classifier with the highest cross-validated score."""
+    best = None
+    best_score = None
     alphas = [1E-4, 1E-3, 1E-2, 1E-1, 1]
     for alpha in alphas:
         mnb = MNB(alpha)
-        print alpha, np.mean(
-            cross_val_score(mnb, top_words[0], top_words[1], cv=10)
+        score = np.mean(
+            cross_val_score(mnb, X, y, cv=10)
         )
+        if not best:
+            best = mnb
+            best_score = score
+        elif score > best_score:
+            best_score = score
+    best.fit(X, y)
+    return best, best_score
 
 
-    # for city, users in our_outs.items():
-    #     print city, len(users)
+def get_raw_classifier(
+    read_pickle=True, make_new_pickles=False, readXYpickle=True
+):
+    u"""Takes in keyword arguments to determine to source of data. Returns a
+    trained classifier."""
+    if readXYpickle:
+        try:
+            pickle_file = open('pickles/matrix_pickle', 'rb')
+            print "Loading X, y, vocab pickle..."
+            X, y, vocab = cPickle.load(pickle_file)
+            print "X, y, vocab pickle loaded."
+            pickle_file.close()
+            mnb, score = fit_classifier(X, y)
+            return mnb
+        except IOError as err:
+            print "Cannot read from existing pickle.", err.message
+            print "Attempting to new matrix from pickled data set"
+    data = return_data_sets(read_pickle, make_new_pickles)
+    X, y, vocab = return_matrix(data, make_new_pickles)
+    mnb, score = fit_classifier(X, y)
+    if make_new_pickles:
+        print "Pickling classifier..."
+        pickle_file = open('pickles/classifier_pickle', 'wb')
+        cPickle.dump(mnb, pickle_file)
+        pickle_file.close()
+        print "Pickled classifier."
+    print "returning mnb"
+    return mnb
 
-    # for city, tweets in our_outs.items:
-    #     print "\n\n", "*" * 10, "\n\n"
-    #     print city, "\n\n"
-    #     print len(tweets)
-    #     print "\n\n", "*" * 20, "\n\n"
-    # nulls = 0
-    # null_keys = []
-    # for key, vals in data.items():
-    #     if len(vals) < 1:
-    #         nulls += 1
-    #         null_keys.append(key)
-    # print "No values for ", nulls, " cities: ", null_keys
+
+def load_pickled_classifier_and_vocab():
+    pickle_file = open('pickles/classifier_pickle', 'rb')
+    print "Loading classifier pickle..."
+    mnb = cPickle.load(pickle_file)
+    print "Classifier pickle loaded."
+    pickle_file.close()
+    pickle_file = open('pickles/vocab_pickle', 'rb')
+    print "Loading vocab pickle..."
+    vocab = cPickle.load(pickle_file)
+    print "Vocab pickle loaded."
+    pickle_file.close()
+    return mnb, vocab
+
+
+def load_y_pickle():
+    pickle_file = open('pickles/labels_pickle', 'rb')
+    print "Loading labels pickle..."
+    labels = cPickle.load(pickle_file)
+    print "Labels pickle loaded."
+    pickle_file.close()
+    return labels
+
+
+def generate_predictions(userTestdata):
+    mnb, vocab = load_pickled_classifier_and_vocab()
+    X, user_array, user_cities = build_test_matrix(userTestdata, vocab)
+    correct = 0
+    incorrect = 0
+    got_wrong = []
+    all_results = []
+    #print X
+    #y = load_y_pickle()
+    #print y
+    #print "+++++++++++++++++++++++++"
+    predictions = mnb.predict(X)
+    if len(predictions):
+        for idx, prediction in enumerate(predictions):
+            report = (user_array[idx], user_cities[idx], prediction)
+            if user_cities[idx] == prediction:
+                correct += 1
+            else:
+                incorrect += 1
+                got_wrong.append(report)
+            all_results.append(report)
+        percent_right = correct / (float(correct) + incorrect)
+        return percent_right, got_wrong, all_results
+
+if __name__ == "__main__":
+    print get_raw_classifier(make_new_pickles=True, read_pickle=False, readXYpickle=False)
