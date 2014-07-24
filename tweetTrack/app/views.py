@@ -65,3 +65,16 @@ def contact():
     msg.body = request.args.get('message', 'Message error')
     mail.send(msg)
     return render_template('message_sent.html', name=name)
+
+
+@app.route('/api-request/<email>', methods=['GET', 'POST'])
+def api_request(email):
+    url = app.config['REQUEST_API_URL']
+    data = json.dumps({'email': email})
+    headers = {
+        'Content-Type': 'application/json',
+        'Content-Length': len(data)
+    }
+    response = requests.get(url, data=data, headers=headers)
+    response.raise_for_status()
+    return jsonify({'response': '<P>Check your email for your key.</p>'})

@@ -10,6 +10,7 @@ if flask_config == 'Dev':
     app.config.from_object(config.DevelopmentConfig)
 elif flask_config == 'Prod':
     app.config.from_object(config.ProductionConfig)
+
 db = SQLAlchemy(app)
 mail = Mail(app)
 

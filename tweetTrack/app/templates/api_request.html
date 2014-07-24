@@ -11,7 +11,7 @@
                 <p>
                     Enter your email below to receive your API key.
                 </p>
-                <form id="api-request-form" action="">
+                <form id="api-request-form" action="" method="post">
                 {{ api_request_form.csrf_token }}
                 <fieldset class="form-group">
                     {{ api_request_form.request_email.label }}<br />
@@ -23,19 +23,18 @@
                 </div>
                 <script>
                     var modal = $("#api_request-modal");
-                    var api_request = $("#api_request-form");
+                    var api_request = $("#api-request-form");
                     api_request.on("submit", function(event){
                         var request_email = $("#request_email").val();
                         event.preventDefault();
-                        $.ajax('/api_request/' + request_email, {
+                        $.ajax('/api-request/' + request_email, {
                             data: api_request.serialize(),
                             success: function(response) {
                                 api_request.trigger("reset");
                                 modal.modal('hide');
-                                });
-                            }
+                                }
+                            });
                         });
-                    });
                 </script>
                 </form>
             </div>

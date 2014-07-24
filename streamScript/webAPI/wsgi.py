@@ -9,7 +9,8 @@ from tweetTrack.app import app
 application = DispatcherMiddleware(app)
 
 if __name__ == '__main__':
-
+    print('hello')
+    print(str(argv))
     if len(argv) < 2:
         os.environ['FLASK_CONFIG'] = 'Dev'
     else:
