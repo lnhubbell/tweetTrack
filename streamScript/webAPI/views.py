@@ -9,22 +9,28 @@ from streamScript.domain.make_predictions_per_user import make_prediction
 
 
 @app.route('/test')
-def dummy_data():
+def dummy_data(screen_name=None):
+    if not screen_name:
+        screen_name = 'No Screen Name'
     lat = random() * 49
     lng = random() * -122
     context = {
-        'screen_name': 'ian_auld',
+        'screen_name': screen_name,
         'location_lat': lat,
         'location_lng': lng,
     }
+
     return context
 
 
-@app.route('/get/location', methods=['GET'])
+@app.route('/get/location', methods=['GET', 'POST'])
 def get_location():
     screen_name = request.get_json().get('screen_name', False)
     key = request.get_json().get('api_key', False)
-    context = make_prediction([screen_name])
+    try:
+        context = make_prediction([screen_name])
+    except:
+        context = dummy_data(screen_name)
     return jsonify(context)
 
 

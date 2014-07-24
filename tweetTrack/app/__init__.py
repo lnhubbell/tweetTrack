@@ -5,12 +5,13 @@ from flask.ext.mail import Mail
 from config import config
 
 app = Flask(__name__)
-flask_config = os.environ.get('FLASK_CONFIG', 'Dev')
+flask_config = os.environ.get('FLASK_CONFIG', 'Prod')
 if flask_config == 'Dev':
+    print('starting in Dev mode')
     app.config.from_object(config.DevelopmentConfig)
-elif flask_config == 'Prod':
+else:
+    print('starting in Prod mode')
     app.config.from_object(config.ProductionConfig)
-
 db = SQLAlchemy(app)
 mail = Mail(app)
 
