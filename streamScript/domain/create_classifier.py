@@ -19,9 +19,7 @@ def build_test_matrix(user_data, vocab):
     matrix = []
     user_array = []
     user_cities = []
-    #print user_data
     for history in user_data:
-        #print history
         user_string = ""
         user_name = history[0][0]
         user_array.append(user_name)
@@ -36,9 +34,6 @@ def build_test_matrix(user_data, vocab):
     )
     print "Building test X, Y..."
     X = vec.fit_transform(matrix, vocab).todense()
-    # print X
-    # print user_array
-    # print user_cities
     return X, user_array, user_cities
 
 
@@ -106,7 +101,7 @@ def fit_classifier(X, y):
 
 
 def get_raw_classifier(make_new_pickles=False, readpickle=True, useTweet200=False):
-    u"""Takes in keyword arguments to determine to source of data. Returns a
+    u"""Takes in keyword arguments to determine source of data. Returns a
     trained classifier."""
     if readpickle:
         X = picklers.load_matrix_pickle()
@@ -121,19 +116,19 @@ def get_raw_classifier(make_new_pickles=False, readpickle=True, useTweet200=Fals
     mnb = fit_classifier(X, y)
     if make_new_pickles:
         picklers.pickle_classifier(mnb)
-    if not readpickle:
-        picklers.pickle_data(data)
-        picklers.pickle_matrix(X)
-        picklers.pickle_labels(y)
-        picklers.pickle_vocab(vocab)
+        if not readpickle:
+            picklers.pickle_data(data)
+            picklers.pickle_matrix(X)
+            picklers.pickle_labels(y)
+            picklers.pickle_vocab(vocab)
     print "returning mnb"
     return mnb
 
 
 def generate_predictions(userTestdata):
     u"""Takes in a list of twitter users' last 200 tweets, formatted as
-    'blobs'. Returns a percent correct (if known), a list of all incorrect guesses
-    (or unknown), and a list of all the city predictions."""
+    'blobs'. Returns a percent correct (if known), a list of all incorrect
+    guesses (or unknown), and a list of all the city predictions."""
     mnb = picklers.load_classifier_pickle()
     vocab = picklers.load_vocab_pickle()
     X, user_array, user_cities = build_test_matrix(userTestdata, vocab)
