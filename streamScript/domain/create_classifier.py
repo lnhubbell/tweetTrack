@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer as CV
 from sklearn.naive_bayes import MultinomialNB as MNB
 
-from streamScript.domain.send_data import query_all_db_lim, query_all_db_Tweet200
+from streamScript.domain.send_data import query_all_db, query_all_db_Tweet200
 import picklers
 
 u"""Generates a vocabulary
@@ -116,7 +116,7 @@ def get_raw_classifier(make_new_pickles=False, readpickle=True, useTweet200=Fals
         data = query_all_db_Tweet200()
         X, y, vocab = build_matrix_per_user(data)
     else:
-        data = query_all_db_lim()
+        data = query_all_db(limit=True)
         X, y, vocab = build_matrix(data)
     mnb = fit_classifier(X, y)
     if make_new_pickles:
