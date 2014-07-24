@@ -56,7 +56,8 @@ def vectorize(user_matrix, user_array, n):
 
 
 def build_matrix(data, n=1000):
-    u"""Takes in a raw dataset and an optional parameter to limit the feature
+    u"""Uses blocks of tweets from multiple users per city.
+    Takes in a raw dataset and an optional parameter to limit the feature
     set to n. Defaults to 1000. Returns a tuple containing a matrix of n features,
     a vector of labels, and a vocabulary list of the features examined."""
     user_matrix = []
@@ -73,7 +74,8 @@ def build_matrix(data, n=1000):
 
 
 def build_matrix_per_user(data, n=1000):
-    u"""Takes in a raw dataset and an optional parameter to limit the feature
+    u""" Uses blocks of tweets from single users per city.
+    Takes in a raw dataset and an optional parameter to limit the feature
     set to n. Defaults to 1000. Returns a tuple containing a matrix of n features,
     a vector of labels, and a vocabulary list of the features examined."""
     user_matrix = []
