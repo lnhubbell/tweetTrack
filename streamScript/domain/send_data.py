@@ -68,7 +68,7 @@ def query_all_db_Tweet200():
     bb_dict = read_in_bb_file()
     data_set = {}
     for key, values in bb_dict.items():
-        sql = """SELECT * FROM "Tweet200" WHERE city == %s;"""
+        sql = """SELECT * FROM "Tweet200" WHERE city = %s;"""
         data = execute_query(sql, key, need_results=True)
         data_set[key] = data
     return data_set

@@ -3,12 +3,20 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer as CV
 from sklearn.naive_bayes import MultinomialNB as MNB
 
-from streamScript.domain.send_data import query_all_db, query_all_db_Tweet200
+from streamScript.domain.send_data import query_all_db, query_all_db_Tweet200, read_in_bb_file
 import picklers
 
 u"""Generates a vocabulary
 set and builds a feature matrix. Creates a classifier and returns
 cross-validated predictions. Pickles dataset and matrix as necessary."""
+
+
+def check_city_locations(location_lat, location_lng):
+    bb_dict = read_in_bb_file()
+    for city, values in bb_dict.items():
+        if (values[0][0] < location_lat < values[0][1]) and \
+                values[1][0] < location_lng < values[1][1]:
+            return city, values
 
 
 def build_test_matrix(user_data, vocab):
@@ -23,7 +31,11 @@ def build_test_matrix(user_data, vocab):
         user_string = ""
         user_name = history[0][0]
         user_array.append(user_name)
-        user_cities.append(history[0][5])
+        if history[0][3] and history[0][4]:
+            actual = check_city_locations(history[0][3], history[0][4])
+            user_cities.append(actual)
+        else:
+            user_cities.append(history[0][5])
         for tweet in history:
             if history[0][0] == user_name:
                 user_string += tweet[1].lower()
@@ -136,7 +148,9 @@ def generate_predictions(userTestdata):
     incorrect = 0
     got_wrong = []
     all_results = []
-    predictions = mnb.predict_log_proba(X)
+    predictions = mnb.predict(X)
+    print user_array
+    print user_cities
     if len(predictions):
         for idx, prediction in enumerate(predictions):
             report = (user_array[idx], user_cities[idx], prediction)
@@ -147,7 +161,7 @@ def generate_predictions(userTestdata):
                 got_wrong.append(report)
             all_results.append(report)
         percent_right = correct / (float(correct) + incorrect)
-        return percent_right, got_wrong, all_results
+        return percent_right, got_wrong, all_results, user_cities
 
 if __name__ == "__main__":
     print get_raw_classifier(make_new_pickles=True, readpickle=False, useTweet200=False)
