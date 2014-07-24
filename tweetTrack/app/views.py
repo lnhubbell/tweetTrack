@@ -2,6 +2,7 @@ from os import environ
 import json
 import tweepy
 import requests
+from requests.exceptions import ConnectionError
 from flask import render_template, request, jsonify
 from flask.ext.mail import Message
 from tweetTrack.app import app, mail
@@ -51,6 +52,22 @@ def user_tweets(user_name):
     return jsonify(response=response.json())
 
 
+@app.route('/api-request/<email>', methods=['GET', 'POST'])
+def api_request(email):
+    try:
+        url = app.config['REQUEST_API_URL']
+        data = json.dumps({'email': email})
+        headers = {
+            'Content-Type': 'application/json',
+            'Content-Length': len(data)
+        }
+        response = requests.get(url, data=data, headers=headers)
+        response.raise_for_status()
+        return jsonify(response=response.json())
+    except ConnectionError:
+        return '<p>Something went wrong with you request</p>'
+
+
 @app.route('/contact/', methods=['GET', 'POST'])
 def contact():
     name = request.args.get('name', 'Name error')
@@ -65,16 +82,3 @@ def contact():
     msg.body = request.args.get('message', 'Message error')
     mail.send(msg)
     return render_template('message_sent.html', name=name)
-
-
-@app.route('/api-request/<email>', methods=['GET', 'POST'])
-def api_request(email):
-    url = app.config['REQUEST_API_URL']
-    data = json.dumps({'email': email})
-    headers = {
-        'Content-Type': 'application/json',
-        'Content-Length': len(data)
-    }
-    response = requests.get(url, data=data, headers=headers)
-    response.raise_for_status()
-    return jsonify({'response': '<P>Check your email for your key.</p>'})

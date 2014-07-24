@@ -2,6 +2,7 @@ import tweepy
 
 from send_data import query_db, send_user_queries_to_db, read_in_bb_file
 from our_keys.twitter_keys import my_keys
+from itertools import chain, repeat
 
 u"""Reads in a file of cities and their bounding boxes. Queries the
 database to get a list of all unique users who have tweeted from that
@@ -21,6 +22,7 @@ def get_twitter_api():
             our_keys['access_key'],
             our_keys['access_secret']
         )
+        print "Hi, I'm the key generator: ", our_keys['access_key']
         yield tweepy.API(auth)
 
 
@@ -70,7 +72,7 @@ def format_blob(history, user, city):
 
 def check_list_low_tweeters():
     with open("text/stop_names.txt", 'r') as f:
-        names = f.readlines()
+        names = f.read().split("\n")
     return names
 
 
@@ -79,7 +81,9 @@ def query_twitter_for_histories(users, city=None, cap=100):
     city. Iterates over the dict to extract the tweet text/locations/timestamps
     for each tweet, bundles results into DB-friendly tuples. Returns a list of
     lists of tuples."""
-    api = get_twitter_api().next()
+    api_generator = get_twitter_api()
+    api_generator = chain.from_iterable(repeat(tuple(api_generator), 1000))
+    api = api_generator.next()
     city_tweets = []
     user_count = 0
     too_low_count = 0
@@ -96,12 +100,10 @@ def query_twitter_for_histories(users, city=None, cap=100):
         try:
             history = api.user_timeline(screen_name=user, count=200)
         except tweepy.error.TweepError as err:
-            print api.me().name
             print "Tweepy Error"
             print "Tweepy Error: ", err.message
             # if err.message == "[{u'message': u'Rate limit exceeded', u'code': 88}]":
-            api = get_twitter_api().next()
-            print api.me().name
+            api = api_generator.next()
             continue
         if len(history) >= 200:
             user_count += 1
