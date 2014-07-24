@@ -4,3 +4,6 @@ Washington, DC
 Atlanta, GA
 Tulsa, OK
 El Paso, TX
+Phoenix, AZ
+Houston, TX
+San Antonio, TX
