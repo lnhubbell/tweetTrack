@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer as CV
 from sklearn.naive_bayes import MultinomialNB as MNB
 
-from streamScript.domain.send_data import query_all_db
+from streamScript.domain.send_data import query_all_db_lim, query_all_db_Tweet200
 import picklers
 
 u"""Generates a vocabulary
@@ -56,7 +56,8 @@ def vectorize(user_matrix, user_array, n):
 
 
 def build_matrix(data, n=1000):
-    u"""Takes in a raw dataset and an optional parameter to limit the feature
+    u"""Uses blocks of tweets from multiple users per city.
+    Takes in a raw dataset and an optional parameter to limit the feature
     set to n. Defaults to 1000. Returns a tuple containing a matrix of n features,
     a vector of labels, and a vocabulary list of the features examined."""
     user_matrix = []
@@ -73,6 +74,10 @@ def build_matrix(data, n=1000):
 
 
 def build_matrix_per_user(data, n=1000):
+    u""" Uses blocks of tweets from single users per city.
+    Takes in a raw dataset and an optional parameter to limit the feature
+    set to n. Defaults to 1000. Returns a tuple containing a matrix of n features,
+    a vector of labels, and a vocabulary list of the features examined."""
     user_matrix = []
     user_array = []
     for key, val in data.items():
@@ -80,16 +85,17 @@ def build_matrix_per_user(data, n=1000):
         for tweet in val:
             if count == 0:
                 this_user = tweet[0]
-                user_matrix.append(" ")
+                our_string = ""
             if (tweet[0] == this_user) and (count < 200):
-                user_matrix[-1] += tweet[2].lower()
+                our_string += tweet[2].lower()
                 count += 1
             elif (tweet[0] != this_user) and (len(user_matrix[-1]) >= 14000):
                 count = 0
-            elif len(user_matrix[-1]) < 14000:
-                user_matrix.pop()
-
-    return vectorize(user_matrix, user_array)
+                user_matrix.append(our_string)
+                user_array.append(key)
+            elif tweet[0] != this_user:
+                count = 0
+    return vectorize(user_matrix, user_array, n)
 
 
 def fit_classifier(X, y):
@@ -99,15 +105,18 @@ def fit_classifier(X, y):
     return mnb.fit(X, y)
 
 
-def get_raw_classifier(make_new_pickles=False, readpickle=True):
+def get_raw_classifier(make_new_pickles=False, readpickle=True, useTweet200=False):
     u"""Takes in keyword arguments to determine to source of data. Returns a
     trained classifier."""
     if readpickle:
         X = picklers.load_matrix_pickle()
         y = picklers.load_y_pickle()
         data = picklers.load_data_pickle()
+    elif useTweet200:
+        data = query_all_db_Tweet200()
+        X, y, vocab = build_matrix_per_user(data)
     else:
-        data = query_all_db()
+        data = query_all_db_lim()
         X, y, vocab = build_matrix(data)
     mnb = fit_classifier(X, y)
     if make_new_pickles:
@@ -146,4 +155,4 @@ def generate_predictions(userTestdata):
         return percent_right, got_wrong, all_results
 
 if __name__ == "__main__":
-    print get_raw_classifier(make_new_pickles=True, readpickle=False)
+    print get_raw_classifier(make_new_pickles=True, readpickle=False, useTweet200=False)
