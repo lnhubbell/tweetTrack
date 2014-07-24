@@ -35,3 +35,13 @@ class TwitterForm(Form):
         validators=[DataRequired(required.format('screen name'))]
     )
     submit = SubmitField('Find Me!')
+
+
+class APIRequestForm(Form):
+    email = StringField(
+        'Email: ',
+        validators=[
+            DataRequired(required.format('email')),
+            Email('Please enter a valid email')
+        ]
+    )
