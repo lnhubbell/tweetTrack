@@ -1,9 +1,8 @@
 from os import environ
 import json
-from random import random
 import tweepy
 import requests
-from flask import render_template, redirect, url_for, request, jsonify
+from flask import render_template, request, jsonify
 from flask.ext.mail import Message
 from tweetTrack.app import app, mail
 from tweetTrack.app.forms import TwitterForm, ContactForm, APIRequestForm
