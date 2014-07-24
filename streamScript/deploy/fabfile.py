@@ -1,12 +1,13 @@
+import time
 from fabric.api import run
 from fabric.api import env
 from fabric.api import prompt
 from fabric.api import execute
 from fabric.api import sudo
 from fabric.api import settings
-from fabric import contrib
+from fabric.contrib.files import upload_template
+from fabric.contrib.project import rsync_project
 import boto.ec2
-import time
 import boto
 
 env.hosts = ['localhost', ]
@@ -34,7 +35,7 @@ def provision_instance(wait_for_running=True, timeout=120, interval=2):
     timeout_val = int(timeout)
     conn = get_ec2_connection()
     instance_type = 't1.micro'
-    key_name = 'pk-aws'
+    key_name = 'imagr'
     security_group = 'ssh-access'
     image_id = 'ami-d0d8b8e0'
 
@@ -63,14 +64,14 @@ def provision_instance(wait_for_running=True, timeout=120, interval=2):
                 instance.update()
 
 
-def list_aws_instances(verbose=False, state='all'):
+def list_aws_instances(verbose=False, state='running'):
     conn = get_ec2_connection()
 
     reservations = conn.get_all_reservations()
     instances = []
     for res in reservations:
         for instance in res.instances:
-            if state == 'all' or instance.state == state:
+            if instance.state == state:
                 print instance
                 instance = {
                     'id': instance.id,
@@ -111,24 +112,13 @@ def select_instance(state='running'):
     env.active_instance = env.instances[choice - 1]['instance']
 
 
-def stop_instance():
-    conn = get_ec2_connection()
-    select_instance('running')
-    conn.stop_instances(env.active_instance.id)
-
-
-def terminate_instance():
-    conn = get_ec2_connection()
-    select_instance('stopped')
-    conn.terminate_instances(env.active_instance.id)
-
-
-def run_command_on_selected_server(command):
+def run_command_on_selected_server(command, *args, **kwargs):
     select_instance()
     selected_hosts = [
         'ubuntu@' + env.active_instance.public_dns_name
     ]
-    execute(command, hosts=selected_hosts)
+    kwargs['hosts'] = selected_hosts
+    execute(command, *args, **kwargs)
 
 
 def _install_nginx():
@@ -141,10 +131,19 @@ def install_nginx():
     run_command_on_selected_server(_install_nginx)
 
 
+def env_vars():
+    with open('env_vars.txt') as f:
+        return str(f.read().rstrip())
+
+
 def _install_supervisor():
     sudo('apt-get -y install supervisor')
     print "installed supervisor"
-    sudo('mv ./streamScript/supervisord.conf /etc/supervisor/conf.d/tweetTrack.conf')
+    upload_template(
+        '/home/ian/Downloads/Projects/tweetTrack/streamScript/deploy/supervisor.conf', '~/',
+        context={'host_envs': env_vars()}
+    )
+    sudo('mv supervisor.conf /etc/supervisor/conf.d/streamScript.conf')
     sudo('/etc/init.d/supervisor stop')
     sudo('/etc/init.d/supervisor start')
 
@@ -156,9 +155,8 @@ def install_supervisor():
 def _move_nginx_files():
     sudo('mv /etc/nginx/sites-available/default \
         /etc/nginx/sites-available/default.orig')
-    sudo('mv ./streamScript/simple_nginx_config /etc/nginx/sites-available/default')
+    sudo('mv streamScript/deploy/simple_nginx_config /etc/nginx/sites-available/default')
     sudo('/etc/init.d/nginx restart')
-    # sudo('python ./tweetTrack/tweetTrack.py')
 
 
 def move_nginx_files():
@@ -169,15 +167,27 @@ def _mass_install():
     sudo('apt-get update')
     sudo('apt-get -y install python-setuptools')
     sudo('apt-get -y install python-dev')
+    sudo('apt-get -y install packaging-dev')
     sudo('apt-get -y install python-pip')
     sudo('apt-get -y install libpq-dev')
-    sudo('apt-get -y install libjpeg-dev')
-    # with settings(warn_only=True):
-    sudo('pip install -r ~/streamScript/requirements.txt')
+    with settings(warn_only=True):
+        sudo('pip install -r streamScript/requirements.txt')
 
 
 def mass_install():
     run_command_on_selected_server(_mass_install)
+
+
+def stop_instance():
+    conn = get_ec2_connection()
+    select_instance('running')
+    conn.stop_instances(env.active_instance.id)
+
+
+def terminate_instance():
+    conn = get_ec2_connection()
+    select_instance('stopped')
+    conn.terminate_instances(env.active_instance.id)
 
 
 def generate_nginx_config():
@@ -198,6 +208,15 @@ def generate_nginx_config():
         outfile.write(config_file)
 
 
+def _install_app():
+    sudo('mv streamScript/setup.py setup.py')
+    sudo('python setup.py develop')
+
+
+def install_app():
+    run_command_on_selected_server(_install_app)
+
+
 def deploy():
     list_aws_instances()
     not_running = True
@@ -209,8 +228,16 @@ def deploy():
 
     install_nginx()
     generate_nginx_config()
-    run_command_on_selected_server(contrib.project.upload_project)
+    run_command_on_selected_server(
+        rsync_project,
+        local_dir='../../streamScript',
+        remote_dir="~/",
+        exclude=[
+            ".git",
+            "streamScript/deploy/env_vars.txt"
+        ]
+    )
     mass_install()
     install_supervisor()
     move_nginx_files()
-
+    install_app()

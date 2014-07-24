@@ -11,10 +11,14 @@ __pycache__/
 # Super Secret Files
 tweets.db
 tweetTrack/deploy/env_vars.txt
+streamScript/deploy/env_vars.txt
 tweetTrack/deploy/simple_nginx_config
+streamScript/deploy/simple_nginix_config
 tweetTrack/deploy/supervisord.conf
+streamScript/deploy/supervisor.conf
 tweetTrack/app/config/
-streamScript/config
+streamScript/webAPI/config/
+streamScript/webAPI/keys.sqlite
 
 # Distribution / packaging
 .Python

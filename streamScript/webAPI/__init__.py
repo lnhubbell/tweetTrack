@@ -1,6 +1,17 @@
+import os
 from flask import Flask
-
+from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.mail import Mail
+from config import config
 
 app = Flask(__name__)
+flask_config = os.environ.get('FLASK_CONFIG', 'Dev')
+if flask_config == 'Dev':
+    app.config.from_object(config.DevelopmentConfig)
+elif flask_config == 'Prod':
+    app.config.from_object(config.ProductionConfig)
 
-from 
+db = SQLAlchemy(app)
+mail = Mail(app)
+
+import views
