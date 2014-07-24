@@ -44,7 +44,7 @@ def get_unique_handles(vals):
 def format_blob(history, user, city):
     u"""Formats tweets pieces to be fed to sql query.
 
-    History is a list-like set of tweets. User is the screen name 
+    History is a list-like set of tweets. User is the screen name
     as a string. City is the string name of the city we querried for."""
     tweet_his = []
     for tweet in history:
@@ -68,6 +68,12 @@ def format_blob(history, user, city):
     return tweet_his
 
 
+def check_list_low_tweeters():
+    with open("text/stop_names.txt", 'r') as f:
+        names = f.readlines()
+    return names
+
+
 def query_twitter_for_histories(users, city=None, cap=100):
     u"""Calls function to return a dict of cities and the unique users for each
     city. Iterates over the dict to extract the tweet text/locations/timestamps
@@ -77,18 +83,25 @@ def query_twitter_for_histories(users, city=None, cap=100):
     city_tweets = []
     user_count = 0
     too_low_count = 0
+    with open("text/stop_names.txt", 'a') as f:
+        f.write(city)
+        f.write("\n")
     for user in users:
         if user_count > cap:
             break
+        if user in check_list_low_tweeters():
+            continue
         history = []
         tweet_his = []
         try:
             history = api.user_timeline(screen_name=user, count=200)
         except tweepy.error.TweepError as err:
+            print api.me().name
+            print "Tweepy Error"
             print "Tweepy Error: ", err.message
-            if err.message == "[{u'message': u'Rate limit \
-                    exceeded', u'code': 88}]":
-                api = get_twitter_api().next()
+            # if err.message == "[{u'message': u'Rate limit exceeded', u'code': 88}]":
+            api = get_twitter_api().next()
+            print api.me().name
             continue
         if len(history) >= 200:
             user_count += 1
@@ -97,7 +110,10 @@ def query_twitter_for_histories(users, city=None, cap=100):
             city_tweets.append(tweet_his)
             print user_count
         else:
-            print 'not enough tweets in this users history'
+            print 'Only ', len(tweet_his), " in this user's history."
+            with open("text/stop_names.txt", 'a') as f:
+                f.write(user)
+                f.write("\n")
             too_low_count += 1
         total = user_count + too_low_count
         print "total requests: ", total

@@ -36,25 +36,26 @@ def build_test_matrix(user_data, vocab):
     representing tweets from a single user, and a vocab list. Returns an X
     matrix of the test user features, a list of the user names, and a Y
     array of the labels."""
-    user_matrix = []
+    matrix = []
     user_array = []
     user_cities = []
     #print user_data
     for history in user_data:
         #print history
+        user_string = ""
         user_name = history[0][0]
         user_array.append(user_name)
         user_cities.append(history[0][5])
         for tweet in history:
             if history[0][0] == user_name:
-                user_matrix.append(" ")
-                user_matrix[-1] += tweet[1].lower()
+                user_string += tweet[1].lower()
+        matrix.append(user_string)
     vec = CV(
         analyzer='word',
         vocabulary=vocab
     )
     print "Building test X, Y..."
-    X = vec.fit_transform(user_matrix, vocab).todense()
+    X = vec.fit_transform(matrix, vocab).todense()
     # print X
     # print user_array
     # print user_cities
@@ -154,6 +155,7 @@ def fit_classifier(X, y):
             best_score = score
         elif score > best_score:
             best_score = score
+    best.fit(X, y)
     return best, best_score
 
 
@@ -164,23 +166,26 @@ def get_raw_classifier(
     trained classifier."""
     if readXYpickle:
         try:
-            pickle_file = open('pickles/xypickle', 'rb')
+            pickle_file = open('pickles/matrix_pickle', 'rb')
             print "Loading X, y, vocab pickle..."
             X, y, vocab = cPickle.load(pickle_file)
             print "X, y, vocab pickle loaded."
             pickle_file.close()
+            mnb, score = fit_classifier(X, y)
+            return mnb
         except IOError as err:
-            return "Cannot read from existing pickle.", err.message
-    else:
-        data = return_data_sets(read_pickle, make_new_pickles)
-        X, y, vocab = return_matrix(data, make_new_pickles)
-        mnb, score = fit_classifier(X, y)
+            print "Cannot read from existing pickle.", err.message
+            print "Attempting to new matrix from pickled data set"
+    data = return_data_sets(read_pickle, make_new_pickles)
+    X, y, vocab = return_matrix(data, make_new_pickles)
+    mnb, score = fit_classifier(X, y)
     if make_new_pickles:
         print "Pickling classifier..."
         pickle_file = open('pickles/classifier_pickle', 'wb')
         cPickle.dump(mnb, pickle_file)
         pickle_file.close()
         print "Pickled classifier."
+    print "returning mnb"
     return mnb
 
 
@@ -198,6 +203,15 @@ def load_pickled_classifier_and_vocab():
     return mnb, vocab
 
 
+def load_y_pickle():
+    pickle_file = open('pickles/labels_pickle', 'rb')
+    print "Loading labels pickle..."
+    labels = cPickle.load(pickle_file)
+    print "Labels pickle loaded."
+    pickle_file.close()
+    return labels
+
+
 def generate_predictions(userTestdata):
     mnb, vocab = load_pickled_classifier_and_vocab()
     X, user_array, user_cities = build_test_matrix(userTestdata, vocab)
@@ -205,22 +219,22 @@ def generate_predictions(userTestdata):
     incorrect = 0
     got_wrong = []
     all_results = []
+    #print X
+    #y = load_y_pickle()
+    #print y
+    #print "+++++++++++++++++++++++++"
     predictions = mnb.predict(X)
-    for idx, prediction in predictions:
-        report = (user_array[idx], user_cities[idx], prediction)
-        if prediction == user_cities[idx]:
-            correct += 1
-        else:
-            incorrect += 1
-            got_wrong.append(report)
-        all_results.append(report)
-    percent_right = correct / (float(correct) + incorrect)
-    return percent_right, got_wrong, all_results
+    if len(predictions):
+        for idx, prediction in enumerate(predictions):
+            report = (user_array[idx], user_cities[idx], prediction)
+            if user_cities[idx] == prediction:
+                correct += 1
+            else:
+                incorrect += 1
+                got_wrong.append(report)
+            all_results.append(report)
+        percent_right = correct / (float(correct) + incorrect)
+        return percent_right, got_wrong, all_results
 
 if __name__ == "__main__":
-    #print get_raw_classifier(make_new_pickles=True, read_pickle=False, readXYpickle=False)
-    # user_names = ['crisewing']
-    # print generate_predictions(user_names)
-    #our_outs = query_twitter_for_histories(data)
-    #send_user_queries_to_db(our_outs)
-    pass
+    print get_raw_classifier(make_new_pickles=True, read_pickle=False, readXYpickle=False)
