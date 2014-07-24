@@ -11,14 +11,17 @@ setup(
     author='Ian Auld, Nathan Hubbell, Corinne Hutchinson',
     author_email='imauld@gmail.com',
     # Choose your license
-    #   and remember to include the license text in a 'docs' directory.
+    # and remember to include the license text in a 'docs' directory.
     license='MIT',
     packages=['streamScript'],
     install_requires=[
             'setuptools',
             'Flask',
+            'Flask-SQLAlchemy',
+            'Flask-Mail',
             'pytest',
-            # 'scikit-learn',
-            # 'numpy'
+            'numpy',
+            'scikit-learn',
+            'scipy',
     ]
 )

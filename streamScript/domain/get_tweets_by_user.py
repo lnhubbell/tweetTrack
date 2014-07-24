@@ -7,11 +7,11 @@ from itertools import chain, repeat
 u"""Reads in a file of cities and their bounding boxes. Queries the
 database to get a list of all unique users who have tweeted from that
 city. Queries Twitter api to get 200 tweets from each user, then inserts
-200 tweets for up to 100 users per city
-into a separate database table called "Tweet200."""
+200 tweets for up to 100 users per city into a separate database table
+called "Tweet200."""
 
 
-def get_twitter_api():
+def artget_twitter_api():
     u"""Gets twitter keys from key file."""
     for our_set, our_keys in my_keys.items():
         auth = tweepy.OAuthHandler(
@@ -59,7 +59,6 @@ def format_blob(history, user, city):
         if location:
             location_lat = location['coordinates'][0]
             location_lng = location['coordinates'][1]
-
         hashtags = []
         # if location:
         blob = (
@@ -87,9 +86,6 @@ def query_twitter_for_histories(users, city=None, cap=100):
     city_tweets = []
     user_count = 0
     too_low_count = 0
-    with open("text/stop_names.txt", 'a') as f:
-        f.write(city)
-        f.write("\n")
     for user in users:
         if user_count > cap:
             break
@@ -100,9 +96,7 @@ def query_twitter_for_histories(users, city=None, cap=100):
         try:
             history = api.user_timeline(screen_name=user, count=200)
         except tweepy.error.TweepError as err:
-            print "Tweepy Error"
             print "Tweepy Error: ", err.message
-            # if err.message == "[{u'message': u'Rate limit exceeded', u'code': 88}]":
             api = api_generator.next()
             continue
         if len(history) >= 200:
@@ -112,7 +106,7 @@ def query_twitter_for_histories(users, city=None, cap=100):
             city_tweets.append(tweet_his)
             print user_count
         else:
-            print 'Only ', len(tweet_his), " in this user's history."
+            print "Too few tweets in this user's history."
             with open("text/stop_names.txt", 'a') as f:
                 f.write(user)
                 f.write("\n")
@@ -133,7 +127,7 @@ def process_each_city():
             print "Now checking ", city
             handles = get_unique_handles(vals)
             print city, len(handles)
-            if len(handles) >= 150:
+            if len(handles) >= 250:
                 print "Now querying twitter for histories"
                 tweets = query_twitter_for_histories(handles, city)
                 if len(tweets) >= 100:

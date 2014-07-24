@@ -1,34 +1,14 @@
 import numpy as np
-import cPickle
 
 from sklearn.feature_extraction.text import CountVectorizer as CV
 from sklearn.naive_bayes import MultinomialNB as MNB
-from sklearn.cross_validation import cross_val_score
 
 from streamScript.domain.send_data import query_all_db
+import picklers
 
 u"""Generates a vocabulary
 set and builds a feature matrix. Creates a classifier and returns
 cross-validated predictions. Pickles dataset and matrix as necessary."""
-
-
-def build_vocab(data, n=1000):
-    u"""MAY BE DEPRECATED Takes in a dict with locations as the keys
-    and a list of tweets
-    as the values. Returns a list of tuples (word, word count) for the
-    top n words."""
-    vocab = {}
-    stopwords = open('text/stopwords.txt').read().lower().split()
-    for key, val in data.items():
-        for tweet in val:
-            the_text = tweet[2]
-            print the_text
-            the_text = the_text.lower().split()
-            for word in the_text:
-                if word not in stopwords:
-                    vocab[word] = vocab.setdefault(word, 0) + 1
-    the_list = sorted(vocab.items(), key=lambda x: -x[1])
-    return the_list[:n]
 
 
 def build_test_matrix(user_data, vocab):
@@ -62,11 +42,23 @@ def build_test_matrix(user_data, vocab):
     return X, user_array, user_cities
 
 
+def vectorize(user_matrix, user_array, n):
+    stopwords = open('text/stopwords.txt').read().lower().split()
+    vec = CV(
+        analyzer='word',
+        stop_words=stopwords,
+        max_features=n,
+    )
+    print "Building X, Y..."
+    X = vec.fit_transform(user_matrix).toarray()
+    Y = np.array(user_array)
+    return X, Y, vec.get_feature_names()
+
+
 def build_matrix(data, n=1000):
     u"""Takes in a raw dataset and an optional parameter to limit the feature
     set to n. Defaults to 1000. Returns a tuple containing a matrix of n features,
     a vector of labels, and a vocabulary list of the features examined."""
-    stopwords = open('text/stopwords.txt').read().lower().split()
     user_matrix = []
     user_array = []
     tweet_count = 0
@@ -77,153 +69,70 @@ def build_matrix(data, n=1000):
                 user_matrix.append(" ")
             user_matrix[-1] += tweet[2].lower()
             tweet_count += 1
-    vec = CV(
-        analyzer='word',
-        stop_words=stopwords,
-        max_features=n,
-    )
-    print "Building X, Y..."
-    X = vec.fit_transform(user_matrix).toarray()
-    Y = np.array(user_array)
-    print "Done"
-    return X, Y, vec.get_feature_names()
+    return vectorize(user_matrix, user_array, n)
 
 
-def return_data_sets(read_pickle=False, make_new_pickles=False):
-    u"""Takes in two optional keyword arguments; will either read in
-    a dataset from disk or will call a function to query the DB to generate
-    a new dataset. If a 'make_new_pickles' keyword arg set to True is passed,
-    the DB function will make a new pickle for future use. Returns a
-    raw dataset."""
-    if read_pickle:
-        try:
-            pickle_file = open('pickles/pickle', 'rb')
-            print "Loading data pickle..."
-            data = cPickle.load(pickle_file)
-            print "Data pickle loaded."
-            pickle_file.close()
-        except IOError as err:
-            return "Cannot read from existing pickle.", err.message
-    elif make_new_pickles:
-        data = query_all_db(make_new_pickles)
-    else:
-        data = query_all_db()
-    return data
+def build_matrix_per_user(data, n=1000):
+    user_matrix = []
+    user_array = []
+    for key, val in data.items():
+        count = 0
+        for tweet in val:
+            if count == 0:
+                this_user = tweet[0]
+                user_matrix.append(" ")
+            if (tweet[0] == this_user) and (count < 200):
+                user_matrix[-1] += tweet[2].lower()
+                count += 1
+            elif (tweet[0] != this_user) and (len(user_matrix[-1]) >= 14000):
+                count = 0
+            elif len(user_matrix[-1]) < 14000:
+                user_matrix.pop()
 
-
-def pickle_matrix_bits(retvals):
-    X, y, vocab = retvals
-    print "Pickling X, y, vocab..."
-    pickle_file = open('pickles/matrix_pickle', 'wb')
-    cPickle.dump(X, pickle_file)
-    pickle_file.close()
-    print "Pickled matrix"
-    pickle_file = open('pickles/labels_pickle', 'wb')
-    cPickle.dump(y, pickle_file)
-    pickle_file.close()
-    print "Pickled y labels"
-    pickle_file = open('pickles/vocab_pickle', 'wb')
-    cPickle.dump(vocab, pickle_file)
-    pickle_file.close()
-    print "Pickled vocab."
-    print "Finished pickling X, y, & vocab."
-
-
-def return_matrix(data, make_new_pickles=False):
-    u"""takes in a dataset, returns a tuple containing an X matrix of vectors
-    per users, a Y array of labels, and a vocabulary list."""
-    top_words = build_matrix(data, 10000)
-    if make_new_pickles:
-        pickle_matrix_bits(top_words)
-    return top_words
+    return vectorize(user_matrix, user_array)
 
 
 def fit_classifier(X, y):
     u"""Takes in an X matrix and a Y array of labels.
-    Checks four possible alpha values; returns the
-    classifier with the highest cross-validated score."""
-    best = None
-    best_score = None
-    alphas = [1E-4, 1E-3, 1E-2, 1E-1, 1]
-    for alpha in alphas:
-        mnb = MNB(alpha)
-        score = np.mean(
-            cross_val_score(mnb, X, y, cv=10)
-        )
-        if not best:
-            best = mnb
-            best_score = score
-        elif score > best_score:
-            best_score = score
-    best.fit(X, y)
-    return best, best_score
+    Fits classifier"""
+    mnb = MNB()
+    return mnb.fit(X, y)
 
 
-def get_raw_classifier(
-    read_pickle=True, make_new_pickles=False, readXYpickle=True
-):
+def get_raw_classifier(make_new_pickles=False, readpickle=True):
     u"""Takes in keyword arguments to determine to source of data. Returns a
     trained classifier."""
-    if readXYpickle:
-        try:
-            pickle_file = open('pickles/matrix_pickle', 'rb')
-            print "Loading X, y, vocab pickle..."
-            X, y, vocab = cPickle.load(pickle_file)
-            print "X, y, vocab pickle loaded."
-            pickle_file.close()
-            mnb, score = fit_classifier(X, y)
-            return mnb
-        except IOError as err:
-            print "Cannot read from existing pickle.", err.message
-            print "Attempting to new matrix from pickled data set"
-    data = return_data_sets(read_pickle, make_new_pickles)
-    X, y, vocab = return_matrix(data, make_new_pickles)
-    mnb, score = fit_classifier(X, y)
+    if readpickle:
+        X = picklers.load_matrix_pickle()
+        y = picklers.load_y_pickle()
+        data = picklers.load_data_pickle()
+    else:
+        data = query_all_db()
+        X, y, vocab = build_matrix(data)
+    mnb = fit_classifier(X, y)
     if make_new_pickles:
-        print "Pickling classifier..."
-        pickle_file = open('pickles/classifier_pickle', 'wb')
-        cPickle.dump(mnb, pickle_file)
-        pickle_file.close()
-        print "Pickled classifier."
+        picklers.pickle_classifier(mnb)
+    if not readpickle:
+        picklers.pickle_data(data)
+        picklers.pickle_matrix(X)
+        picklers.pickle_labels(y)
+        picklers.pickle_vocab(vocab)
     print "returning mnb"
     return mnb
 
 
-def load_pickled_classifier_and_vocab():
-    pickle_file = open('pickles/classifier_pickle', 'rb')
-    print "Loading classifier pickle..."
-    mnb = cPickle.load(pickle_file)
-    print "Classifier pickle loaded."
-    pickle_file.close()
-    pickle_file = open('pickles/vocab_pickle', 'rb')
-    print "Loading vocab pickle..."
-    vocab = cPickle.load(pickle_file)
-    print "Vocab pickle loaded."
-    pickle_file.close()
-    return mnb, vocab
-
-
-def load_y_pickle():
-    pickle_file = open('pickles/labels_pickle', 'rb')
-    print "Loading labels pickle..."
-    labels = cPickle.load(pickle_file)
-    print "Labels pickle loaded."
-    pickle_file.close()
-    return labels
-
-
 def generate_predictions(userTestdata):
-    mnb, vocab = load_pickled_classifier_and_vocab()
+    u"""Takes in a list of twitter users' last 200 tweets, formatted as
+    'blobs'. Returns a percent correct (if known), a list of all incorrect guesses
+    (or unknown), and a list of all the city predictions."""
+    mnb = picklers.load_classifier_pickle()
+    vocab = picklers.load_vocab_pickle()
     X, user_array, user_cities = build_test_matrix(userTestdata, vocab)
     correct = 0
     incorrect = 0
     got_wrong = []
     all_results = []
-    #print X
-    #y = load_y_pickle()
-    #print y
-    #print "+++++++++++++++++++++++++"
-    predictions = mnb.predict(X)
+    predictions = mnb.predict_log_proba(X)
     if len(predictions):
         for idx, prediction in enumerate(predictions):
             report = (user_array[idx], user_cities[idx], prediction)
@@ -237,4 +146,4 @@ def generate_predictions(userTestdata):
         return percent_right, got_wrong, all_results
 
 if __name__ == "__main__":
-    print get_raw_classifier(make_new_pickles=True, read_pickle=False, readXYpickle=False)
+    print get_raw_classifier(make_new_pickles=True, readpickle=False)

@@ -5,7 +5,7 @@ from flask.ext.mail import Message
 from sqlalchemy.orm.exc import NoResultFound
 from streamScript.webAPI import app, mail, db
 from streamScript.webAPI.auth.models import APIKey
-from streamScript.webAPI.auth.exceptions import HTTP401
+from streamScript.domain.make_predictions_per_user import make_prediction
 
 
 @app.route('/test')
@@ -22,12 +22,9 @@ def dummy_data():
 
 @app.route('/get/location', methods=['GET'])
 def get_location():
-    try:
-        screen_name = request.get_json().get('screen_name', False)
-        key = request.get_json().get('api_key', False)
-        context = dummy_data()
-    except:
-        context = HTTP401()
+    screen_name = request.get_json().get('screen_name', False)
+    key = request.get_json().get('api_key', False)
+    context = make_prediction([screen_name])
     return jsonify(context)
 
 
