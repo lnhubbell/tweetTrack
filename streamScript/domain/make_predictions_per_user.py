@@ -20,12 +20,21 @@ def make_prediction(names):
             results.append(user)
         else:
             get_preds.append(history)
-    percent_right, got_wrong, all_results = generate_predictions(get_preds)
-    for prediction in all_results:
-        user = {}
-        user['name'] = prediction[0]
-        user['prediction'] = prediction[2]
-        results.append(user)
+    try:
+        right, wrong, preds, actual = generate_predictions(get_preds)
+        for idx, pred in enumerate(preds):
+            user = {}
+            user['name'] = pred[0]
+            if actual[idx]:
+                user['prediction'] = actual[idx]
+            else:
+                user['prediction'] = pred[2]
+            results.append(user)
+    except Exception:
+        _error = {}
+        _error['name'] = "Error"
+        _error['prediction'] = "We couldn't make a prediction for this user."
+        results.append(_error)
     return results
 
 
@@ -35,15 +44,7 @@ def serve_predictions(names):
         yield result
 
 if __name__ == "__main__":
-    print
-    # user_names = raw_input("Please enter a list of Twitter handles.\n ")
-    # if not isinstance(user_names, list):
-    #     user_names = raw_input("Names must be in a list.")
-    #'EdgarandtheHall'
-    user_names = [
-        'selfiequeenbri', 'bobiiniicole', 'THE 1Far Above', 'duqe', 'neo rama']
+    user_names = ['TrustyJohn']
     results = make_prediction(user_names)
     for result in results:
-        print "For the user: ", result['name']
-        print "Our predictions are: "
-        print result['prediction']
+        print "For the user: ", result['name'], " our predictions are: ", result['prediction']

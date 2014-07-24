@@ -11,13 +11,6 @@ city. Queries Twitter api to get 200 tweets from each user, then inserts
 called "Tweet200."""
 
 
-# class Tweet(list):
-#     """A simple Tweet object."""
-#     def __init__(self, arg):
-#         super(ClassName, self).__init__()
-#         self.arg = arg
-        
-
 def get_twitter_api():
     u"""Gets twitter keys from key file."""
     for our_set, our_keys in my_keys.items():
