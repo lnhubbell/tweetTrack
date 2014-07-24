@@ -34,14 +34,17 @@ def write_report():
             total_users += handles
             out = ",".join([str(city), str(handles), str(city_tweets)])
             out_list.append(out)
-        out_list.sort(key=lambda x: x[1])
+        out_list.sort(key=lambda x: x[-1])
         joined = "\n".join(out_list)
         f.write(joined)
         f.write("\n")
         totals = ",".join(["Totals", str(total_users), str(total_tweets)])
+        star_line = ("*" * 10) + "\n"
+        f.write(star_line)
         f.write(totals)
         f.write("\n")
-        mins_maxs = "Min: " + str(min_tweets) + ", Max: " + str(max_tweets)
+        f.write(star_line)
+        mins_maxs = "Min users: " + str(min_tweets) + ", Max users: " + str(max_tweets)
         f.write(mins_maxs)
 
 if __name__ == "__main__":
