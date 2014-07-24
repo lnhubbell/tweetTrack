@@ -108,13 +108,5 @@ def test_make_prediction(mock_query_twitter_for_histories, create_pickle):
 
 
 
-
-# class TestRandom(unittest.TestCase):
-#     @mock.patch('os.urandom', side_effect=simple_urandom)
-#     def test_urandom(self, urandom_function):
-#         assert os.urandom(5) == 'fffff'
-
-
-
 if __name__ == '__main__':
     test_query_twitter_for_histories()
