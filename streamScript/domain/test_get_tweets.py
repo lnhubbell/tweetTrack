@@ -7,7 +7,7 @@ import mock
 from get_tweets_by_user import get_twitter_api
 from get_tweets_by_user import read_in_bb_file
 from get_tweets_by_user import get_unique_handles
-from get_tweets_by_user import format_blob
+from get_tweets_by_user import format_tweet_history
 from get_tweets_by_user import query_twitter_for_histories
 from make_predictions_per_user import make_prediction
 from streamScript.domain.send_data import query_db
@@ -97,16 +97,16 @@ def test_query_twitter_for_histories(create_pickle):
     assert type(tweet[0]) == type(u'a')
 
 
-def test_make_prediction():
-    pass
+# def test_make_prediction():
+#     pass
 
-@mock.patch('streamScript.domain.get_tweets_by_user.query_twitter_for_histories')
-def test_make_prediction(mock_query_twitter_for_histories, create_pickle):
-    mock_query_twitter_for_histories.return_value=create_pickle
-    results = make_prediction('unused')
-    assert results == "hello"
+# @mock.patch('streamScript.domain.get_tweets_by_user.query_twitter_for_histories')
+# def test_make_prediction(mock_query_twitter_for_histories, create_pickle):
+#     mock_query_twitter_for_histories.return_value=create_pickle
+#     results = make_prediction('unused')
+#     assert results == "hello"
 
 
 
-if __name__ == '__main__':
-    test_query_twitter_for_histories()
+# if __name__ == '__main__':
+#     test_query_twitter_for_histories()
