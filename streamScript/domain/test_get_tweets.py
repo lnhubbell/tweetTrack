@@ -1,12 +1,15 @@
 import random
 import cPickle
 import os
-
+from mock import patch, Mock
+import mock
+# import get_tweets_by_user
 from get_tweets_by_user import get_twitter_api
 from get_tweets_by_user import read_in_bb_file
 from get_tweets_by_user import get_unique_handles
 from get_tweets_by_user import format_blob
 from get_tweets_by_user import query_twitter_for_histories
+from make_predictions_per_user import make_prediction
 from streamScript.domain.send_data import query_db
 
 import pytest
@@ -14,12 +17,13 @@ slow = pytest.mark.slow
 pickle = pytest.mark.pickle
 
 
+
 @pytest.fixture(scope="session")
 def create_pickle(request):
     u"""Create a pickle."""
     try:
         pickle_file = open('pickles/test_tweets', 'rb')
-        users_tweets, count = cPickle.load(pickle_file)
+        histories, count = cPickle.load(pickle_file)
         pickle_file.close()
     except IOError:
         bb_dict = read_in_bb_file()
@@ -27,15 +31,15 @@ def create_pickle(request):
         values = bb_dict[a_key]
         vals = query_db(a_key,values)
         handles = get_unique_handles(vals)
-        users_tweets = query_twitter_for_histories(handles, a_key, cap=3)
+        histories = query_twitter_for_histories(handles, a_key, cap=3)
         count = 0
         pickle_file = open('pickles/test_tweets', 'wb')
-        users_tweets_count = users_tweets, count
+        users_tweets_count = histories, count
         cPickle.dump(users_tweets_count, pickle_file)
         pickle_file.close()
 
     def fin():
-        users_tweets_count = users_tweets, count + 1
+        users_tweets_count = histories, count + 1
         print "+++++++++++"
         print count
         if count < 50:
@@ -47,23 +51,7 @@ def create_pickle(request):
 
     request.addfinalizer(fin)
 
-    return users_tweets
-
-
-# @pytest.fixture(scope="session")
-# def smtp(request):
-#     def fin():
-#         pickle_file = open('pickles/test_tweets', 'wb')
-#         users_tweets = users_tweets, count + 1
-#         print "+++++++++++"
-#         print count
-#         if count < 5:
-#             cPickle.dump(users_tweets, pickle_file)
-#             pickle_file.close()
-#         else:
-#             os.remove('pickles/test_tweets')
-
-#     request.addfinalizer(fin)
+    return histories
 
 
 def test_get_twitter_api():
@@ -97,34 +85,36 @@ def test_get_unique_handles():
     assert len(handles) != 0
     assert type(handles[0]) == type(u'a')
 
-@slow
-def test_query_twitter_for_histories():
+
+def test_query_twitter_for_histories(create_pickle):
     u"""This test fails on occasion, specficially when a users first tweet
     doesn't have location data."""
-    bb_dict = read_in_bb_file()
-    a_key = random.choice(bb_dict.keys())
-    values = bb_dict[a_key]
-    vals = query_db(a_key,values)
-    handles = get_unique_handles(vals)
-    users_tweets = query_twitter_for_histories(handles, a_key, cap=3)
-    tweets = users_tweets[0]
+    histories = create_pickle
+    tweets = histories[0]
     tweet = tweets[0]
     print tweet
     assert len(tweet) == 7
     assert type(tweet[0]) == type(u'a')
-    # assert type(tweet[2]) == type(6.)
+
+
+def test_make_prediction():
+    pass
+
+@mock.patch('streamScript.domain.get_tweets_by_user.query_twitter_for_histories')
+def test_make_prediction(mock_query_twitter_for_histories, create_pickle):
+    mock_query_twitter_for_histories.return_value=create_pickle
+    results = make_prediction('unused')
+    assert results == "hello"
 
 
 
-def test_next(create_pickle):
-    u"""This test fails on occasion, specficially when a users first tweet
-    doesn't have location data."""
-    users_tweets = create_pickle
-    tweets = users_tweets[0]
-    tweet = tweets[0]
-    print tweet
-    assert len(tweet) == 7
-    assert type(tweet[0]) == type(u'a')
+
+# class TestRandom(unittest.TestCase):
+#     @mock.patch('os.urandom', side_effect=simple_urandom)
+#     def test_urandom(self, urandom_function):
+#         assert os.urandom(5) == 'fffff'
+
+
 
 if __name__ == '__main__':
     test_query_twitter_for_histories()
