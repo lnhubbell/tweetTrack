@@ -8,11 +8,12 @@ from streamScript.webAPI.auth.models import APIKey
 from streamScript.webAPI.auth.exceptions import HTTP401
 
 
-def dummy_data(screen_name):
+@app.route('/test')
+def dummy_data():
     lat = random() * 49
     lng = random() * -122
     context = {
-        'screen_name': screen_name,
+        'screen_name': 'ian_auld',
         'location_lat': lat,
         'location_lng': lng,
     }
@@ -24,7 +25,7 @@ def get_location():
     try:
         screen_name = request.get_json().get('screen_name', False)
         key = request.get_json().get('api_key', False)
-        context = dummy_data(screen_name, key)
+        context = dummy_data()
     except:
         context = HTTP401()
     return jsonify(context)
@@ -44,8 +45,13 @@ def get_key():
         )
         message.body = """Your tweetTrack API key is  {}.
             Please visit <a href={}>this link</a> to activate it:
-            """.format(key.key, url_for('activate_key', _external=True))
+            """.format(
+            key.key,
+            url_for('activate_key', _external=True, key=key.key)
+        )
         mail.send(message)
+        return jsonify({'success': 'True'})
+    return jsonify({'success': 'False'})
 
 
 @app.route('/activate/<key>')
