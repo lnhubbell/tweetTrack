@@ -167,6 +167,7 @@ def _mass_install():
     sudo('apt-get update')
     sudo('apt-get -y install python-setuptools')
     sudo('apt-get -y install python-dev')
+    sudo('apt-get -y install packaging-dev')
     sudo('apt-get -y install python-pip')
     sudo('apt-get -y install libpq-dev')
     with settings(warn_only=True):

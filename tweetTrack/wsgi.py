@@ -13,7 +13,7 @@ if __name__ == '__main__':
         os.environ['FLASK_CONFIG'] = 'Dev'
         run_simple(
             'localhost',
-            8000,
+            5000,
             application,
             __debug__
         )
@@ -21,6 +21,6 @@ if __name__ == '__main__':
         os.environ['FLASK_CONFIG'] = argv[1].title()
         run_simple(
             'localhost',
-            8000,
+            5000,
             application,
         )
