@@ -127,7 +127,7 @@ def process_each_city():
             print "Now checking ", city
             handles = get_unique_handles(vals)
             print city, len(handles)
-            if len(handles) >= 200:
+            if len(handles) >= 250:
                 print "Now querying twitter for histories"
                 tweets = query_twitter_for_histories(handles, city)
                 if len(tweets) >= 100:
