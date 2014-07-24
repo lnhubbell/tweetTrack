@@ -38,10 +38,11 @@ class TwitterForm(Form):
 
 
 class APIRequestForm(Form):
-    email = StringField(
+    request_email = StringField(
         'Email: ',
         validators=[
             DataRequired(required.format('email')),
             Email('Please enter a valid email')
         ]
     )
+    send_request = SubmitField('Send Request')

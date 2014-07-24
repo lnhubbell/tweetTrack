@@ -1,10 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<div class="modal fade" id="request-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">
+                    Enter your email address below
+                </h4>
+            </div>
+            <div id="api-request-modal-body" class="modal-body">
+                <p>
+                    Enter your email below to receive your API key.
+                </p>
+                <form id="api-request-form" action="">
+                {{ api_request_form.csrf_token }}
+                <fieldset class="form-group">
+                    {{ api_request_form.request_email.label }}<br />
+                    {{ api_request_form.request_email }}
+                </fieldset>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    {{ api_request_form.send_request(class_='btn btn-primary') }}
+                </div>
+                <script>
+                    var modal = $("#api_request-modal");
+                    var api_request = $("#api_request-form");
+                    api_request.on("submit", function(event){
+                        var request_email = $("#request_email").val();
+                        event.preventDefault();
+                        $.ajax('/api_request/' + request_email, {
+                            data: api_request.serialize(),
+                            success: function(response) {
+                                api_request.trigger("reset");
+                                modal.modal('hide');
+                                });
+                            }
+                        });
+                    });
+                </script>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

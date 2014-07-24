@@ -6,7 +6,7 @@ import requests
 from flask import render_template, redirect, url_for, request, jsonify
 from flask.ext.mail import Message
 from tweetTrack.app import app, mail
-from tweetTrack.app.forms import TwitterForm, ContactForm
+from tweetTrack.app.forms import TwitterForm, ContactForm, APIRequestForm
 
 
 def get_twitter_api():
@@ -30,10 +30,12 @@ def get_twitter_api():
 def index():
     contact_form = ContactForm()
     twitter_form = TwitterForm()
+    api_request_form = APIRequestForm()
     return render_template(
         'index.html',
         contact_form=contact_form,
-        twitter_form=twitter_form
+        twitter_form=twitter_form,
+        api_request_form=api_request_form
         )
 
 
