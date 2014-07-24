@@ -1,6 +1,32 @@
 import cPickle
 
 
+def write_pickle(item, item_name, test=False):
+    print "Pickling %s..." % item_name
+    if not test:
+        pickle_file = open('pickles/%s' % item_name, 'wb')
+    else:
+        pickle_file = open('pickles/test_%s' % item_name, 'wb')
+    cPickle.dump(item, pickle_file)
+    pickle_file.close()
+    print "Pickled %s." % item_name
+
+
+def load_pickle(item_name, test=False):
+    if not test:
+        pickle_file = open('pickles/%s' % str(item_name), 'rb')
+    else:
+        pickle_file = open('pickles/test_%s' % str(item_name), 'rb')
+    print "Loading matrix pickle..."
+    X = cPickle.load(pickle_file)
+    print "Matrix pickle loaded."
+    pickle_file.close()
+    return X
+
+
+
+
+
 def load_matrix_pickle():
     pickle_file = open('pickles/matrix_pickle', 'rb')
     print "Loading matrix pickle..."
@@ -82,3 +108,4 @@ def pickle_vocab(vocab):
     cPickle.dump(vocab, pickle_file)
     pickle_file.close()
     print "Pickled vocab."
+

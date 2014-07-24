@@ -78,7 +78,7 @@ def build_matrix(data, n=1000):
                 user_matrix.append(" ")
             user_matrix[-1] += tweet[2].lower()
             tweet_count += 1
-    return vectorize(user_matrix, user_array, n)
+    return user_matrix, user_array, n
 
 
 def build_matrix_per_user(data, n=1000):
@@ -103,7 +103,7 @@ def build_matrix_per_user(data, n=1000):
                 user_array.append(key)
             elif tweet[0] != this_user:
                 count = 0
-    return vectorize(user_matrix, user_array, n)
+    return user_matrix, user_array, n
 
 
 def fit_classifier(X, y):
@@ -121,12 +121,14 @@ def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=Fa
         X = picklers.load_matrix_pickle()
         y = picklers.load_y_pickle()
         data = picklers.load_data_pickle()
-    elif useTweet200:
-        data = query_all_db_Tweet200()
-        X, y, vocab = build_matrix_per_user(data)
     else:
-        data = query_all_db(limit=True)
-        X, y, vocab = build_matrix(data)
+        if useTweet200:
+            data = query_all_db_Tweet200()
+            user_matrix, user_array, n = build_matrix_per_user(data)
+        else:
+            data = query_all_db(limit=True)
+            user_matrix, user_array, n = build_matrix(data)
+        X, y, vocab = vectorize(user_matrix, user_array, n)
     mnb = fit_classifier(X, y)
     if make_new_pickles:
         picklers.pickle_classifier(mnb)

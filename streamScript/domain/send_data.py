@@ -41,6 +41,19 @@ def query_all_db(limit=False):
     return data_set
 
 
+def query_all_db_Tweet200():
+    u"""Returns a dictionary with keys as city names and values as a list of
+    tweets from that city."""
+    bb_dict = read_in_bb_file()
+    data_set = {}
+    for key, values in bb_dict.items():
+        sql = """SELECT * FROM "Tweet200" WHERE city = %s;"""
+        data = execute_query(sql, (key,), need_results=True)
+        data_set[key] = data
+        print "Completed query on: " + str(key)
+    return data_set
+
+    
 def query_db(city, values, limit=False):
     u"""Takes in a city and Returns a dict containing all tweets
     collected from the city (with the key being the city name and the value
@@ -62,17 +75,6 @@ def query_db(city, values, limit=False):
     return data
 
 
-def query_all_db_Tweet200():
-    u"""Returns a dictionary with keys as city names and values as a list of
-    tweets from that city."""
-    bb_dict = read_in_bb_file()
-    data_set = {}
-    for key, values in bb_dict.items():
-        sql = """SELECT * FROM "Tweet200" WHERE city = %s;"""
-        data = execute_query(sql, (key,), need_results=True)
-        data_set[key] = data
-        print "Completed query on: " + str(key)
-    return data_set
 
 
 def send_user_queries_to_db(tweet_set, city):
