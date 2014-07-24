@@ -59,6 +59,18 @@ def query_db(city, values):
     return data
 
 
+def query_all_db_Tweet200():
+    u"""Returns a dictionary with keys as city names and values as a list of
+    tweets from that city."""
+    bb_dict = read_in_bb_file()
+    data_set = {}
+    for key, values in bb_dict.items():
+        sql = """SELECT * FROM "Tweet200" WHERE city == %s;"""
+        data = execute_query(sql, key, need_results=True)
+        data_set[key] = data
+    return data_set
+
+
 def send_user_queries_to_db(tweet_set, city):
     u"""Sends formatted tweets into DB."""
     for blob in tweet_set:
