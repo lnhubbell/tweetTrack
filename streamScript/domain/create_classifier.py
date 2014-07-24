@@ -89,22 +89,13 @@ def build_matrix(data, n=1000):
     return X, Y, vec.get_feature_names()
 
 
-def return_data_sets(read_pickle=False, make_new_pickles=False):
+def return_data_sets(make_new_pickles=False):
     u"""Takes in two optional keyword arguments; will either read in
     a dataset from disk or will call a function to query the DB to generate
     a new dataset. If a 'make_new_pickles' keyword arg set to True is passed,
     the DB function will make a new pickle for future use. Returns a
     raw dataset."""
-    if read_pickle:
-        try:
-            pickle_file = open('pickles/pickle', 'rb')
-            print "Loading data pickle..."
-            data = cPickle.load(pickle_file)
-            print "Data pickle loaded."
-            pickle_file.close()
-        except IOError as err:
-            return "Cannot read from existing pickle.", err.message
-    elif make_new_pickles:
+    if make_new_pickles:
         data = query_all_db(make_new_pickles)
     else:
         data = query_all_db()
@@ -138,25 +129,33 @@ def return_matrix(data, make_new_pickles=False):
     return top_words
 
 
+# def fit_classifier(X, y):
+#     u"""Takes in an X matrix and a Y array of labels.
+#     Checks four possible alpha values; returns the
+#     classifier with the highest cross-validated score."""
+#     best = None
+#     best_score = None
+#     alphas = [1E-4, 1E-3, 1E-2, 1E-1, 1]
+#     for alpha in alphas:
+#         mnb = MNB(alpha)
+#         score = np.mean(
+#             cross_val_score(mnb, X, y, cv=10)
+#         )
+#         if not best:
+#             best = mnb
+#             best_score = score
+#         elif score > best_score:
+#             best_score = score
+#     best.fit(X, y)
+#     return best, best_score
+
 def fit_classifier(X, y):
     u"""Takes in an X matrix and a Y array of labels.
     Checks four possible alpha values; returns the
     classifier with the highest cross-validated score."""
-    best = None
-    best_score = None
-    alphas = [1E-4, 1E-3, 1E-2, 1E-1, 1]
-    for alpha in alphas:
-        mnb = MNB(alpha)
-        score = np.mean(
-            cross_val_score(mnb, X, y, cv=10)
-        )
-        if not best:
-            best = mnb
-            best_score = score
-        elif score > best_score:
-            best_score = score
-    best.fit(X, y)
-    return best, best_score
+    mnb = MNB()
+    mnb.fit(X, y)
+    return mnb
 
 
 def get_raw_classifier(
@@ -168,15 +167,19 @@ def get_raw_classifier(
         try:
             pickle_file = open('pickles/matrix_pickle', 'rb')
             print "Loading X, y, vocab pickle..."
-            X, y, vocab = cPickle.load(pickle_file)
-            print "X, y, vocab pickle loaded."
+            X = cPickle.load(pickle_file)
+            print "X pickle loaded."
+            pickle_file = open('pickles/labels_pickle', 'rb')
+            print "Loading y pickle..."
+            y = cPickle.load(pickle_file)
+            print "y pickle loaded."
             pickle_file.close()
             mnb, score = fit_classifier(X, y)
             return mnb
         except IOError as err:
             print "Cannot read from existing pickle.", err.message
             print "Attempting to new matrix from pickled data set"
-    data = return_data_sets(read_pickle, make_new_pickles)
+    data = return_data_sets(make_new_pickles)
     X, y, vocab = return_matrix(data, make_new_pickles)
     mnb, score = fit_classifier(X, y)
     if make_new_pickles:
@@ -223,7 +226,7 @@ def generate_predictions(userTestdata):
     #y = load_y_pickle()
     #print y
     #print "+++++++++++++++++++++++++"
-    predictions = mnb.predict(X)
+    predictions = mnb.predict_log_proba(X)
     if len(predictions):
         for idx, prediction in enumerate(predictions):
             report = (user_array[idx], user_cities[idx], prediction)
@@ -237,4 +240,4 @@ def generate_predictions(userTestdata):
         return percent_right, got_wrong, all_results
 
 if __name__ == "__main__":
-    print get_raw_classifier(make_new_pickles=True, read_pickle=False, readXYpickle=False)
+    print get_raw_classifier(make_new_pickles=True, read_pickle=True, readXYpickle=True)

@@ -56,9 +56,9 @@ def query_db(city, values):
     lats = values[0]
     longs = values[1]
     vals = (lats[0], lats[1], longs[0], longs[1])
-    sql = """SELECT * FROM "Tweet" WHERE
+    sql = """SELECT * FROM "TweetTest" WHERE
         (location_lat BETWEEN %s AND %s)
-        AND (location_lng BETWEEN %s AND %s); """
+        AND (location_lng BETWEEN %s AND %s);"""
         ## LIMIT 2000
     print "Querying database for ", city
     data = execute_query(sql, vals, need_results=True)
@@ -77,7 +77,8 @@ def send_user_queries_to_db(tweet_set, city):
                         ; """
                     execute_query(sql, tweet, autocommit=False)
                     print "Sending to database..."
-    commit_queries()
+    DB_CONFIG['DB_CONNECTION'].commit()
+    print "we committed"
     with open('text/stop_cities.txt', 'a') as fff:
         fff.write(city)
         fff.write("\n")
@@ -112,10 +113,6 @@ def execute_query(sql, args=None, need_results=False, autocommit=True):
         if autocommit:
             DB_CONFIG['DB_CONNECTION'].commit()
     return results
-
-
-def commit_queries():
-    _get_connection.commit()
 
 
 def _get_cursor():
@@ -180,3 +177,22 @@ def _get_connection_string():
 def _get_pasword():
     password = open(ROOT_DIR + '/our_keys/config').read().split()
     return password[1]
+
+
+def add_rows():
+    sql = """INSERT INTO "Tweet" (screen_name, text, location_lat, location_lng, created_at, hashtags) SELECT screen_name, text, location_lat, location_lng, created_at, hashtags FROM "TweetTest";"""
+    print "Querying database"
+    execute_query(sql)
+
+
+def change_col_size():
+    sql = """ ALTER TABLE "Tweet" ALTER COLUMN text TYPE varchar(200);"""
+    print "Querying database"
+    execute_query(sql)
+
+if __name__ == "__main__":
+    pass
+    #add_rows()
+    # change_col_size()
+
+
