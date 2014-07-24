@@ -68,6 +68,12 @@ def format_blob(history, user, city):
     return tweet_his
 
 
+def check_list_low_tweeters():
+    with open("text/stop_names.txt", 'r') as f:
+        names = f.readlines()
+    return names
+
+
 def query_twitter_for_histories(users, city=None, cap=100):
     u"""Calls function to return a dict of cities and the unique users for each
     city. Iterates over the dict to extract the tweet text/locations/timestamps
@@ -77,9 +83,14 @@ def query_twitter_for_histories(users, city=None, cap=100):
     city_tweets = []
     user_count = 0
     too_low_count = 0
+    with open("text/stop_names.txt", 'a') as f:
+        f.write(city)
+        f.write("\n")
     for user in users:
         if user_count > cap:
             break
+        if user in check_list_low_tweeters():
+            continue
         history = []
         tweet_his = []
         try:
@@ -100,6 +111,9 @@ def query_twitter_for_histories(users, city=None, cap=100):
             print user_count
         else:
             print 'Only ', len(tweet_his), " in this user's history."
+            with open("text/stop_names.txt", 'a') as f:
+                f.write(user)
+                f.write("\n")
             too_low_count += 1
         total = user_count + too_low_count
         print "total requests: ", total
