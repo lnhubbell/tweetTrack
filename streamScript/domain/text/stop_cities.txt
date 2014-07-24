@@ -19,3 +19,5 @@ Henderson, NV
 Newark, NJ
 Saint Louis, MO
 Oklahoma City, OK
+Chesapeake, VA
+Stockton, CA

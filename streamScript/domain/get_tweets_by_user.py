@@ -52,7 +52,7 @@ def format_tweet_history(history, user, city):
     for tweet in history:
         screen_name = user
         text = tweet.text
-        created_at = tweet.created_at.strftime('%m/%d/%Y')
+        created_at = tweet.created_at.strftime('%m/%d/%Y, %H:%M')
         location = tweet.geo
         location_lat = None
         location_lng = None
