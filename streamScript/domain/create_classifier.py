@@ -80,16 +80,16 @@ def build_matrix_per_user(data, n=1000):
         for tweet in val:
             if count == 0:
                 this_user = tweet[0]
-                user_matrix.append(" ")
+                our_string = ""
             if (tweet[0] == this_user) and (count < 200):
-                user_matrix[-1] += tweet[2].lower()
+                our_string += tweet[2].lower()
                 count += 1
             elif (tweet[0] != this_user) and (len(user_matrix[-1]) >= 14000):
                 count = 0
-            elif len(user_matrix[-1]) < 14000:
-                user_matrix.pop()
-
-    return vectorize(user_matrix, user_array)
+                user_matrix.append(our_string)
+            elif tweet[0] != this_user:
+                count = 0
+    return vectorize(user_matrix, user_array, n)
 
 
 def fit_classifier(X, y):
