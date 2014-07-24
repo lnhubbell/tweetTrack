@@ -169,6 +169,7 @@ def _mass_install():
     sudo('apt-get -y install python-dev')
     sudo('apt-get -y install python-pip')
     sudo('apt-get -y install libpq-dev')
+    sudo('apt-get update')
     with settings(warn_only=True):
         sudo('pip install -r tweetTrack/requirements.txt')
 
@@ -233,7 +234,8 @@ def deploy():
         remote_dir="~/",
         exclude=[
             ".git",
-            "tweetTrack/deploy/env_vars.txt"
+            "tweetTrack/deploy/env_vars.txt",
+            "tweetTrack/tests",
         ]
     )
     mass_install()

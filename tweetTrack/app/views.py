@@ -41,15 +41,19 @@ def index():
 
 @app.route('/twitter/<user_name>')
 def user_tweets(user_name):
-    url = app.config['TRACKING_API_URL']
-    data = json.dumps({'screen_name': user_name})
-    headers = {
-        'Content-Type': 'application/json',
-        'Content-Length': len(data)
-    }
-    response = requests.get(url, data=data, headers=headers)
-    response.raise_for_status()
-    return jsonify(response=response.json())
+    try:
+        url = app.config['TRACKING_API_URL']
+        data = json.dumps({'screen_name': user_name})
+        headers = {
+            'Content-Type': 'application/json',
+            'Content-Length': len(data)
+        }
+        response = requests.get(url, data=data, headers=headers)
+        print(response)
+        response.raise_for_status()
+        return jsonify(response=response.json())
+    except ConnectionError:
+        pass
 
 
 @app.route('/api-request/<email>', methods=['GET', 'POST'])

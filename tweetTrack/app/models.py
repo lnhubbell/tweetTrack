@@ -32,3 +32,14 @@ class TweetTest(db.Model):
     location_lng = db.Column(db.Float, nullable=False)
     created_at = db.Column(db.Date, nullable=False)
     hashtags = db.Column(db.String(140))
+
+
+class TweetTest2(db.Model):
+    __tablename__ = 'TweetTest2'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    screen_name = db.Column(db.String(15), nullable=False)
+    text = db.Column(db.String(180), nullable=False)
+    location_lat = db.Column(db.Float)
+    location_lng = db.Column(db.Float)
+    created_at = db.Column(db.Date, nullable=False)
+    hashtags = db.Column(db.String(140))
