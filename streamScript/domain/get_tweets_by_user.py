@@ -44,7 +44,7 @@ def get_unique_handles(vals):
 def format_blob(history, user, city):
     u"""Formats tweets pieces to be fed to sql query.
 
-    History is a list-like set of tweets. User is the screen name 
+    History is a list-like set of tweets. User is the screen name
     as a string. City is the string name of the city we querried for."""
     tweet_his = []
     for tweet in history:
@@ -85,10 +85,12 @@ def query_twitter_for_histories(users, city=None, cap=100):
         try:
             history = api.user_timeline(screen_name=user, count=200)
         except tweepy.error.TweepError as err:
+            print api.me().name
+            print "Tweepy Error"
             print "Tweepy Error: ", err.message
-            if err.message == "[{u'message': u'Rate limit \
-                    exceeded', u'code': 88}]":
-                api = get_twitter_api().next()
+            # if err.message == "[{u'message': u'Rate limit exceeded', u'code': 88}]":
+            api = get_twitter_api().next()
+            print api.me().name
             continue
         if len(history) >= 200:
             user_count += 1
@@ -97,7 +99,7 @@ def query_twitter_for_histories(users, city=None, cap=100):
             city_tweets.append(tweet_his)
             print user_count
         else:
-            print 'not enough tweets in this users history'
+            print 'Only ', len(tweet_his), " in this user's history."
             too_low_count += 1
         total = user_count + too_low_count
         print "total requests: ", total

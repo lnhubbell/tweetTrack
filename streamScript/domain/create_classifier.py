@@ -219,34 +219,22 @@ def generate_predictions(userTestdata):
     incorrect = 0
     got_wrong = []
     all_results = []
-    print X
+    #print X
+    #y = load_y_pickle()
+    #print y
+    #print "+++++++++++++++++++++++++"
     predictions = mnb.predict(X)
-    # y = load_y_pickle()
-    # for el in y:
-    #     print el
-    # print "*" * 10
-    # print
-    # print y
-    # print
-    # print "*" * 10
-
-    for idx, prediction in enumerate(predictions):
-        #labelled_prediction = zip(tuple(prediction), tuple(y))
-        # print labelled_prediction
-        # top_three = labelled_prediction.sorted()[:3]
-        report = (user_array[idx], user_cities[idx], prediction)
-        if user_cities[idx] == prediction:
-            correct += 1
-        else:
-            incorrect += 1
-            got_wrong.append(report)
-        all_results.append(report)
-    percent_right = correct / (float(correct) + incorrect)
-    return percent_right, got_wrong, all_results
+    if len(predictions):
+        for idx, prediction in enumerate(predictions):
+            report = (user_array[idx], user_cities[idx], prediction)
+            if user_cities[idx] == prediction:
+                correct += 1
+            else:
+                incorrect += 1
+                got_wrong.append(report)
+            all_results.append(report)
+        percent_right = correct / (float(correct) + incorrect)
+        return percent_right, got_wrong, all_results
 
 if __name__ == "__main__":
     print get_raw_classifier(make_new_pickles=True, read_pickle=False, readXYpickle=False)
-    # user_names = ['crisewing']
-    # print generate_predictions(user_names)
-    #our_outs = query_twitter_for_histories(data)
-    #send_user_queries_to_db(our_outs)

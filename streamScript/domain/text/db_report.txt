@@ -1,6 +1,7 @@
 Report generated: 07/23/2014
 
-City,Tweets,UsersFort Wayne, IN,3048,136
+City,Tweets,Users
+Fort Wayne, IN,3048,136
 Tulsa, OK,5474,218
 Milwaukee, WI,10756,406
 El Paso, TX,6366,286

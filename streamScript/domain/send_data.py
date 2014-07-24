@@ -59,6 +59,7 @@ def query_db(city, values):
     sql = """SELECT * FROM "Tweet" WHERE
         (location_lat BETWEEN %s AND %s)
         AND (location_lng BETWEEN %s AND %s); """
+        ## LIMIT 2000
     print "Querying database for ", city
     data = execute_query(sql, vals, need_results=True)
     return data
