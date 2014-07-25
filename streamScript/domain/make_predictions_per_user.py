@@ -2,6 +2,7 @@ from get_tweets_by_user import query_twitter_for_histories
 from create_classifier import build_test_matrix
 from send_data import query_for_handles
 import picklers
+import random
 
 
 def generate_predictions(userTestdata):
@@ -49,6 +50,11 @@ def make_prediction(name):
     return user
 
 
+def create_test_user_set():
+    user_names = query_for_handles()
+    picklers.write_pickle(user_names, 'known_users_pickle')
+
+
 def predict_on_list(user_names):
     u"""Takes in a list of tuples, where the first element is the user name,
     and the second element is the known city location. Prints to the terminal
@@ -80,7 +86,8 @@ def predict_on_list(user_names):
     return accuracy
 
 if __name__ == "__main__":
-    # user_names = query_for_handles()
-    # picklers.write_pickle(user_names, 'known_users_pickle')
     user_names = picklers.load_pickle('known_users_pickle')
-    predict_on_list(user_names)
+    test_users = []
+    for i in range(50):
+        test_users.append(random.choice(user_names))
+    predict_on_list(test_users)
