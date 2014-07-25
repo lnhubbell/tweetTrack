@@ -153,7 +153,6 @@ def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=Fa
     mnb = fit_classifier(X, y)
     picklers.write_pickle(mnb, 'classifier_pickle')
     if make_new_pickles:
-        if not read_pickles:
             picklers.write_pickle(data, 'pickle')
             picklers.write_pickle(X, 'matrix_pickle')
             picklers.write_pickle(y, 'labels_pickle')
