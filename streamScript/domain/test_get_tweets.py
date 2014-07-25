@@ -42,7 +42,7 @@ def create_pickle(request):
         users_tweets_count = histories, count + 1
         print "+++++++++++"
         print count
-        if count < 50:
+        if count < 10:
             pickle_file = open('pickles/test_tweets', 'wb')
             cPickle.dump(users_tweets_count, pickle_file)
             pickle_file.close()
