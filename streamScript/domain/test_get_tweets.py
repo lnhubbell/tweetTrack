@@ -1,8 +1,8 @@
 import random
 import cPickle
 import os
-from mock import patch, Mock
-import mock
+# from mock import patch, Mock
+# import mock
 # import get_tweets_by_user
 from get_tweets_by_user import get_twitter_api
 from get_tweets_by_user import read_in_bb_file
@@ -70,7 +70,7 @@ def test_query_db():
     bb_dict = read_in_bb_file()
     a_key = random.choice(bb_dict.keys())
     values = bb_dict[a_key]
-    vals = query_db(a_key,values)
+    vals = query_db(a_key, values)
     assert len(vals) != 0
     assert type(vals[0][0]) == type(6)
     assert type(vals[0][1]) == type(u'a')
@@ -80,10 +80,10 @@ def test_get_unique_handles():
     bb_dict = read_in_bb_file()
     a_key = random.choice(bb_dict.keys())
     values = bb_dict[a_key]
-    vals = query_db(a_key,values)
+    vals = query_db(a_key, values)
     handles = get_unique_handles(vals)
     assert len(handles) != 0
-    assert type(handles[0]) == type(u'a')
+    assert isinstance(handles[0], unicode)
 
 
 def test_query_twitter_for_histories(create_pickle):
@@ -94,7 +94,7 @@ def test_query_twitter_for_histories(create_pickle):
     tweet = tweets[0]
     print tweet
     assert len(tweet) == 7
-    assert type(tweet[0]) == type(u'a')
+    assert isinstance(tweet[0], unicode)
 
 
 # def test_make_prediction():

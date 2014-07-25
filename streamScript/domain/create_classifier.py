@@ -14,9 +14,11 @@ cross-validated predictions. Pickles dataset and matrix as necessary."""
 def check_city_locations(location_lat, location_lng):
     bb_dict = read_in_bb_file()
     for city, values in bb_dict.items():
-        if (values[0][0] < location_lat < values[0][1]) and \
-                values[1][0] < location_lng < values[1][1]:
-            return city, values
+        lats = values[0]
+        lngs = values[1]
+        if (float(lats[0]) < float(location_lat) < float(lats[1])) and \
+                (float(lngs[0]) < float(location_lng) < float(lngs[1])):
+            return city
 
 
 def build_test_matrix(history, vocab):
