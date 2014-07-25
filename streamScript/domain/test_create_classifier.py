@@ -19,5 +19,6 @@ def test_check_city_locations():
     lng = -122.33621199999999
     assert check_city_locations(lat, lng) == 'Seattle, WA'
 
+
 def test_build_test_matrix():
     pass
