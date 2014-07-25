@@ -71,3 +71,6 @@ Minneapolis, MN
 Fresno, CA
 Tampa, FL
 Las Vegas, NV
+Scottsdale, AZ
+Oakland, CA
+Los Angeles, CA
