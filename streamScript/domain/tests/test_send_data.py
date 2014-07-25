@@ -4,7 +4,7 @@ from streamScript.domain.send_data import query_all_db_Tweet200
 from streamScript.domain.send_data import read_in_bb_file
 from streamScript.domain.create_classifier import build_matrix_per_user
 from streamScript.domain.create_classifier import fit_classifier, vectorize
-from picklers import pickle_handling
+from streamScript.domain.picklers import pickle_handling
 
 slow = pytest.mark.slow
 
@@ -53,7 +53,7 @@ def test_build_matrix_per_user_array_user_len():
             count += 1
     assert count <= len(user_matrix) / 100
 
-
+@slow
 def test_vectorize_with_200():
     try:
         data_set = pickle_handling.load_pickle('data_set', test=True)
@@ -64,7 +64,7 @@ def test_vectorize_with_200():
     X, y, vocab = vectorize(user_matrix, user_array, n)
     assert len(X) == len(y)
 
-
+@slow
 def test_fit_with_200():
     try:
         data_set = pickle_handling.load_pickle('data_set', test=True)
@@ -73,10 +73,10 @@ def test_fit_with_200():
         pickle_handling.write_pickle(data_set, 'data_set', test=True)
     user_matrix, user_array, n = build_matrix_per_user(data_set)
     X, y, vocab = vectorize(user_matrix, user_array, n)
-    mnb = fit_classifier(X, y)
-    assert mnb.get_params()['alpha'] == 1.0
-    assert mnb.get_params()['fit_prior'] is True
-    assert not mnb.get_params()['class_prior']
+    clf = fit_classifier(X, y)
+    assert clf.get_params()['alpha'] == 1.0
+    assert clf.get_params()['fit_prior'] is True
+    assert not clf.get_params()['class_prior']
 
 if __name__ == '__main__':
     test_build_matrix_per_user_array_user_len()
