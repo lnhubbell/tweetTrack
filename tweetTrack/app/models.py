@@ -44,3 +44,16 @@ class TweetTest2(db.Model):
     location_lng = db.Column(db.Float)
     created_at = db.Column(db.Date, nullable=False)
     hashtags = db.Column(db.String(140))
+
+
+class UserResponse(db.Model):
+    __tablename__ = 'UserResponse'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    screen_name = db.Column(db.String(15), nullable=False)
+    is_correct = db.Column(db.Boolean, nullable=False)
+    guess_location = db.Column(db.String(25), nullable=False)
+
+    def __init__(self, screen_name, is_correct, guess_location):
+        self.screen_name = screen_name
+        self.is_correct = is_correct
+        self.guess_location = guess_location

@@ -1,11 +1,12 @@
 from re import match
-from random import random
+from random import random, choice
 from flask import jsonify, request, url_for
 from flask.ext.mail import Message
 from sqlalchemy.orm.exc import NoResultFound
 from streamScript.webAPI import app, mail, db
 from streamScript.webAPI.auth.models import APIKey
-from streamScript.domain.make_predictions_per_user import make_prediction
+from streamScript.webAPI.places import places
+#from streamScript.domain.make_predictions_per_user import make_prediction
 
 
 @app.route('/test')
@@ -15,11 +16,10 @@ def dummy_data(screen_name=None):
     lat = random() * 49
     lng = random() * -122
     context = {
-        'screen_name': screen_name,
-        'location_lat': lat,
-        'location_lng': lng,
+        'name': screen_name,
+        'prediction': choice([place for place in places]),
+        'success': True
     }
-
     return context
 
 
@@ -28,9 +28,10 @@ def get_location():
     screen_name = request.get_json().get('screen_name', False)
     key = request.get_json().get('api_key', False)
     try:
-        context = make_prediction([screen_name])
+        context = make_prediction(screen_name)
     except:
         context = dummy_data(screen_name)
+    context['coords'] = places[context['prediction']]
     return jsonify(context)
 
 

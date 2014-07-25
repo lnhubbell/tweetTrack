@@ -2,31 +2,33 @@ from get_tweets_by_user import query_twitter_for_histories
 from create_classifier import generate_predictions
 
 
-def make_prediction(names):
+def make_prediction(name):
     u"""Takes in a list of Twitter user handles. Returns a list of
     single-entry dictionaries, with the keys being the user names
     and the values being the predictions."""
-    if isinstance(names, basestring):
-        names = [names]
-    histories = query_twitter_for_histories(names)
-    results = []
-    get_preds = []
+    print "Name: " + str(name)
+    name = [name]
+    histories = query_twitter_for_histories(name, data_collection=False)
     for history in histories:
         if len(history) < 100:
             user = {}
             user['name'] = history[0][0]
-            user['prediction'] = """Not enough tweeting history to
-                                make a prediction."""
-            results.append(user)
+            user['prediction'] = """You're not cool enough to track!"""
+            user['success'] = False
+            return user
+            print "Not Long enough"
         else:
-            get_preds.append(history)
-    percent_right, got_wrong, all_results = generate_predictions(get_preds)
-    for prediction in all_results:
-        user = {}
-        user['name'] = prediction[0]
-        user['prediction'] = prediction[2]
-        results.append(user)
-    return results
+            print "Long enough"
+            right, wrong, preds, actual = generate_predictions(history)
+            for pred in preds:
+                user = {}
+                user['name'] = pred[0]
+                if actual[0]:
+                    user['prediction'] = actual[0]
+                else:
+                    user['prediction'] = pred[2]
+                user['success'] = True
+            return user
 
 
 def serve_predictions(names):
@@ -35,15 +37,6 @@ def serve_predictions(names):
         yield result
 
 if __name__ == "__main__":
-    print
-    # user_names = raw_input("Please enter a list of Twitter handles.\n ")
-    # if not isinstance(user_names, list):
-    #     user_names = raw_input("Names must be in a list.")
-    #'EdgarandtheHall'
-    user_names = [
-        'selfiequeenbri', 'bobiiniicole', 'THE 1Far Above', 'duqe', 'neo rama']
+    user_names = 'crisewing'
     results = make_prediction(user_names)
-    for result in results:
-        print "For the user: ", result['name']
-        print "Our predictions are: "
-        print result['prediction']
+    print "For the user: ", results['name'], " our predictions are: ", results['prediction']
