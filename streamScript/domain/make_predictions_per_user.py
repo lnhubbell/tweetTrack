@@ -63,6 +63,7 @@ def serve_predictions(names):
         yield result
 
 if __name__ == "__main__":
-    user_names = 'TrustyJohn'
-    results = make_prediction(user_names)
-    print "For the user: ", results['name'], " our predictions are: ", results['prediction']
+    user_names = ['TrustyJohn', 'arosexoxo', "emmily_Claire", "jshafranski", "20MC20", "aharrington9"]
+    for name in user_names:
+        results = make_prediction(name)
+        print "For the user: ", results['name'], " our predictions are: ", results['prediction']
