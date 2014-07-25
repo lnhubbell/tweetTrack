@@ -1,0 +1,51 @@
+<div class="modal fade" id="response-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Enter you response handle below</h4>
+            </div>
+            <div id="response-modal-body" class="modal-body">
+                <p>
+                    Our best guess is that you are in:<br />
+                    <span id="prediction"></span>
+                </p>
+                <p>
+                    Did we get it right?
+                </p>
+                <form id="response-form" action="">
+                    {{ user_response_form.csrf_token }}
+                    {{ user_response_form.yes(class_='btn btn-info') }}
+                    {{ user_response_form.no(class_='btn btn-danger') }}
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                    <script>
+                        var responseModal = $("#response-modal");
+                        var responseForm = $("#response-form");
+                        var response = 0;
+                        $("#yes").on("click", function(event){
+                            //event.preventDefault();
+                            response++;
+                        });
+                        responseForm.on("submit", function(event){
+                            event.preventDefault();
+                            $.ajax('/response', {
+                                data: {
+                                    'response': response,
+                                    'prediction': $("#prediction").text(),
+                                    'name': name
+                                },
+                                success: function(response) {
+                                    responseForm.trigger("reset");
+                                    responseModal.modal('hide');
+                                    response = 0;
+                                }
+                            });
+                        });
+                    </script>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

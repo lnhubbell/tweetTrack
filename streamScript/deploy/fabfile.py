@@ -170,6 +170,8 @@ def _mass_install():
     sudo('apt-get -y install packaging-dev')
     sudo('apt-get -y install python-pip')
     sudo('apt-get -y install libpq-dev')
+    sudo('apt-get update')
+    sudo('apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose')
     with settings(warn_only=True):
         sudo('pip install -r streamScript/requirements.txt')
 

@@ -1,28 +1,15 @@
 from os import environ
+from random import random
 import json
 import tweepy
 import requests
 from requests.exceptions import ConnectionError
 from flask import render_template, request, jsonify
 from flask.ext.mail import Message
-from tweetTrack.app import app, mail
-from tweetTrack.app.forms import TwitterForm, ContactForm, APIRequestForm
-
-
-def get_twitter_api():
-    try:
-        from tweetTrack.app.config.keys import TwitterKeys
-    except ImportError:
-        pass
-    auth = tweepy.OAuthHandler(
-        environ.get('CONSUMER_KEY', TwitterKeys.consumer_key),
-        environ.get('CONSUMER_SECRET', TwitterKeys.consumer_secret)
-    )
-    auth.set_access_token(
-        environ.get('ACCESS_KEY', TwitterKeys.access_key),
-        environ.get('ACCESS_SECRET', TwitterKeys.access_secret)
-    )
-    return tweepy.API(auth)
+from tweetTrack.app import app, mail, db
+from tweetTrack.app.forms import TwitterForm, ContactForm
+from tweetTrack.app.forms import UserResponseForm, APIRequestForm
+from tweetTrack.app.models import UserResponse
 
 
 @app.route('/')
@@ -31,27 +18,34 @@ def index():
     contact_form = ContactForm()
     twitter_form = TwitterForm()
     api_request_form = APIRequestForm()
+    user_response_form = UserResponseForm()
     return render_template(
         'index.html',
         contact_form=contact_form,
         twitter_form=twitter_form,
-        api_request_form=api_request_form
-        )
+        api_request_form=api_request_form,
+        user_response_form=user_response_form
+    )
 
 
 @app.route('/twitter/<user_name>')
 def user_tweets(user_name):
-    url = app.config['TRACKING_API_URL']
-    data = json.dumps({'screen_name': user_name})
-    headers = {
-        'Content-Type': 'application/json',
-        'Content-Length': len(data)
-    }
-    response = requests.get(url, data=data, headers=headers)
-    response.raise_for_status()
-    return jsonify(response=response.json())
+    try:
+        url = app.config['TRACKING_API_URL']
+        data = json.dumps({'screen_name': user_name})
+        headers = {
+            'Content-Type': 'application/json',
+            'Content-Length': len(data)
+        }
+        response = requests.post(url, data=data, headers=headers)
+        response.raise_for_status()
+        return jsonify(response.json())
+    except ConnectionError:
+        pass
 
 
+# I know these methods look a lot alike, which means I should have made
+# a request builder function but there is only so many hours in the day
 @app.route('/api-request/<email>', methods=['GET', 'POST'])
 def api_request(email):
     try:
@@ -63,10 +57,21 @@ def api_request(email):
         }
         response = requests.get(url, data=data, headers=headers)
         response.raise_for_status()
+        print(response.json().success)
         return jsonify(response=response.json())
     except ConnectionError:
         return '<p>Something went wrong with you request</p>'
 
+
+@app.route('/response')
+def collect_response():
+    name = request.args.get('name', False)
+    response = request.args.get('response', False)
+    prediction = request.args.get('prediction', False)
+    user_response = UserResponse(name, response, prediction)
+    db.session.add(user_response)
+    db.session.commit()
+    return 'Done'
 
 @app.route('/contact/', methods=['GET', 'POST'])
 def contact():

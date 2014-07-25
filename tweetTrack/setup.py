@@ -19,6 +19,7 @@ setup(
             'Flask',
             'Flask-WTF',
             'Flask-SQLAlchemy',
+            'requests',
             'pytest'
     ]
 )

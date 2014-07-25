@@ -25,8 +25,9 @@
                     {{ twitter_form.submit(class_='btn btn-primary') }}
                 </div>
                 <script>
-                    var modal = $("#twitter-modal");
+                    var twitter_modal = $("#twitter-modal");
                     var twitter = $("#twitter-form");
+                    var name;
                     twitter.on("submit", function(event){
                         var screen_name = $("#screen_name").val();
                         event.preventDefault();
@@ -34,14 +35,18 @@
                             data: twitter.serialize(),
                             success: function(response) {
                                 twitter.trigger("reset");
-                                modal.modal('hide');
-                                var loc = new google.maps.LatLng(response.response.location_lat, response.response.location_lng);
+                                twitter_modal.modal('hide');
+                                console.log(response)
+                                var loc = new google.maps.LatLng(response.coords.lat, response.coords.lng);
                                 map.setCenter(loc);
                                 var marker = new google.maps.Marker({
                                     position: loc,
                                     map: map,
-                                    title:"Hello World!"
+                                    title:response.name
                                 });
+                                $("#prediction").text(response.prediction);
+                                name = response.name;
+                                $("#response-modal").modal("show");
                             }
                         });
                     });

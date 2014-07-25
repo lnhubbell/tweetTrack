@@ -200,8 +200,8 @@ def _get_connection_string():
 
 
 def _get_pasword():
-    password = open(ROOT_DIR + '/our_keys/config').read().split()
-    return password[1]
+    password = os.environ.get('DB_PASSWORD', False)
+    return password
 
 
 def add_rows():

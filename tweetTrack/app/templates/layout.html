@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title> tweet-finder </title>
+        <title>tweetTrack</title>
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
         <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
         <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
@@ -60,6 +60,7 @@
             {% include 'twitter.html' %}
             {% include 'about.html' %}
             {% include 'api_request.html' %}
+            {% include 'response.html' %}
             <script type="text/javascript">
                 $(window).load(function(){
                     $('#about-modal').modal('show');
