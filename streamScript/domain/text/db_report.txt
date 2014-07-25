@@ -1,0 +1,107 @@
+Report generated: 07/24/2014, 18:01
+
+City,Users,Tweets
+Chesapeake, VA,564,16720
+Dallas, TX,2288,74360
+Long Beach, CA,721,19510
+Oakland, CA,336,9580
+Greensboro, NC,317,8960
+Bakersfield, CA,536,16741
+Houston, TX,3692,114661
+Stockton, CA,326,9501
+Anaheim, CA,674,17021
+Fort Worth, TX,2279,68291
+Indianapolis, IN,885,25431
+Raleigh, NC,615,17501
+Chicago, IL,2952,80311
+Fort Wayne, IN,231,5312
+Tulsa, OK,346,9502
+Fremont, CA,144,3302
+San Francisco, CA,661,19812
+Portland, OR,1215,33612
+Irvine, CA,278,6512
+Los Angeles, CA,3865,113692
+New Orleans, LA,844,33572
+North Las Vegas, NV,225,7402
+Orlando, FL,1563,42512
+Washington, DC,1260,41333
+Saint Louis, MO,672,20453
+Fresno, CA,580,15093
+Albuquerque, NM,416,10393
+Hialeah, FL,318,10073
+Irving, TX,312,9854
+Atlanta, GA,1801,59174
+Henderson, NV,709,18694
+Winston Salem, NC,202,5974
+Garland, TX,379,13634
+San Bernardino, CA,686,19514
+Pittsburgh, PA,888,22264
+Wichita, KS,438,11804
+Saint Petersburg, FL,304,8054
+Chula Vista, CA,342,7864
+Laredo, TX,133,3445
+Boise, ID,146,3615
+Chandler, AZ,368,8165
+Newark, NJ,573,17235
+Oklahoma City, OK,621,18315
+Corpus Christi, TX,408,12685
+Birmingham, AL,428,13525
+Detroit, MI,872,26645
+Virginia Beach, VA,548,13445
+Honolulu, HI,283,7365
+Arlington, TX,638,21355
+Madison, WI,168,4255
+Lubbock, TX,191,4525
+Nashville, TN,475,13075
+Seattle, WA,676,19516
+Kansas City, MO,768,19696
+Norfolk, VA,252,7146
+Colorado Springs, CO,293,8316
+Gilbert, AZ,350,8346
+Sacramento, CA,928,26226
+Riverside, CA,469,13696
+Louisville, KY,838,21496
+Columbus, OH,1024,27956
+Cincinnati, OH,862,24696
+Buffalo, NY,936,23926
+Glendale, AZ,422,11166
+Baltimore, MD,779,26226
+Denver, CO,971,28536
+Jacksonville, FL,753,21926
+Memphis, TN,519,14267
+San Diego, CA,2174,55847
+Plano, TX,496,13207
+Charlotte, NC,916,26477
+Minneapolis, MN,960,24817
+Tampa, FL,727,19517
+Austin, TX,1105,33807
+Aurora, CO,405,12107
+Mesa, AZ,680,17247
+Milwaukee, WI,646,17898
+Phoenix, AZ,1451,40198
+Santa Ana, CA,378,9958
+Baton Rouge, LA,383,13178
+Philadelphia, PA,2410,72908
+New York, NY,7507,209098
+Scottsdale, AZ,219,5558
+Miami, FL,1842,56938
+El Paso, TX,416,10109
+Reno, NV,296,7439
+San Antonio, TX,1921,55139
+Boston, MA,723,21399
+Omaha, NE,562,13729
+Durham, NC,260,7479
+Toledo, OH,412,10349
+Lincoln, NE,145,3519
+San Jose, CA,922,25249
+Jersey City, NJ,251,7339
+Lexington, KY,258,6259
+Cleveland, OH,1225,40099
+Tucson, AZ,625,17019
+Saint Paul, MN,636,16009
+Las Vegas, NV,2158,60499
+Anchorage, AK,161,4219
+**********
+Totals,84826,2433394
+**********
+Min tweets: 3302, Max tweets: 209098

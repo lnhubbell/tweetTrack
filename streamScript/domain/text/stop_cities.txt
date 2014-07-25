@@ -26,3 +26,7 @@ Boston, MA
 Garland, TX
 Anaheim, CA
 Memphis, TN
+Norfolk, VA
+Omaha, NE
+Birmingham, AL
+Colorado Springs, CO

@@ -37,6 +37,6 @@ def serve_predictions(names):
         yield result
 
 if __name__ == "__main__":
-    user_names = 'TrustyJohn'
+    user_names = 'crisewing'
     results = make_prediction(user_names)
     print "For the user: ", results['name'], " our predictions are: ", results['prediction']

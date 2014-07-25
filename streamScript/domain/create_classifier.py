@@ -111,7 +111,6 @@ def fit_classifier(X, y):
     return mnb.fit(X, y)
 
 
-
 def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=False):
     u"""Takes in keyword arguments to determine source of data. Returns a
     trained classifier."""
@@ -128,7 +127,7 @@ def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=Fa
         X, y, vocab = vectorize(user_matrix, user_array, n)
     mnb = fit_classifier(X, y)
     if make_new_pickles:
-        picklers.pickle_classifier(mnb)
+        picklers.write_pickle(mnb, 'classifier_pickle')
         if not read_pickles:
             picklers.write_pickle(data, 'pickle')
             picklers.write_pickle(X, 'matrix_pickle')
