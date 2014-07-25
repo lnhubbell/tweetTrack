@@ -61,10 +61,10 @@ def vectorize(user_matrix, user_array, n):
     return X, Y, vec.get_feature_names()
 
 
-def build_matrix(data, n=1000):
+def build_matrix(data, n=10000):
     u"""Uses blocks of tweets from multiple users per city.
     Takes in a raw dataset and an optional parameter to limit the feature
-    set to n. Defaults to 1000. Returns a tuple containing a matrix of n features,
+    set to n. Defaults to 10000. Returns a tuple containing a matrix of n features,
     a vector of labels, and a vocabulary list of the features examined."""
     user_matrix = []
     user_array = []
@@ -79,10 +79,10 @@ def build_matrix(data, n=1000):
     return user_matrix, user_array, n
 
 
-def build_matrix_per_user(data, n=1000):
+def build_matrix_per_user(data, n=10000):
     u""" Uses blocks of tweets from single users per city.
     Takes in a raw dataset and an optional parameter to limit the feature
-    set to n. Defaults to 1000. Returns a tuple containing a matrix of n features,
+    set to n. Defaults to 10000. Returns a tuple containing a matrix of n features,
     a vector of labels, and a vocabulary list of the features examined."""
     user_matrix = ['']
     user_array = []
@@ -155,11 +155,11 @@ def generate_predictions(userTestdata):
     incorrect = 0
     got_wrong = []
     all_results = []
-    predictions = mnb.predict_log_proba(X)
-    y = picklers.load_pickle('labels_pickle')
+    predictions = mnb.predict(X)
+    # y = picklers.load_pickle('labels_pickle')
     print user_array
     print user_cities
-    print zip(tuple(y), tuple(predictions))
+    # print zip(tuple(y), tuple(predictions))
     if len(predictions):
         for idx, prediction in enumerate(predictions):
             report = (user_array[idx], user_cities[idx], prediction)

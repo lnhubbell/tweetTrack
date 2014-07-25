@@ -93,7 +93,7 @@ def query_twitter_for_histories(users, city=None, cap=100, data_collection=True)
             print "Skipped user on stop list"
             continue
         history = []
-        tweet_history = []
+        # tweet_history = []
         try:
             history = api.user_timeline(screen_name=user, count=200)
         except tweepy.error.TweepError as err:
@@ -103,7 +103,7 @@ def query_twitter_for_histories(users, city=None, cap=100, data_collection=True)
         if len(history) >= 200 or not data_collection:
             user_count += 1
             tweet_history = format_tweet_history(history, user, city)
-        if len(tweet_history):
+        # if len(tweet_history):
             city_tweets.append(tweet_history)
             print user_count
         else:
