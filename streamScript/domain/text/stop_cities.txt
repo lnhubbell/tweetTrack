@@ -30,3 +30,6 @@ Norfolk, VA
 Omaha, NE
 Birmingham, AL
 Colorado Springs, CO
+Gilbert, AZ
+San Bernardino, CA
+Virginia Beach, VA
