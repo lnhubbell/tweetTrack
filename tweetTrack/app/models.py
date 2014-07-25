@@ -52,3 +52,8 @@ class UserResponse(db.Model):
     screen_name = db.Column(db.String(15), nullable=False)
     is_correct = db.Column(db.Boolean, nullable=False)
     guess_location = db.Column(db.String(25), nullable=False)
+
+    def __init__(self, screen_name, is_correct, guess_location):
+        self.screen_name = screen_name
+        self.is_correct = is_correct
+        self.guess_location = guess_location

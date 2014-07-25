@@ -19,16 +19,16 @@
                     {{ user_response_form.no(class_='btn btn-danger') }}
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
                     </div>
                     <script>
                         var responseModal = $("#response-modal");
                         var responseForm = $("#response-form");
                         var response = 0;
-                        $("#yes").on(click, function(){
+                        $("#yes").on("click", function(event){
+                            //event.preventDefault();
                             response++;
                         });
-                        response.on("submit", function(event){
+                        responseForm.on("submit", function(event){
                             event.preventDefault();
                             $.ajax('/response', {
                                 data: {

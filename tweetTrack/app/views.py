@@ -6,7 +6,7 @@ import requests
 from requests.exceptions import ConnectionError
 from flask import render_template, request, jsonify
 from flask.ext.mail import Message
-from tweetTrack.app import app, mail
+from tweetTrack.app import app, mail, db
 from tweetTrack.app.forms import TwitterForm, ContactForm
 from tweetTrack.app.forms import UserResponseForm, APIRequestForm
 from tweetTrack.app.models import UserResponse
@@ -57,10 +57,21 @@ def api_request(email):
         }
         response = requests.get(url, data=data, headers=headers)
         response.raise_for_status()
+        print(response.json().success)
         return jsonify(response=response.json())
     except ConnectionError:
         return '<p>Something went wrong with you request</p>'
 
+
+@app.route('/response')
+def collect_response():
+    name = request.args.get('name', False)
+    response = request.args.get('response', False)
+    prediction = request.args.get('prediction', False)
+    user_response = UserResponse(name, response, prediction)
+    db.session.add(user_response)
+    db.session.commit()
+    return 'Done'
 
 @app.route('/contact/', methods=['GET', 'POST'])
 def contact():
