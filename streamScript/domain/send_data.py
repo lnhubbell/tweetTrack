@@ -28,6 +28,24 @@ def read_in_bb_file():
     return bb_dict
 
 
+def query_for_handles():
+    u"""Returns a dictionary with keys as city names and values as a list of
+    tweets from that city."""
+    bb_dict = read_in_bb_file()
+    data_set = {}
+    for key, values in bb_dict.items():
+        sql = """SELECT DISTINCT screen_name FROM "Tweet200" WHERE city = %s ORDER BY (screen_name) ASC LIMIT 10;"""
+        data = execute_query(sql, (key,), need_results=True)
+        data_set[key] = data
+        print "Completed query on: " + str(key)
+    name_city = []
+    for key, vals in data_set.items():
+        for val in vals:
+            name_city.append((val,key))
+    return name_city
+
+
+
 def query_all_db(limit=False):
     u"""Returns a dictionary with keys as city names and values as a list of
     tweets from that city."""
@@ -208,4 +226,5 @@ def drop_rows():
 if __name__ == "__main__":
     #query_all_db_Tweet200()
     #drop_rows()
+    print query_for_handles()
     pass
