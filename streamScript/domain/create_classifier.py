@@ -14,9 +14,11 @@ cross-validated predictions. Pickles dataset and matrix as necessary."""
 def check_city_locations(location_lat, location_lng):
     bb_dict = read_in_bb_file()
     for city, values in bb_dict.items():
-        if (values[0][0] < location_lat < values[0][1]) and \
-                values[1][0] < location_lng < values[1][1]:
-            return city, values
+        lats = values[0]
+        lngs = values[1]
+        if (float(lats[0]) < float(location_lat) < float(lats[1])) and \
+                (float(lngs[0]) < float(location_lng) < float(lngs[1])):
+            return city
 
 
 def build_test_matrix(history, vocab):
@@ -61,10 +63,10 @@ def vectorize(user_matrix, user_array, n):
     return X, Y, vec.get_feature_names()
 
 
-def build_matrix(data, n=1000):
+def build_matrix(data, n=10000):
     u"""Uses blocks of tweets from multiple users per city.
     Takes in a raw dataset and an optional parameter to limit the feature
-    set to n. Defaults to 1000. Returns a tuple containing a matrix of n features,
+    set to n. Defaults to 10000. Returns a tuple containing a matrix of n features,
     a vector of labels, and a vocabulary list of the features examined."""
     user_matrix = []
     user_array = []

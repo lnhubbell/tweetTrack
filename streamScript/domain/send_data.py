@@ -198,5 +198,14 @@ def change_col_size():
     print "Querying database"
     execute_query(sql)
 
+
+def drop_rows():
+    sql = """DELETE FROM "Tweet200" WHERE city = 'Omaha, NE';"""
+    print "Querying database"
+    execute_query(sql)
+    print "deleted rows"
+
 if __name__ == "__main__":
-    query_all_db_Tweet200()
+    #query_all_db_Tweet200()
+    #drop_rows()
+    pass

@@ -1,7 +1,3 @@
-Milwaukee, WI
-Seattle, WA
-Washington, DC
-Atlanta, GA
 Tulsa, OK
 El Paso, TX
 Phoenix, AZ
@@ -11,25 +7,27 @@ Fort Worth, TX
 San Diego, CA
 Detroit, MI
 Irving, TX
-Kansas City, MO
 Bakersfield, CA
 Reno, NV
 Chandler, AZ
 Henderson, NV
-Newark, NJ
 Saint Louis, MO
-Oklahoma City, OK
 Chesapeake, VA
 Stockton, CA
 Corpus Christi, TX
-Boston, MA
-Garland, TX
 Anaheim, CA
-Memphis, TN
 Norfolk, VA
-Omaha, NE
 Birmingham, AL
 Colorado Springs, CO
 Gilbert, AZ
 San Bernardino, CA
 Virginia Beach, VA
+Honolulu, HI
+Santa Ana, CA
+Plano, TX
+Indianapolis, IN
+Durham, NC
+Pittsburgh, PA
+Toledo, OH
+Dallas, TX
+Long Beach, CA

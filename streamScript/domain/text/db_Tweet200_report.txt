@@ -1,14 +1,17 @@
-Report generated: 07/24/2014, 18:47
+Report generated: 07/24/2014, 21:54
 
 City,Users,Tweets
 Fort Wayne, IN,0,0
 Tulsa, OK,101,20200
+Milwaukee, WI,0,0
 El Paso, TX,101,20200
 Laredo, TX,0,0
 Fremont, CA,0,0
-Gilbert, AZ,0,0
+Gilbert, AZ,101,20200
 Irving, TX,101,20200
-Washington, DC,101,10440
+Washington, DC,0,0
+Atlanta, GA,0,0
+Kansas City, MO,0,0
 Phoenix, AZ,101,20200
 Norfolk, VA,101,20200
 Boise, ID,0,0
@@ -18,28 +21,33 @@ Houston, TX,101,20200
 Chandler, AZ,101,20200
 San Antonio, TX,101,20200
 Henderson, NV,101,20200
+Newark, NJ,0,0
 Winston Salem, NC,0,0
 Saint Louis, MO,101,20200
+Oklahoma City, OK,0,0
 Chesapeake, VA,101,20200
 Stockton, CA,101,20200
 Corpus Christi, TX,101,20200
+Boston, MA,0,0
+Garland, TX,0,0
 Anaheim, CA,101,20200
-Pittsburgh, PA,0,0
+Memphis, TN,0,0
+Pittsburgh, PA,101,20200
 Fort Worth, TX,101,20200
 Birmingham, AL,101,20200
 Detroit, MI,101,20200
-Colorado Springs, CO,0,0
-San Bernardino, CA,0,0
-Virginia Beach, VA,0,0
-Honolulu, HI,0,0
-Santa Ana, CA,0,0
-Plano, TX,0,0
-Indianapolis, IN,0,0
+Colorado Springs, CO,101,20200
+Seattle, WA,0,0
+San Bernardino, CA,101,20200
+Virginia Beach, VA,101,20200
+Honolulu, HI,101,20200
+Santa Ana, CA,101,20200
+Plano, TX,101,20200
+Indianapolis, IN,101,20200
 Sacramento, CA,0,0
-Durham, NC,0,0
 San Diego, CA,101,20200
-Toledo, OH,0,0
-Dallas, TX,0,0
+Toledo, OH,101,20200
+Dallas, TX,101,20200
 Lincoln, NE,0,0
 Long Beach, CA,0,0
 Wichita, KS,0,0
@@ -91,17 +99,9 @@ North Las Vegas, NV,0,0
 Hialeah, FL,0,0
 Greensboro, NC,0,0
 Orlando, FL,0,0
-Milwaukee, WI,101,11241
-Garland, TX,7,1371
-Seattle, WA,101,11181
-Kansas City, MO,31,6082
-Boston, MA,46,9142
 Omaha, NE,65,12832
-Oklahoma City, OK,46,9184
-Memphis, TN,29,5765
-Newark, NJ,32,6236
-Atlanta, GA,100,10168
+Durham, NC,101,20199
 **********
-Totals,2679,497642
+Totals,3297,659231
 **********
-Min tweets: 0, Max tweets: 0
+Min tweets: 0, Max tweets: 20200
