@@ -27,6 +27,7 @@ def build_test_matrix(user_data, vocab):
     matrix = []
     user_array = []
     user_cities = []
+    print user_data
     print user_data[0][0]
     for history in user_data:
         user_string = ""
