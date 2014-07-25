@@ -136,6 +136,28 @@ def fit_classifier(X, y):
     return mnb.fit(X, y)
 
 
+def check_alphas(X, y):
+    u"""Takes in an X matrix and a Y array of labels.
+    Checks four possible alpha values; returns the
+    classifier with the highest cross-validated score."""
+    best = None
+    best_score = None
+    alphas = [1E-4, 1E-3, 1E-2, 1E-1, 1]
+    for alpha in alphas:
+        mnb = MNB(alpha)
+        score = np.mean(
+            cross_val_score(mnb, X, y, cv=10)
+        )
+        if not best:
+            best = mnb
+            best_score = score
+        elif score > best_score:
+            best_score = score
+    best.fit(X, y)
+    return best, best_score
+
+
+
 def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=False):
     u"""Takes in keyword arguments to determine source of data. Returns a
     trained classifier."""
