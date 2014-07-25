@@ -14,28 +14,36 @@
                     Did we get it right?
                 </p>
                 <form id="response-form" action="">
-                {{ user_response_form.csrf_token }}
-                {{ user_response_form.yes(class_='btn btn-info') }}
-                {{ user_response_form.no(class_='btn btn-danger') }}
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    {{ user_response_form.csrf_token }}
+                    {{ user_response_form.yes(class_='btn btn-info') }}
+                    {{ user_response_form.no(class_='btn btn-danger') }}
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
-                </div>
-                <script>
-                    var response_modal = $("#response-modal");
-                    var response = $("#response-form");
-                    response.on("submit", function(event){
-                        var screen_name = $("#screen_name").val();
-                        event.preventDefault();
-                        $.ajax('/response/' + screen_name, {
-                            data: response.serialize(),
-                            success: function(response) {
-                                response.trigger("reset");
-                                response_modal.modal('hide');
-                            }
+                    </div>
+                    <script>
+                        var responseModal = $("#response-modal");
+                        var responseForm = $("#response-form");
+                        var response = 0;
+                        $("#yes").on(click, function(){
+                            response++;
                         });
-                    });
-                </script>
+                        response.on("submit", function(event){
+                            event.preventDefault();
+                            $.ajax('/response', {
+                                data: {
+                                    'response': response,
+                                    'prediction': $("#prediction").text(),
+                                    'name': name
+                                },
+                                success: function(response) {
+                                    responseForm.trigger("reset");
+                                    responseModal.modal('hide');
+                                    response = 0;
+                                }
+                            });
+                        });
+                    </script>
                 </form>
             </div>
         </div>

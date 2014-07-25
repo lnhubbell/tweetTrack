@@ -27,6 +27,7 @@
                 <script>
                     var twitter_modal = $("#twitter-modal");
                     var twitter = $("#twitter-form");
+                    var name;
                     twitter.on("submit", function(event){
                         var screen_name = $("#screen_name").val();
                         event.preventDefault();
@@ -36,7 +37,7 @@
                                 twitter.trigger("reset");
                                 twitter_modal.modal('hide');
                                 console.log(response)
-                                var loc = new google.maps.LatLng(response.coords.lng, response.coords.lat);
+                                var loc = new google.maps.LatLng(response.coords.lat, response.coords.lng);
                                 map.setCenter(loc);
                                 var marker = new google.maps.Marker({
                                     position: loc,
@@ -44,6 +45,7 @@
                                     title:response.name
                                 });
                                 $("#prediction").text(response.prediction);
+                                name = response.name;
                                 $("#response-modal").modal("show");
                             }
                         });
