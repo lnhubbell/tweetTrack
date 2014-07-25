@@ -2,7 +2,8 @@ import datetime
 from get_tweets_by_user import get_unique_handles
 from send_data import query_all_db, query_all_db_Tweet200
 
-u"""Generates a report on database stats"""
+u"""Generates a csv report on database stats. Currently set to
+query the Tweet200 database."""
 
 
 def write_report():
