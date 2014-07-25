@@ -1,0 +1,43 @@
+<div class="modal fade" id="response-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Enter you response handle below</h4>
+            </div>
+            <div id="response-modal-body" class="modal-body">
+                <p>
+                    Our best guess is that you are in:<br />
+                    <span id="prediction"></span>
+                </p>
+                <p>
+                    Did we get it right?
+                </p>
+                <form id="response-form" action="">
+                {{ user_response_form.csrf_token }}
+                {{ user_response_form.yes(class_='btn btn-info') }}
+                {{ user_response_form.no(class_='btn btn-danger') }}
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                </div>
+                <script>
+                    var response_modal = $("#response-modal");
+                    var response = $("#response-form");
+                    response.on("submit", function(event){
+                        var screen_name = $("#screen_name").val();
+                        event.preventDefault();
+                        $.ajax('/response/' + screen_name, {
+                            data: response.serialize(),
+                            success: function(response) {
+                                response.trigger("reset");
+                                response_modal.modal('hide');
+                            }
+                        });
+                    });
+                </script>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

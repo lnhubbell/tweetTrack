@@ -46,3 +46,8 @@ class APIRequestForm(Form):
         ]
     )
     send_request = SubmitField('Send Request')
+
+
+class UserResponseForm(Form):
+    yes = SubmitField('Yes')
+    no = SubmitField('No')

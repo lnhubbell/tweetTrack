@@ -7,7 +7,8 @@ from requests.exceptions import ConnectionError
 from flask import render_template, request, jsonify
 from flask.ext.mail import Message
 from tweetTrack.app import app, mail
-from tweetTrack.app.forms import TwitterForm, ContactForm, APIRequestForm
+from tweetTrack.app.forms import TwitterForm, ContactForm
+from tweetTrack.app.forms import UserResponseForm, APIRequestForm
 from tweetTrack.app.models import UserResponse
 
 
@@ -17,12 +18,14 @@ def index():
     contact_form = ContactForm()
     twitter_form = TwitterForm()
     api_request_form = APIRequestForm()
+    user_response_form = UserResponseForm()
     return render_template(
         'index.html',
         contact_form=contact_form,
         twitter_form=twitter_form,
-        api_request_form=api_request_form
-        )
+        api_request_form=api_request_form,
+        user_response_form=user_response_form
+    )
 
 
 @app.route('/twitter/<user_name>')

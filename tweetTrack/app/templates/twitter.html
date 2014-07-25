@@ -43,6 +43,8 @@
                                     map: map,
                                     title:response.name
                                 });
+                                $("#prediction").text(response.prediction);
+                                $("#response-modal").modal("show");
                             }
                         });
                     });
