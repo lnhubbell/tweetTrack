@@ -1,107 +1,107 @@
-Report generated: 07/24/2014, 13:31
+Report generated: 07/24/2014, 19:47
 
 City,Users,Tweets
-Washington, DC,1121,36660
-Atlanta, GA,1642,53180
-Newark, NJ,539,15630
-Glendale, AZ,402,10260
-Minneapolis, MN,858,21990
-Austin, TX,1010,30860
-Milwaukee, WI,591,16021
-Irving, TX,293,9071
-Norfolk, VA,226,6181
-Henderson, NV,639,16751
-Santa Ana, CA,350,9001
-Sacramento, CA,871,23791
-Long Beach, CA,668,17711
-Raleigh, NC,559,15781
-New York, NY,6785,186411
-Baltimore, MD,730,23921
-Albuquerque, NM,382,9421
-Mesa, AZ,629,15561
-Laredo, TX,128,3212
-Memphis, TN,472,12912
-Fort Worth, TX,2100,62482
-San Diego, CA,1895,48212
-Toledo, OH,376,9352
-Portland, OR,1104,30152
-Buffalo, NY,866,21722
-Lubbock, TX,172,4042
-Los Angeles, CA,3535,103312
-Nashville, TN,430,11652
-Phoenix, AZ,1342,36583
-Garland, TX,355,12663
-Anaheim, CA,614,15433
-Colorado Springs, CO,265,7603
-Durham, NC,231,6633
-Saint Petersburg, FL,275,7223
-Lexington, KY,230,5623
-Fresno, CA,538,13623
-Fort Wayne, IN,209,4724
-Tulsa, OK,323,8644
-Oklahoma City, OK,562,16594
-Boston, MA,650,19014
-Gilbert, AZ,320,7464
-Lincoln, NE,135,3204
-Cleveland, OH,1149,36374
-New Orleans, LA,800,30664
-Kansas City, MO,694,17665
-Houston, TX,3428,104095
-Chandler, AZ,330,7255
-Corpus Christi, TX,387,11755
-San Bernardino, CA,635,17755
-Arlington, TX,590,19565
-Tucson, AZ,586,15415
-Saint Paul, MN,567,14395
-Tampa, FL,656,17465
-Aurora, CO,390,11345
-North Las Vegas, NV,213,6815
-Boise, ID,135,3236
-Reno, NV,277,6846
-Stockton, CA,312,8726
-Omaha, NE,516,12296
-Virginia Beach, VA,507,12206
-San Francisco, CA,581,17456
-Madison, WI,155,3846
-Irvine, CA,248,5836
-Las Vegas, NV,1989,54676
-Chula Vista, CA,322,7106
-Denver, CO,908,26106
-Hialeah, FL,301,9056
-Orlando, FL,1416,37546
-El Paso, TX,386,9247
-Seattle, WA,606,17297
-San Antonio, TX,1797,50457
-Honolulu, HI,262,6697
-Plano, TX,460,11967
-Indianapolis, IN,811,22607
-Pittsburgh, PA,810,20067
-Oakland, CA,306,8817
-Anchorage, AK,143,3907
-Miami, FL,1692,51167
-Greensboro, NC,293,8127
-Bakersfield, CA,511,15488
-Saint Louis, MO,609,18528
-Chesapeake, VA,515,14968
-Dallas, TX,2146,68398
-San Jose, CA,847,22708
-Baton Rouge, LA,356,12078
-Louisville, KY,765,19688
-Charlotte, NC,832,23578
-Jacksonville, FL,691,19798
-Fremont, CA,134,3039
-Winston Salem, NC,185,5399
-Birmingham, AL,386,12319
-Detroit, MI,804,24159
-Wichita, KS,403,10779
-Philadelphia, PA,2219,65789
-Riverside, CA,441,12539
-Jersey City, NJ,233,6639
-Columbus, OH,929,25209
-Cincinnati, OH,782,22329
-Scottsdale, AZ,195,4939
-Chicago, IL,2679,71529
+Boise, ID,156,3730
+Reno, NV,310,7700
+Chandler, AZ,393,8550
+Garland, TX,391,14170
+Birmingham, AL,451,14200
+Detroit, MI,909,28070
+Sacramento, CA,960,27230
+San Francisco, CA,699,20860
+Columbus, OH,1076,29510
+Cincinnati, OH,909,26020
+New York, NY,7876,220920
+Baltimore, MD,809,27600
+New Orleans, LA,877,35260
+Greensboro, NC,331,9500
+Henderson, NV,733,19601
+Seattle, WA,713,20441
+San Bernardino, CA,708,20171
+Arlington, TX,665,22181
+Chicago, IL,3081,84961
+Mesa, AZ,708,17991
+Milwaukee, WI,680,18882
+Kansas City, MO,809,20872
+Chesapeake, VA,583,17852
+Dallas, TX,2370,77632
+Long Beach, CA,736,20312
+Baton Rouge, LA,395,13752
+Philadelphia, PA,2503,77012
+Anchorage, AK,165,4382
+Tulsa, OK,360,9943
+Gilbert, AZ,367,8713
+Atlanta, GA,1896,62443
+Norfolk, VA,261,7623
+Newark, NJ,604,18143
+Stockton, CA,334,9863
+Anaheim, CA,706,17863
+Pittsburgh, PA,917,23433
+Toledo, OH,430,10913
+Cleveland, OH,1278,42393
+Irving, TX,322,10214
+Corpus Christi, TX,426,13254
+Omaha, NE,597,14534
+Honolulu, HI,293,7624
+Louisville, KY,883,22634
+Portland, OR,1256,35054
+Nashville, TN,502,13914
+Aurora, CO,412,12564
+Laredo, TX,137,3655
+Houston, TX,3818,119765
+Saint Louis, MO,711,21425
+Virginia Beach, VA,571,14215
+Plano, TX,516,13815
+Durham, NC,275,7885
+Lubbock, TX,198,4775
+Miami, FL,1917,60135
+Chula Vista, CA,354,8265
+Albuquerque, NM,432,10905
+Washington, DC,1321,43586
+Santa Ana, CA,393,10336
+Indianapolis, IN,934,26806
+Saint Petersburg, FL,323,8606
+Raleigh, NC,651,18466
+Fresno, CA,597,15656
+El Paso, TX,433,10517
+Fremont, CA,149,3447
+Bakersfield, CA,548,17157
+Boston, MA,769,22617
+Memphis, TN,532,14907
+San Jose, CA,965,26487
+Lexington, KY,287,6667
+Tucson, AZ,646,17737
+Madison, WI,177,4447
+Minneapolis, MN,1003,26227
+Tampa, FL,764,20617
+Denver, CO,1013,29917
+North Las Vegas, NV,231,7707
+Orlando, FL,1649,45117
+Phoenix, AZ,1511,41888
+San Antonio, TX,1992,57658
+Oklahoma City, OK,635,19008
+San Diego, CA,2287,59258
+Lincoln, NE,155,3728
+Wichita, KS,455,12368
+Riverside, CA,485,14158
+Jersey City, NJ,262,7788
+Charlotte, NC,948,27778
+Las Vegas, NV,2221,63128
+Scottsdale, AZ,235,5808
+Los Angeles, CA,4001,118518
+Austin, TX,1166,35328
+Fort Wayne, IN,241,5699
+Winston Salem, NC,208,6319
+Fort Worth, TX,2354,71289
+Colorado Springs, CO,303,8759
+Buffalo, NY,977,25139
+Glendale, AZ,436,11759
+Irvine, CA,292,6829
+Saint Paul, MN,667,16849
+Oakland, CA,348,9949
+Jacksonville, FL,784,23059
+Hialeah, FL,325,10629
 **********
-Totals,77742,2196038
+Totals,88442,2555041
 **********
-Min users: 3039, Max users: 186411
+Min tweets: 3447, Max tweets: 220920

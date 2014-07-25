@@ -1,12 +1,12 @@
 import datetime
 from get_tweets_by_user import get_unique_handles
-from send_data import query_db, read_in_bb_file
+from send_data import query_all_db, query_all_db_Tweet200
 
 u"""Generates a report on database stats"""
 
 
 def write_report():
-    bb_dict = read_in_bb_file()
+    #print "Querying Tweet 200 table"
     header = "Report generated: " + \
         datetime.datetime.now().strftime('%m/%d/%Y') + ", " +\
         datetime.datetime.now().strftime('%H:%M') + "\n\n"
@@ -19,8 +19,7 @@ def write_report():
         out_list = []
         min_tweets = 0
         max_tweets = 0
-        for city, values in bb_dict.items():
-            tweets = query_db(city, values)
+        for city, tweets in query_all_db().items():
             handles = len(get_unique_handles(tweets))
             city_tweets = len(tweets)
             if min_tweets == 0:
@@ -44,7 +43,7 @@ def write_report():
         f.write(totals)
         f.write("\n")
         f.write(star_line)
-        mins_maxs = "Min users: " + str(min_tweets) + ", Max users: " + str(max_tweets)
+        mins_maxs = "Min tweets: " + str(min_tweets) + ", Max tweets: " + str(max_tweets)
         f.write(mins_maxs)
 
 if __name__ == "__main__":

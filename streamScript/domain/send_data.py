@@ -18,8 +18,6 @@ def read_in_bb_file():
     for each location."""
     with open("text/bounding_boxes.txt", 'r') as f:
         bbs = f.readlines()
-    f.close()
-
     bb_dict = {}
     for line in bbs:
         spl = line.strip().split(",")
@@ -30,33 +28,51 @@ def read_in_bb_file():
     return bb_dict
 
 
-def query_all_db():
+def query_all_db(limit=False):
     u"""Returns a dictionary with keys as city names and values as a list of
     tweets from that city."""
-    i = 0
     bb_dict = read_in_bb_file()
     data_set = {}
     for key, values in bb_dict.items():
-        data = query_db(key, values)
+        data = query_db(key, values, limit)
         data_set[key] = data
-        i += 1
     return data_set
 
 
-def query_db(city, values):
+def query_all_db_Tweet200():
+    u"""Returns a dictionary with keys as city names and values as a list of
+    tweets from that city."""
+    bb_dict = read_in_bb_file()
+    data_set = {}
+    for key, values in bb_dict.items():
+        sql = """SELECT * FROM "Tweet200" WHERE city = %s;"""
+        data = execute_query(sql, (key,), need_results=True)
+        data_set[key] = data
+        print "Completed query on: " + str(key)
+    return data_set
+
+
+def query_db(city, values, limit=False):
     u"""Takes in a city and Returns a dict containing all tweets
     collected from the city (with the key being the city name and the value
     being a list of tweets)."""
     lats = values[0]
     longs = values[1]
     vals = (lats[0], lats[1], longs[0], longs[1])
-    sql = """SELECT * FROM "Tweet" WHERE
-        (location_lat BETWEEN %s AND %s)
-        AND (location_lng BETWEEN %s AND %s);"""
-        ## LIMIT 2000
+    if limit:
+        sql = """SELECT * FROM "Tweet" WHERE
+            (location_lat BETWEEN %s AND %s)
+            AND (location_lng BETWEEN %s AND %s)LIMIT 3300;"""
+    else:
+        sql = """SELECT * FROM "Tweet" WHERE
+            (location_lat BETWEEN %s AND %s)
+            AND (location_lng BETWEEN %s AND %s);"""
+            ## LIMIT 2000
     print "Querying database for ", city
     data = execute_query(sql, vals, need_results=True)
     return data
+
+
 
 
 def send_user_queries_to_db(tweet_set, city):
@@ -186,5 +202,4 @@ def change_col_size():
 
 if __name__ == "__main__":
     pass
-    #add_rows()
-    # change_col_size()
+
