@@ -194,14 +194,16 @@ def _get_connection_string():
     connection_string.append("password=")
     connection_string.append(password)
     connection_string.append("port=5432")
+    # print connection_string
     connection = " ".join(connection_string)
 
     DB_CONFIG['DB_CONNECTION_STRING'] = connection
 
 
 def _get_pasword():
-    password = os.environ.get('DB_PASSWORD', False)
-    return password
+    with open(ROOT_DIR + "/our_keys/config", 'r') as f:
+        password = f.read().split()[-1]
+        return password
 
 
 def add_rows():
@@ -217,13 +219,13 @@ def change_col_size():
 
 
 def drop_rows():
-    sql = """DELETE FROM "TweetTest2";"""
+    sql = """DELETE FROM "Tweet200" WHERE city = 'Los Angeles, CA';"""
     print "Querying database"
     execute_query(sql)
     print "deleted rows"
 
 if __name__ == "__main__":
     #query_all_db_Tweet200()
-    #drop_rows()
+    drop_rows()
     #print query_for_handles()
     pass
