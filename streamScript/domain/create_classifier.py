@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer as CV
 from sklearn.naive_bayes import MultinomialNB as MNB
 
-from streamScript.domain.send_data import query_all_db, query_all_db_Tweet200, read_in_bb_file
+from streamScript.domain.query_db import query_all_db, query_all_db_Tweet200, read_in_bb_file
 import picklers
 
 u"""You should interact with this file through the 'if name == main' block.
