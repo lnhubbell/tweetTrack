@@ -87,23 +87,30 @@ def build_matrix_per_user(data, n=1000):
     Takes in a raw dataset and an optional parameter to limit the feature
     set to n. Defaults to 1000. Returns a tuple containing a matrix of n features,
     a vector of labels, and a vocabulary list of the features examined."""
-    user_matrix = []
+    user_matrix = ['']
     user_array = []
     for key, val in data.items():
         count = 0
+        user_count = 0
+        # print key
+        # print len(val)
         for tweet in val:
+            if user_count >= 100:
+                continue
             if count == 0:
-                this_user = tweet[0]
+                this_user = tweet[1]
                 our_string = ""
-            if (tweet[0] == this_user) and (count < 200):
+            if (tweet[1] == this_user) and (count < 200):
                 our_string += tweet[2].lower()
                 count += 1
-            elif (tweet[0] != this_user) and (len(user_matrix[-1]) >= 14000):
+            elif (tweet[1] != this_user): # and len(our_string) >= 14000:
                 count = 0
+                user_count += 1
                 user_matrix.append(our_string)
                 user_array.append(key)
-            elif tweet[0] != this_user:
+            elif tweet[1] != this_user:
                 count = 0
+        print len(user_matrix)
     return user_matrix, user_array, n
 
 
