@@ -1,17 +1,16 @@
-Report generated: 07/24/2014, 21:54
+Report generated: 07/25/2014, 06:55
 
 City,Users,Tweets
 Fort Wayne, IN,0,0
 Tulsa, OK,101,20200
-Milwaukee, WI,0,0
+Milwaukee, WI,101,20200
 El Paso, TX,101,20200
 Laredo, TX,0,0
 Fremont, CA,0,0
 Gilbert, AZ,101,20200
 Irving, TX,101,20200
-Washington, DC,0,0
-Atlanta, GA,0,0
-Kansas City, MO,0,0
+Washington, DC,101,20200
+Atlanta, GA,101,20200
 Phoenix, AZ,101,20200
 Norfolk, VA,101,20200
 Boise, ID,0,0
@@ -21,58 +20,49 @@ Houston, TX,101,20200
 Chandler, AZ,101,20200
 San Antonio, TX,101,20200
 Henderson, NV,101,20200
-Newark, NJ,0,0
 Winston Salem, NC,0,0
 Saint Louis, MO,101,20200
-Oklahoma City, OK,0,0
 Chesapeake, VA,101,20200
 Stockton, CA,101,20200
 Corpus Christi, TX,101,20200
-Boston, MA,0,0
-Garland, TX,0,0
+Boston, MA,101,20200
+Garland, TX,101,20200
 Anaheim, CA,101,20200
-Memphis, TN,0,0
 Pittsburgh, PA,101,20200
 Fort Worth, TX,101,20200
 Birmingham, AL,101,20200
 Detroit, MI,101,20200
 Colorado Springs, CO,101,20200
-Seattle, WA,0,0
+Seattle, WA,101,20200
 San Bernardino, CA,101,20200
 Virginia Beach, VA,101,20200
 Honolulu, HI,101,20200
 Santa Ana, CA,101,20200
 Plano, TX,101,20200
 Indianapolis, IN,101,20200
-Sacramento, CA,0,0
+Sacramento, CA,101,20200
 San Diego, CA,101,20200
 Toledo, OH,101,20200
 Dallas, TX,101,20200
 Lincoln, NE,0,0
-Long Beach, CA,0,0
-Wichita, KS,0,0
-San Jose, CA,0,0
-San Francisco, CA,0,0
-Saint Petersburg, FL,0,0
-Baton Rouge, LA,0,0
-Philadelphia, PA,0,0
-Riverside, CA,0,0
-Louisville, KY,0,0
-Jersey City, NJ,0,0
-Columbus, OH,0,0
-Cincinnati, OH,0,0
-Portland, OR,0,0
-Buffalo, NY,0,0
-Lexington, KY,0,0
-Arlington, TX,0,0
-Cleveland, OH,0,0
-Charlotte, NC,0,0
-Glendale, AZ,0,0
-Tucson, AZ,0,0
-Raleigh, NC,0,0
+Long Beach, CA,101,20200
+San Francisco, CA,101,20200
+Saint Petersburg, FL,101,20200
+Baton Rouge, LA,101,20200
+Philadelphia, PA,101,20200
+Riverside, CA,101,20200
+Louisville, KY,101,20200
+Portland, OR,101,20200
+Buffalo, NY,101,20200
+Arlington, TX,4,670
+Cleveland, OH,101,20200
+Charlotte, NC,15,2940
+Glendale, AZ,101,20200
+Tucson, AZ,101,20200
+Raleigh, NC,101,20200
 Madison, WI,0,0
-Irvine, CA,0,0
-New York, NY,0,0
+Irvine, CA,101,20200
+New York, NY,101,20200
 Lubbock, TX,0,0
 Baltimore, MD,0,0
 Saint Paul, MN,0,0
@@ -99,9 +89,19 @@ North Las Vegas, NV,0,0
 Hialeah, FL,0,0
 Greensboro, NC,0,0
 Orlando, FL,0,0
-Omaha, NE,65,12832
+Newark, NJ,26,5201
+Jersey City, NJ,53,10601
+Lexington, KY,71,14031
+Cincinnati, OH,11,2142
+Omaha, NE,62,12223
+Wichita, KS,90,17893
+Oklahoma City, OK,41,8184
+Memphis, TN,30,5934
+Kansas City, MO,32,6245
+San Jose, CA,99,19737
+Columbus, OH,20,3948
 Durham, NC,101,20199
 **********
-Totals,3297,659231
+Totals,6008,1200548
 **********
 Min tweets: 0, Max tweets: 20200

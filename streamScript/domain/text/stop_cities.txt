@@ -39,3 +39,30 @@ Baton Rouge, LA
 Philadelphia, PA
 Riverside, CA
 Milwaukee, WI
+Seattle, WA
+Washington, DC
+Atlanta, GA
+Kansas City, MO
+Newark, NJ
+Oklahoma City, OK
+Boston, MA
+Garland, TX
+Memphis, TN
+Omaha, NE
+Sacramento, CA
+Louisville, KY
+Jersey City, NJ
+Columbus, OH
+Cincinnati, OH
+Portland, OR
+Buffalo, NY
+Lexington, KY
+Arlington, TX
+Cleveland, OH
+Charlotte, NC
+Glendale, AZ
+Tucson, AZ
+Raleigh, NC
+Irvine, CA
+New York, NY
+Baltimore, MD

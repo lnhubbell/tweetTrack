@@ -21,6 +21,16 @@ def check_city_locations(location_lat, location_lng):
             return city
 
 
+def get_most_common_city(user_city):
+    top = None
+    top_num = 0
+    for city, count in user_city.items():
+        if count > top_num:
+            top_num = count
+            top = city
+    return top
+
+
 def build_test_matrix(history, vocab):
     u"""Takes in a list of lists, with each list containing tuples
     representing tweets from a single user, and a vocab list. Returns an X
@@ -30,17 +40,23 @@ def build_test_matrix(history, vocab):
     user_array = []
     user_cities = []
     user_string = ""
+    user_city = {}
     user_name = history[0][0]
     user_array.append(user_name)
-    if history[0][2] and history[0][3]:
-        actual = check_city_locations(history[0][2], history[0][3])
-        user_cities.append(actual)
-    else:
-        user_cities.append(history[0][5])
     for tweet in history:
         if history[0][0] == user_name:
             user_string += tweet[1].lower()
+            if history[0][2] and history[0][3]:
+                actual = check_city_locations(history[0][2], history[0][3])
+                if actual in user_city:
+                    user_city[actual] += 1
+                else:
+                    user_city[actual] = 1
     matrix.append(user_string)
+    if user_city:
+        user_cities.append(get_most_common_city(user_city))
+    else:
+        user_cities.append(history[0][5])
     vec = CV(
         analyzer='word',
         vocabulary=vocab
