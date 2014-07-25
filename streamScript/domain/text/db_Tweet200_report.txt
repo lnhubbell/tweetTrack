@@ -1,4 +1,4 @@
-Report generated: 07/25/2014, 10:22
+Report generated: 07/25/2014, 10:51
 
 City,Users,Tweets
 Fort Wayne, IN,0,0
@@ -70,8 +70,6 @@ Tampa, FL,101,20200
 Las Vegas, NV,3,470
 Scottsdale, AZ,101,20200
 Oakland, CA,101,20200
-Los Angeles, CA,0,0
-Austin, TX,0,0
 Anchorage, AK,0,0
 Nashville, TN,101,20200
 Chula Vista, CA,101,20200
@@ -98,10 +96,12 @@ Oklahoma City, OK,41,8184
 Memphis, TN,30,5934
 Kansas City, MO,32,6245
 Fresno, CA,31,6036
+Los Angeles, CA,29,5686
 San Jose, CA,99,19737
 Columbus, OH,20,3948
 Durham, NC,101,20199
+Austin, TX,5,849
 **********
-Totals,6805,1359387
+Totals,6839,1365922
 **********
 Min tweets: 0, Max tweets: 20200

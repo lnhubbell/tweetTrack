@@ -27,7 +27,9 @@ def make_prediction(name):
         history = query_twitter_for_histories(name, data_collection=False)[0]
         if len(history) < 100:
             can_predict = False
+            print "length was too small"
         else:
+            print "length was good"
             can_predict = True
     except Exception:
         print "Twitter query failed."
@@ -66,18 +68,20 @@ def predict_on_list(user_names):
     got_right = []
     for name, actual_city in user_names:
         results = make_prediction(name[0])
-        if results['success']:
-            incorrect += 1
-            got_wrong.append(results)
-        elif results['prediction'] == actual_city.upper():
+        if (results['success']) and (results['prediction'] == actual_city.upper()):
             correct += 1
             got_right.append(results)
+        else:
+            incorrect += 1
+            results['actual'] = actual_city.upper()
+            got_wrong.append(results)
     accuracy = correct / (float(correct) + incorrect)
     print "Our accuracy on this set is: ", accuracy
     print "*" * 10
     print "We made incorrect predictions for these ", incorrect, " users: "
     for user in got_wrong:
         print "For the user: ", user['name'], " our prediction was: ", user['prediction']
+        print "The actual city was: ", user['actual']
     print "*" * 10
     print "We made correct predictions for these ", correct, " users: "
     for user in got_right:
@@ -88,6 +92,7 @@ def predict_on_list(user_names):
 if __name__ == "__main__":
     user_names = picklers.load_pickle('known_users_pickle')
     test_users = []
-    for i in range(10):
+    for i in range(5):
         test_users.append(random.choice(user_names))
+    test_users = [('crisewing', 'SEATTLE, WA'), ('TrustyJohn', 'SEATTLE, WA')]
     predict_on_list(test_users)
