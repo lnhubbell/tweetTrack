@@ -145,6 +145,5 @@ def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=Fa
     print "returning mnb"
     return mnb
 
-
 if __name__ == "__main__":
     print get_raw_classifier(make_new_pickles=True, read_pickles=False, useTweet200=False)

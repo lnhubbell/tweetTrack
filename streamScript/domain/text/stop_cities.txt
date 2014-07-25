@@ -32,3 +32,5 @@ Toledo, OH
 Dallas, TX
 Long Beach, CA
 Wichita, KS
+San Jose, CA
+San Francisco, CA
