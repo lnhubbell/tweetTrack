@@ -119,9 +119,8 @@ def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=Fa
     u"""Takes in keyword arguments to determine source of data. Returns a
     trained classifier."""
     if read_pickles:
-        X = picklers.load_matrix_pickle()
-        y = picklers.load_y_pickle()
-        data = picklers.load_data_pickle()
+        X = picklers.load_pickle('matrix_pickle')
+        y = picklers.load_pickle('labels_pickle')
     else:
         if useTweet200:
             data = query_all_db_Tweet200()
@@ -134,10 +133,10 @@ def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=Fa
     if make_new_pickles:
         picklers.pickle_classifier(mnb)
         if not read_pickles:
-            picklers.pickle_data(data)
-            picklers.pickle_matrix(X)
-            picklers.pickle_labels(y)
-            picklers.pickle_vocab(vocab)
+            picklers.write_pickle(data, 'pickle')
+            picklers.write_pickle(X, 'matrix_pickle')
+            picklers.write_pickle(y, 'labels_pickle')
+            picklers.write_pickle(vocab, 'vocab_pickle')
     print "returning mnb"
     return mnb
 
@@ -146,8 +145,8 @@ def generate_predictions(userTestdata):
     u"""Takes in a list of twitter users' last 200 tweets, formatted as
     'blobs'. Returns a percent correct (if known), a list of all incorrect
     guesses (or unknown), and a list of all the city predictions."""
-    mnb = picklers.load_classifier_pickle()
-    vocab = picklers.load_vocab_pickle()
+    mnb = picklers.load_pickle('classifier_pickle')
+    vocab = picklers.load_pickle('vocab_pickle')
     X, user_array, user_cities = build_test_matrix(userTestdata, vocab)
     correct = 0
     incorrect = 0
