@@ -73,10 +73,10 @@ def test_fit_with_200():
         pickle_handling.write_pickle(data_set, 'data_set', test=True)
     user_matrix, user_array, n = build_matrix_per_user(data_set)
     X, y, vocab = vectorize(user_matrix, user_array, n)
-    clf = fit_classifier(X, y)
-    assert clf.get_params()['alpha'] == 1.0
-    assert clf.get_params()['fit_prior'] is True
-    assert not clf.get_params()['class_prior']
+    mnb = fit_classifier(X, y)
+    assert mnb.get_params()['alpha'] == 1.0
+    assert mnb.get_params()['fit_prior'] is True
+    assert not mnb.get_params()['class_prior']
 
 if __name__ == '__main__':
     test_build_matrix_per_user_array_user_len()
