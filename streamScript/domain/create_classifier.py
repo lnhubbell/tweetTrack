@@ -87,6 +87,7 @@ def build_matrix_per_user(data, n=10000):
     user_matrix = []
     user_array = []
     for key, val in data.items():
+        user_list = []
         count = 0
         user_count = 0
         # print key
@@ -105,11 +106,8 @@ def build_matrix_per_user(data, n=10000):
                 user_count += 1
                 user_matrix.append(our_string)
                 user_array.append(key)
-            elif tweet[1] != this_user:
-                count = 0
-        # print len(user_matrix)
-        # print len(user_array)
-        # print "----------Break---------"
+                user_list.append(this_user)
+
     return user_matrix, user_array, n
 
 
@@ -145,34 +143,6 @@ def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=Fa
     print "returning mnb"
     return mnb
 
-
-def generate_predictions(userTestdata):
-    u"""Takes in a list of twitter users' last 200 tweets, formatted as
-    'blobs'. Returns a percent correct (if known), a list of all incorrect
-    guesses (or unknown), and a list of all the city predictions."""
-    mnb = picklers.load_pickle('classifier_pickle')
-    vocab = picklers.load_pickle('vocab_pickle')
-    X, user_array, user_cities = build_test_matrix(userTestdata, vocab)
-    correct = 0
-    incorrect = 0
-    got_wrong = []
-    all_results = []
-    predictions = mnb.predict_log_proba(X)
-    y = picklers.load_pickle('labels_pickle')
-    print user_array
-    print user_cities
-    print zip(tuple(y), tuple(predictions))
-    if len(predictions):
-        for idx, prediction in enumerate(predictions):
-            report = (user_array[idx], user_cities[idx], prediction)
-            if user_cities[idx] == prediction:
-                correct += 1
-            else:
-                incorrect += 1
-                got_wrong.append(report)
-            all_results.append(report)
-        percent_right = correct / (float(correct) + incorrect)
-        return percent_right, got_wrong, all_results, user_cities
 
 if __name__ == "__main__":
     print get_raw_classifier(make_new_pickles=True, read_pickles=False, useTweet200=False)
