@@ -8,9 +8,11 @@ def make_prediction(names):
     and the values being the predictions."""
     if isinstance(names, basestring):
         names = [names]
-    histories = query_twitter_for_histories(names)
+    print "Names: " + str(names)
+    histories = query_twitter_for_histories(names, data_collection=False)
     results = []
     get_preds = []
+    print "LENGTH: " + str(len(histories))
     for history in histories:
         if len(history) < 100:
             user = {}
@@ -18,7 +20,9 @@ def make_prediction(names):
             user['prediction'] = """Not enough tweeting history to
                                 make a prediction."""
             results.append(user)
+            print "Not Long enough"
         else:
+            print "Long enough"
             get_preds.append(history)
     right, wrong, preds, actual = generate_predictions(get_preds)
     for idx, pred in enumerate(preds):
@@ -43,7 +47,7 @@ def serve_predictions(names):
         yield result
 
 if __name__ == "__main__":
-    user_names = ['crisewing']
+    user_names = ['TrustyJohn']
     results = make_prediction(user_names)
     for result in results:
         print "For the user: ", result['name'], " our predictions are: ", result['prediction']
