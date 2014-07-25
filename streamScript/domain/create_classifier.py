@@ -135,8 +135,8 @@ def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=Fa
             user_matrix, user_array, n = build_matrix(data)
         X, y, vocab = vectorize(user_matrix, user_array, n)
     mnb = fit_classifier(X, y)
+    picklers.write_pickle(mnb, 'classifier_pickle')
     if make_new_pickles:
-        picklers.write_pickle(mnb, 'classifier_pickle')
         if not read_pickles:
             picklers.write_pickle(data, 'pickle')
             picklers.write_pickle(X, 'matrix_pickle')
@@ -146,4 +146,4 @@ def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=Fa
     return mnb
 
 if __name__ == "__main__":
-    print get_raw_classifier(make_new_pickles=True, read_pickles=False, useTweet200=False)
+    print get_raw_classifier(make_new_pickles=True, read_pickles=False, useTweet200=True)
