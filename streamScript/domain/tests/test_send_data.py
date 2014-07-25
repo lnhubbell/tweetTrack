@@ -1,7 +1,7 @@
 import pytest
 
-from streamScript.domain.send_data import query_all_db_Tweet200
-from streamScript.domain.send_data import read_in_bb_file
+from streamScript.domain.query_db import query_all_db_Tweet200
+from streamScript.domain.query_db import read_in_bb_file
 from streamScript.domain.create_classifier import build_matrix_per_user
 from streamScript.domain.create_classifier import fit_classifier, vectorize
 from streamScript.domain.picklers import pickle_handling

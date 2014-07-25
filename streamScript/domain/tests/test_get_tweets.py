@@ -10,7 +10,7 @@ from streamScript.domain.get_tweets_by_user import get_unique_handles
 from streamScript.domain.get_tweets_by_user import format_tweet_history
 from streamScript.domain.get_tweets_by_user import query_twitter_for_histories
 from streamScript.domain.make_predictions_per_user import make_prediction
-from streamScript.domain.send_data import query_db
+from streamScript.domain.query_db import query_db
 
 import pytest
 slow = pytest.mark.slow
