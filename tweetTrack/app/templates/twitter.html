@@ -35,13 +35,13 @@
                             success: function(response) {
                                 twitter.trigger("reset");
                                 twitter_modal.modal('hide');
-                                console.log(response.response.prediction)
-                                var loc = new google.maps.LatLng(response.response.location_lat, response.response.location_lng);
+                                console.log(response)
+                                var loc = new google.maps.LatLng(response.coords.lng, response.coords.lat);
                                 map.setCenter(loc);
                                 var marker = new google.maps.Marker({
                                     position: loc,
                                     map: map,
-                                    title:response.response.screen_name
+                                    title:response.name
                                 });
                             }
                         });
