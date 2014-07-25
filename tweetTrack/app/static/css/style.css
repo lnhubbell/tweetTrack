@@ -94,11 +94,16 @@ nav ul li:first-child {
 
 nav ul li:nth-child(2) {
     border-left: 1px solid rgba(255,255,255,.1);
-    border-right: 1px solid rgba(255,255,255,.1);
+    border-right: 1px solid rgba(0,0,0,.1);
+}
+
+nav ul li:nth-child(3) {
+    border-left: 1px solid rgba(255,255,255,.1);
+    border-right: 1px solid rgba(0,0,0,.1);
 }
 
 nav ul li:last-child {
-    border-left: 1px solid rgba(0,0,0,.1);
+    border-left: 1px solid rgba(255,255,255,.1);
 }
 
 nav ul li {

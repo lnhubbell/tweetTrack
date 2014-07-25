@@ -11,7 +11,7 @@ city. Queries Twitter api to get 200 tweets from each user, then inserts
 called "Tweet200."""
 
 
-def artget_twitter_api():
+def get_twitter_api():
     u"""Gets twitter keys from key file."""
     for our_set, our_keys in my_keys.items():
         auth = tweepy.OAuthHandler(
