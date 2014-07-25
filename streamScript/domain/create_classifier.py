@@ -12,6 +12,7 @@ cross-validated predictions. Pickles dataset and matrix as necessary."""
 
 
 def check_city_locations(location_lat, location_lng):
+    u"""Takes in lati"""
     bb_dict = read_in_bb_file()
     for city, values in bb_dict.items():
         lats = values[0]
@@ -22,6 +23,8 @@ def check_city_locations(location_lat, location_lng):
 
 
 def get_most_common_city(user_city):
+    u"""Takes in a dictionary of city names; returns the most frequently
+    occurring city in the dict."""
     top = None
     top_num = 0
     for city, count in user_city.items():
@@ -37,12 +40,9 @@ def build_test_matrix(history, vocab):
     matrix of the test user features, a list of the user names, and a Y
     array of the labels."""
     matrix = []
-    user_array = []
-    user_cities = []
     user_string = ""
     user_city = {}
     user_name = history[0][0]
-    user_array.append(user_name)
     for tweet in history:
         if history[0][0] == user_name:
             user_string += tweet[1].lower()
@@ -54,16 +54,16 @@ def build_test_matrix(history, vocab):
                     user_city[actual] = 1
     matrix.append(user_string)
     if user_city:
-        user_cities.append(get_most_common_city(user_city))
+        ret_user_city = get_most_common_city(user_city)
     else:
-        user_cities.append(history[0][5])
+        ret_user_city = history[0][5]
     vec = CV(
         analyzer='word',
         vocabulary=vocab
     )
     print "Building test X, Y..."
     X = vec.fit_transform(matrix, vocab).todense()
-    return X, user_array, user_cities
+    return X, user_name, ret_user_city
 
 
 def vectorize(user_matrix, user_array, n):

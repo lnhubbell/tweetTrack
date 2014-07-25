@@ -9,23 +9,10 @@ def generate_predictions(userTestdata):
     guesses (or unknown), and a list of all the city predictions."""
     mnb = picklers.load_pickle('classifier_pickle')
     vocab = picklers.load_pickle('vocab_pickle')
-    X, user_array, user_cities = build_test_matrix(userTestdata, vocab)
-    correct = 0
-    incorrect = 0
-    got_wrong = []
-    all_results = []
-    predictions = mnb.predict(X)
-    if len(predictions):
-        for idx, prediction in enumerate(predictions):
-            report = (user_array[idx], user_cities[idx], prediction)
-            if user_cities[idx] == prediction:
-                correct += 1
-            else:
-                incorrect += 1
-                got_wrong.append(report)
-            all_results.append(report)
-        percent_right = correct / (float(correct) + incorrect)
-        return percent_right, got_wrong, all_results, user_cities
+    X, user_name, user_city = build_test_matrix(userTestdata, vocab)
+    prediction = mnb.predict(X)
+    report = (user_name, user_city, prediction[0])
+    return report
 
 
 def make_prediction(name):
@@ -45,26 +32,38 @@ def make_prediction(name):
             print "Not Long enough"
         else:
             print "Long enough"
-            right, wrong, preds, actual = generate_predictions(history)
-            for pred in preds:
-                user = {}
-                user['name'] = pred[0]
-                if actual[0]:
-                    user['prediction'] = actual[0]
-                else:
-                    user['prediction'] = pred[2]
-                user['success'] = True
+            user_name, user_city, prediction = generate_predictions(history)
+            user = {}
+            user['name'] = user_name
+            if user_city:
+                user['prediction'] = city
+            else:
+                user['prediction'] = prediction
+            user['success'] = True
             return user
 
 
-def serve_predictions(names):
-    results = make_prediction(names)
-    for result in results:
-        yield result
+def predict_on_list(user_names):
+    u"""Takes in a list of tuples, where the first element is the user name,
+    and the second element is the known city location. Prints to the terminal
+    a report of the number correct, a list of the wrong guesses, and a list
+    of the correct guesses. Returns the percent correct."""
+    correct = 0
+    incorrect = 0
+    got_wrong = []
+    got_right = []
+    for name, actual_city in user_names:
+        results = make_prediction(name)
+        if results['success']:
+            incorrect += 1
+            got_wrong.append(results)
+        elif results['prediction'] == 
+
+
+
+        print "For the user: ", results['name'], " our predictions are: ", results['prediction']
+
 
 if __name__ == "__main__":
-    user_names = ['TrustyJohn', 'arosexoxo', "emmily_Claire", "jshafranski", "20MC20", "aharrington9"]
-    user_names = ["emmily_Claire"]
-    for name in user_names:
-        results = make_prediction(name)
-        print "For the user: ", results['name'], " our predictions are: ", results['prediction']
+   pass
+
