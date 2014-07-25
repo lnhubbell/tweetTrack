@@ -1,6 +1,6 @@
 import tweepy
 
-from send_data import query_db, send_user_queries_to_db, read_in_bb_file
+from query_db import query_db, send_user_queries_to_db, read_in_bb_file
 from our_keys.twitter_keys import my_keys
 from itertools import chain, repeat
 
