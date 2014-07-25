@@ -90,7 +90,7 @@ def query_twitter_for_histories(users, city=None, cap=100, data_collection=True)
         if user_count > cap:
             break
         if user in check_list_low_tweeters() and data_collection is True:
-            print "JOHN DONT TWEET"
+            print "Skipped user on stop list"
             continue
         history = []
         tweet_history = []
@@ -138,4 +138,8 @@ def process_each_city():
 
 
 if __name__ == "__main__":
-    process_each_city()
+    while True:
+        try:
+            process_each_city()
+        except Exception:
+            continue

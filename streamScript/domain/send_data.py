@@ -53,7 +53,7 @@ def query_all_db_Tweet200():
         print "Completed query on: " + str(key)
     return data_set
 
-    
+
 def query_db(city, values, limit=False):
     u"""Takes in a city and Returns a dict containing all tweets
     collected from the city (with the key being the city name and the value
@@ -64,7 +64,7 @@ def query_db(city, values, limit=False):
     if limit:
         sql = """SELECT * FROM "Tweet" WHERE
             (location_lat BETWEEN %s AND %s)
-            AND (location_lng BETWEEN %s AND %s)LIMIT 3000;"""
+            AND (location_lng BETWEEN %s AND %s)LIMIT 3300;"""
     else:
         sql = """SELECT * FROM "Tweet" WHERE
             (location_lat BETWEEN %s AND %s)

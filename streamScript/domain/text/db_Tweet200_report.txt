@@ -1,0 +1,107 @@
+Report generated: 07/24/2014, 18:47
+
+City,Users,Tweets
+Fort Wayne, IN,0,0
+Tulsa, OK,101,20200
+El Paso, TX,101,20200
+Laredo, TX,0,0
+Fremont, CA,0,0
+Gilbert, AZ,0,0
+Irving, TX,101,20200
+Washington, DC,101,10440
+Phoenix, AZ,101,20200
+Norfolk, VA,101,20200
+Boise, ID,0,0
+Bakersfield, CA,101,20200
+Reno, NV,101,20200
+Houston, TX,101,20200
+Chandler, AZ,101,20200
+San Antonio, TX,101,20200
+Henderson, NV,101,20200
+Winston Salem, NC,0,0
+Saint Louis, MO,101,20200
+Chesapeake, VA,101,20200
+Stockton, CA,101,20200
+Corpus Christi, TX,101,20200
+Anaheim, CA,101,20200
+Pittsburgh, PA,0,0
+Fort Worth, TX,101,20200
+Birmingham, AL,101,20200
+Detroit, MI,101,20200
+Colorado Springs, CO,0,0
+San Bernardino, CA,0,0
+Virginia Beach, VA,0,0
+Honolulu, HI,0,0
+Santa Ana, CA,0,0
+Plano, TX,0,0
+Indianapolis, IN,0,0
+Sacramento, CA,0,0
+Durham, NC,0,0
+San Diego, CA,101,20200
+Toledo, OH,0,0
+Dallas, TX,0,0
+Lincoln, NE,0,0
+Long Beach, CA,0,0
+Wichita, KS,0,0
+San Jose, CA,0,0
+San Francisco, CA,0,0
+Saint Petersburg, FL,0,0
+Baton Rouge, LA,0,0
+Philadelphia, PA,0,0
+Riverside, CA,0,0
+Louisville, KY,0,0
+Jersey City, NJ,0,0
+Columbus, OH,0,0
+Cincinnati, OH,0,0
+Portland, OR,0,0
+Buffalo, NY,0,0
+Lexington, KY,0,0
+Arlington, TX,0,0
+Cleveland, OH,0,0
+Charlotte, NC,0,0
+Glendale, AZ,0,0
+Tucson, AZ,0,0
+Raleigh, NC,0,0
+Madison, WI,0,0
+Irvine, CA,0,0
+New York, NY,0,0
+Lubbock, TX,0,0
+Baltimore, MD,0,0
+Saint Paul, MN,0,0
+Minneapolis, MN,0,0
+Fresno, CA,0,0
+Tampa, FL,0,0
+Las Vegas, NV,0,0
+Scottsdale, AZ,0,0
+Oakland, CA,0,0
+Los Angeles, CA,0,0
+Austin, TX,0,0
+Anchorage, AK,0,0
+Nashville, TN,0,0
+Miami, FL,0,0
+Chula Vista, CA,0,0
+New Orleans, LA,0,0
+Denver, CO,0,0
+Albuquerque, NM,0,0
+Aurora, CO,0,0
+Chicago, IL,0,0
+Mesa, AZ,0,0
+Jacksonville, FL,0,0
+North Las Vegas, NV,0,0
+Hialeah, FL,0,0
+Greensboro, NC,0,0
+Orlando, FL,0,0
+Milwaukee, WI,101,11241
+Garland, TX,7,1371
+Seattle, WA,101,11181
+Kansas City, MO,31,6082
+Boston, MA,46,9142
+Omaha, NE,65,12832
+Oklahoma City, OK,46,9184
+Memphis, TN,29,5765
+Newark, NJ,32,6236
+Atlanta, GA,100,10168
+**********
+Totals,2679,497642
+**********
+Min tweets: 0, Max tweets: 0

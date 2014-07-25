@@ -19,7 +19,7 @@ def check_city_locations(location_lat, location_lng):
             return city, values
 
 
-def build_test_matrix(user_data, vocab):
+def build_test_matrix(history, vocab):
     u"""Takes in a list of lists, with each list containing tuples
     representing tweets from a single user, and a vocab list. Returns an X
     matrix of the test user features, a list of the user names, and a Y
@@ -27,21 +27,18 @@ def build_test_matrix(user_data, vocab):
     matrix = []
     user_array = []
     user_cities = []
-    print user_data
-    print user_data[0][0]
-    for history in user_data:
-        user_string = ""
-        user_name = history[0][0]
-        user_array.append(user_name)
-        if history[0][2] and history[0][3]:
-            actual = check_city_locations(history[0][2], history[0][3])
-            user_cities.append(actual)
-        else:
-            user_cities.append(history[0][5])
-        for tweet in history:
-            if history[0][0] == user_name:
-                user_string += tweet[1].lower()
-        matrix.append(user_string)
+    user_string = ""
+    user_name = history[0][0]
+    user_array.append(user_name)
+    if history[0][2] and history[0][3]:
+        actual = check_city_locations(history[0][2], history[0][3])
+        user_cities.append(actual)
+    else:
+        user_cities.append(history[0][5])
+    for tweet in history:
+        if history[0][0] == user_name:
+            user_string += tweet[1].lower()
+    matrix.append(user_string)
     vec = CV(
         analyzer='word',
         vocabulary=vocab
@@ -121,7 +118,6 @@ def fit_classifier(X, y):
     return mnb.fit(X, y)
 
 
-
 def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=False):
     u"""Takes in keyword arguments to determine source of data. Returns a
     trained classifier."""
@@ -138,7 +134,7 @@ def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=Fa
         X, y, vocab = vectorize(user_matrix, user_array, n)
     mnb = fit_classifier(X, y)
     if make_new_pickles:
-        picklers.pickle_classifier(mnb)
+        picklers.write_pickle(mnb, 'classifier_pickle')
         if not read_pickles:
             picklers.write_pickle(data, 'pickle')
             picklers.write_pickle(X, 'matrix_pickle')

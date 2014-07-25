@@ -2,38 +2,33 @@ from get_tweets_by_user import query_twitter_for_histories
 from create_classifier import generate_predictions
 
 
-def make_prediction(names):
+def make_prediction(name):
     u"""Takes in a list of Twitter user handles. Returns a list of
     single-entry dictionaries, with the keys being the user names
     and the values being the predictions."""
-    if isinstance(names, basestring):
-        names = [names]
-    print "Names: " + str(names)
-    histories = query_twitter_for_histories(names, data_collection=False)
-    results = []
-    get_preds = []
-    print "LENGTH: " + str(len(histories))
+    print "Name: " + str(name)
+    name = [name]
+    histories = query_twitter_for_histories(name, data_collection=False)
     for history in histories:
         if len(history) < 100:
             user = {}
             user['name'] = history[0][0]
-            user['prediction'] = """Not enough tweeting history to
-                                make a prediction."""
-            results.append(user)
+            user['prediction'] = """You're not cool enough to track!"""
+            user['success'] = False
+            return user
             print "Not Long enough"
         else:
             print "Long enough"
-            get_preds.append(history)
-    right, wrong, preds, actual = generate_predictions(get_preds)
-    for idx, pred in enumerate(preds):
-        user = {}
-        user['name'] = pred[0]
-        if actual[idx]:
-            user['prediction'] = actual[idx]
-        else:
-            user['prediction'] = pred[2]
-        results.append(user)
-    return results
+            right, wrong, preds, actual = generate_predictions(history)
+            for pred in preds:
+                user = {}
+                user['name'] = pred[0]
+                if actual[0]:
+                    user['prediction'] = actual[0]
+                else:
+                    user['prediction'] = pred[2]
+                user['success'] = True
+            return user
 
 
 def serve_predictions(names):
@@ -42,9 +37,6 @@ def serve_predictions(names):
         yield result
 
 if __name__ == "__main__":
-
-    user_names = ['TrustyJohn']
-
+    user_names = 'crisewing'
     results = make_prediction(user_names)
-    for result in results:
-        print "For the user: ", result['name'], " our predictions are: ", result['prediction']
+    print "For the user: ", results['name'], " our predictions are: ", results['prediction']
