@@ -75,7 +75,7 @@ def check_list_low_tweeters():
     return names
 
 
-def query_twitter_for_histories(users, city=None, cap=100):
+def query_twitter_for_histories(users, city=None, cap=100, data_collection=True):
     u"""Calls function to return a dict of cities and the unique users for each
     city. Iterates over the dict to extract the tweet text/locations/timestamps
     for each tweet, bundles results into DB-friendly tuples. Returns a list of
@@ -89,7 +89,8 @@ def query_twitter_for_histories(users, city=None, cap=100):
     for user in users:
         if user_count > cap:
             break
-        if user in check_list_low_tweeters():
+        if user in check_list_low_tweeters() and data_collection is True:
+            print "JOHN DONT TWEET"
             continue
         history = []
         tweet_history = []
@@ -99,7 +100,7 @@ def query_twitter_for_histories(users, city=None, cap=100):
             print "Tweepy Error: ", err.message
             api = api_generator.next()
             continue
-        if len(history) >= 200:
+        if len(history) >= 200 or not data_collection:
             user_count += 1
             tweet_history = format_tweet_history(history, user, city)
         if len(tweet_history):
