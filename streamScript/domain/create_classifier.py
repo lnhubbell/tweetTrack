@@ -119,7 +119,7 @@ def build_matrix_per_user(data, n=10000):
             if (tweet[1] == this_user) and (count < 200):
                 our_string += tweet[2].lower()
                 count += 1
-            elif (tweet[1] != this_user): # and len(our_string) >= 14000:
+            elif (tweet[1] != this_user):
                 count = 0
                 user_count += 1
                 user_matrix.append(our_string)

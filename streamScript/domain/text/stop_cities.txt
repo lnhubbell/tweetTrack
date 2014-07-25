@@ -1,3 +1,5 @@
+Fort Wayne, IN
+***
 Tulsa, OK
 El Paso, TX
 Phoenix, AZ
@@ -71,3 +73,11 @@ Minneapolis, MN
 Fresno, CA
 Tampa, FL
 Las Vegas, NV
+Scottsdale, AZ
+Oakland, CA
+Nashville, TN
+Miami, FL
+Chula Vista, CA
+Los Angeles, CA
+Austin, TX
+New Orleans, LA

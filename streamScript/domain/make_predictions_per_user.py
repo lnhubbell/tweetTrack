@@ -1,6 +1,8 @@
 from get_tweets_by_user import query_twitter_for_histories
 from create_classifier import build_test_matrix
+from send_data import query_for_handles
 import picklers
+import random
 
 
 def generate_predictions(userTestdata):
@@ -19,28 +21,40 @@ def make_prediction(name):
     u"""Takes in a list of Twitter user handles. Returns a list of
     single-entry dictionaries, with the keys being the user names
     and the values being the predictions."""
-    print "Name: " + str(name)
+    print "Name: " + name
     name = [name]
-    histories = query_twitter_for_histories(name, data_collection=False)
-    for history in histories:
+    try:
+        history = query_twitter_for_histories(name, data_collection=False)[0]
         if len(history) < 100:
-            user = {}
-            user['name'] = history[0][0]
-            user['prediction'] = """You're not cool enough to track!"""
-            user['success'] = False
-            return user
-            print "Not Long enough"
+            can_predict = False
+            print "length was too small"
         else:
-            print "Long enough"
-            user_name, user_city, prediction = generate_predictions(history)
-            user = {}
-            user['name'] = user_name
-            if user_city:
-                user['prediction'] = user_city.upper()
-            else:
-                user['prediction'] = prediction.upper()
-            user['success'] = True
-            return user
+            print "length was good"
+            can_predict = True
+    except Exception:
+        print "Twitter query failed."
+        can_predict = False
+    if can_predict:
+        user_name, user_city, prediction = generate_predictions(history)
+        user = {}
+        user['name'] = user_name
+        if user_city:
+            user['prediction'] = user_city.upper()
+        else:
+            user['prediction'] = prediction.upper()
+        user['success'] = True
+    else:
+        user = {}
+        user['name'] = name
+        user['prediction'] = """You're not cool enough to track!"""
+        user['success'] = False
+        print "Could not make a prediction."
+    return user
+
+
+def create_test_user_set():
+    user_names = query_for_handles()
+    picklers.write_pickle(user_names, 'known_users_pickle')
 
 
 def predict_on_list(user_names):
@@ -52,20 +66,22 @@ def predict_on_list(user_names):
     incorrect = 0
     got_wrong = []
     got_right = []
-    for name, actual_city in user_names.items():
-        results = make_prediction(name)
-        if results['success']:
-            incorrect += 1
-            got_wrong.append(results)
-        elif results['prediction'] == actual_city.upper():
+    for name, actual_city in user_names:
+        results = make_prediction(name[0])
+        if (results['success']) and (results['prediction'] == actual_city.upper()):
             correct += 1
             got_right.append(results)
+        else:
+            incorrect += 1
+            results['actual'] = actual_city.upper()
+            got_wrong.append(results)
     accuracy = correct / (float(correct) + incorrect)
     print "Our accuracy on this set is: ", accuracy
     print "*" * 10
     print "We made incorrect predictions for these ", incorrect, " users: "
     for user in got_wrong:
         print "For the user: ", user['name'], " our prediction was: ", user['prediction']
+        print "The actual city was: ", user['actual']
     print "*" * 10
     print "We made correct predictions for these ", correct, " users: "
     for user in got_right:
@@ -74,4 +90,9 @@ def predict_on_list(user_names):
     return accuracy
 
 if __name__ == "__main__":
-   predict_on_list()
+    user_names = picklers.load_pickle('known_users_pickle')
+    test_users = []
+    for i in range(5):
+        test_users.append(random.choice(user_names))
+    test_users = [('crisewing', 'SEATTLE, WA'), ('TrustyJohn', 'SEATTLE, WA')]
+    predict_on_list(test_users)

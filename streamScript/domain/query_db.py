@@ -29,8 +29,7 @@ def read_in_bb_file():
 
 
 def query_for_handles():
-    u"""Returns a dictionary with keys as city names and values as a list of
-    tweets from that city."""
+    u"""Returns a list of tuples containing names and city locations."""
     bb_dict = read_in_bb_file()
     data_set = {}
     for key, values in bb_dict.items():
@@ -41,7 +40,7 @@ def query_for_handles():
     name_city = []
     for key, vals in data_set.items():
         for val in vals:
-            name_city.append((val,key))
+            name_city.append((val, key))
     return name_city
 
 
@@ -218,7 +217,7 @@ def change_col_size():
 
 
 def drop_rows():
-    sql = """DELETE FROM "Tweet200" WHERE city = 'Omaha, NE';"""
+    sql = """DELETE FROM "TweetTest2";"""
     print "Querying database"
     execute_query(sql)
     print "deleted rows"
@@ -226,5 +225,5 @@ def drop_rows():
 if __name__ == "__main__":
     #query_all_db_Tweet200()
     #drop_rows()
-    print query_for_handles()
+    #print query_for_handles()
     pass
