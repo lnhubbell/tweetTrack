@@ -155,9 +155,11 @@ def generate_predictions(userTestdata):
     incorrect = 0
     got_wrong = []
     all_results = []
-    predictions = mnb.predict(X)
+    predictions = mnb.predict_log_proba(X)
+    y = picklers.load_pickle('labels_pickle')
     print user_array
     print user_cities
+    print zip(tuple(y), tuple(predictions))
     if len(predictions):
         for idx, prediction in enumerate(predictions):
             report = (user_array[idx], user_cities[idx], prediction)

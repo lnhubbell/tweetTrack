@@ -142,4 +142,5 @@ if __name__ == "__main__":
         try:
             process_each_city()
         except Exception:
+            print "I got an exception"
             continue

@@ -18,8 +18,6 @@ def read_in_bb_file():
     for each location."""
     with open("text/bounding_boxes.txt", 'r') as f:
         bbs = f.readlines()
-    f.close()
-
     bb_dict = {}
     for line in bbs:
         spl = line.strip().split(",")

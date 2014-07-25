@@ -17,9 +17,9 @@ def load_pickle(item_name, test=False):
         pickle_file = open('pickles/%s' % str(item_name), 'rb')
     else:
         pickle_file = open('pickles/test_%s' % str(item_name), 'rb')
-    print "Loading matrix pickle..."
+    print "Loading ", item_name, " pickle..."
     X = cPickle.load(pickle_file)
-    print "Matrix pickle loaded."
+    print "Pickle loaded."
     pickle_file.close()
     return X
 
