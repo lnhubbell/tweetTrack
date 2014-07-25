@@ -1,6 +1,8 @@
-u"""Uses a Census bureau list of US cities by population to return a formatted
-list of the 100 most populous US cities. Uses a csv file of states and their
-abbreviations to return the 2-letter mailing abbr for each state."""
+u"""These are supporting functions that are used in the 'get_target_cities.py'
+file. You should not need to run them on their own. Uses a Census bureau list
+of US cities by population to return a formatted list of the 100 most populous
+cities. Uses a csv file of states and their abbreviations to return the
+2-letter mailing abbr for each state."""
 
 
 def _open_files():
@@ -17,21 +19,6 @@ def _open_files():
 
 
 def _make_top_cities_list(state_abbrs, lines, n=100):
-    # with open('text/test_locs.txt', 'w') as f:
-    #     for line in lines[:n]:
-    #         line = line.strip().split(",")
-    #         out = line[8:10]
-    #         out[0] = out[0][1:]
-    #         new_city_name = []
-    #         for chunk in out[0].split():
-    #             if chunk.lower() == "st.":
-    #                 chunk = "Saint"
-    #             if chunk.lower() != "urban":
-    #                 new_city_name.append(chunk)
-    #         out[0] = " ".join(new_city_name)
-    #         out[1] = state_abbrs[out[1][:-1].lower().strip()]
-    #         out = "\t".join(out)
-    #         f.write(out + "\n")
     print n
     locs_of_interest = []
     for line in lines[:n]:
@@ -54,7 +41,3 @@ def _make_top_cities_list(state_abbrs, lines, n=100):
 def get_locs(n=100):
     state_abbrs, lines = _open_files()
     return _make_top_cities_list(state_abbrs, lines, n)
-
-
-if __name__ == '__main__':
-    get_locs()

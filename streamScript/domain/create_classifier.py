@@ -3,20 +3,35 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer as CV
 from sklearn.naive_bayes import MultinomialNB as MNB
 
-from streamScript.domain.send_data import query_all_db, query_all_db_Tweet200, read_in_bb_file
+from streamScript.domain.query_db import query_all_db, query_all_db_Tweet200, read_in_bb_file
 import picklers
 
-u"""Generates a vocabulary
-set and builds a feature matrix. Creates a classifier and returns
-cross-validated predictions. Pickles dataset and matrix as necessary."""
+u"""You should interact with this file through the 'if name == main' block.
+Edit the kwargs you want in order to create an pickle a classifier. This
+classifier will be used to make your predictions."""
 
 
 def check_city_locations(location_lat, location_lng):
+    u"""Takes in lati"""
     bb_dict = read_in_bb_file()
     for city, values in bb_dict.items():
-        if (values[0][0] < location_lat < values[0][1]) and \
-                values[1][0] < location_lng < values[1][1]:
-            return city, values
+        lats = values[0]
+        lngs = values[1]
+        if (float(lats[0]) < float(location_lat) < float(lats[1])) and \
+                (float(lngs[0]) < float(location_lng) < float(lngs[1])):
+            return city
+
+
+def get_most_common_city(user_city):
+    u"""Takes in a dictionary of city names; returns the most frequently
+    occurring city in the dict."""
+    top = None
+    top_num = 0
+    for city, count in user_city.items():
+        if count > top_num:
+            top_num = count
+            top = city
+    return top
 
 
 def build_test_matrix(history, vocab):
@@ -25,27 +40,30 @@ def build_test_matrix(history, vocab):
     matrix of the test user features, a list of the user names, and a Y
     array of the labels."""
     matrix = []
-    user_array = []
-    user_cities = []
     user_string = ""
+    user_city = {}
     user_name = history[0][0]
-    user_array.append(user_name)
-    if history[0][2] and history[0][3]:
-        actual = check_city_locations(history[0][2], history[0][3])
-        user_cities.append(actual)
-    else:
-        user_cities.append(history[0][5])
     for tweet in history:
         if history[0][0] == user_name:
             user_string += tweet[1].lower()
+            if history[0][2] and history[0][3]:
+                actual = check_city_locations(history[0][2], history[0][3])
+                if actual in user_city:
+                    user_city[actual] += 1
+                else:
+                    user_city[actual] = 1
     matrix.append(user_string)
+    if user_city:
+        ret_user_city = get_most_common_city(user_city)
+    else:
+        ret_user_city = history[0][5]
     vec = CV(
         analyzer='word',
         vocabulary=vocab
     )
     print "Building test X, Y..."
     X = vec.fit_transform(matrix, vocab).todense()
-    return X, user_array, user_cities
+    return X, user_name, ret_user_city
 
 
 def vectorize(user_matrix, user_array, n):
@@ -61,10 +79,10 @@ def vectorize(user_matrix, user_array, n):
     return X, Y, vec.get_feature_names()
 
 
-def build_matrix(data, n=1000):
+def build_matrix(data, n=10000):
     u"""Uses blocks of tweets from multiple users per city.
     Takes in a raw dataset and an optional parameter to limit the feature
-    set to n. Defaults to 1000. Returns a tuple containing a matrix of n features,
+    set to n. Defaults to 10000. Returns a tuple containing a matrix of n features,
     a vector of labels, and a vocabulary list of the features examined."""
     user_matrix = []
     user_array = []
@@ -79,14 +97,15 @@ def build_matrix(data, n=1000):
     return user_matrix, user_array, n
 
 
-def build_matrix_per_user(data, n=1000):
+def build_matrix_per_user(data, n=10000):
     u""" Uses blocks of tweets from single users per city.
     Takes in a raw dataset and an optional parameter to limit the feature
-    set to n. Defaults to 1000. Returns a tuple containing a matrix of n features,
+    set to n. Defaults to 10000. Returns a tuple containing a matrix of n features,
     a vector of labels, and a vocabulary list of the features examined."""
-    user_matrix = ['']
+    user_matrix = []
     user_array = []
     for key, val in data.items():
+        user_list = []
         count = 0
         user_count = 0
         # print key
@@ -100,14 +119,13 @@ def build_matrix_per_user(data, n=1000):
             if (tweet[1] == this_user) and (count < 200):
                 our_string += tweet[2].lower()
                 count += 1
-            elif (tweet[1] != this_user): # and len(our_string) >= 14000:
+            elif (tweet[1] != this_user):
                 count = 0
                 user_count += 1
                 user_matrix.append(our_string)
                 user_array.append(key)
-            elif tweet[1] != this_user:
-                count = 0
-        print len(user_matrix)
+                user_list.append(this_user)
+
     return user_matrix, user_array, n
 
 
@@ -116,6 +134,28 @@ def fit_classifier(X, y):
     Fits classifier"""
     mnb = MNB()
     return mnb.fit(X, y)
+
+
+def check_alphas(X, y):
+    u"""Takes in an X matrix and a Y array of labels.
+    Checks four possible alpha values; returns the
+    classifier with the highest cross-validated score."""
+    best = None
+    best_score = None
+    alphas = [1E-4, 1E-3, 1E-2, 1E-1, 1]
+    for alpha in alphas:
+        mnb = MNB(alpha)
+        score = np.mean(
+            cross_val_score(mnb, X, y, cv=10)
+        )
+        if not best:
+            best = mnb
+            best_score = score
+        elif score > best_score:
+            best_score = score
+    best.fit(X, y)
+    return best, best_score
+
 
 
 def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=False):
@@ -133,9 +173,8 @@ def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=Fa
             user_matrix, user_array, n = build_matrix(data)
         X, y, vocab = vectorize(user_matrix, user_array, n)
     mnb = fit_classifier(X, y)
+    picklers.write_pickle(mnb, 'classifier_pickle')
     if make_new_pickles:
-        picklers.write_pickle(mnb, 'classifier_pickle')
-        if not read_pickles:
             picklers.write_pickle(data, 'pickle')
             picklers.write_pickle(X, 'matrix_pickle')
             picklers.write_pickle(y, 'labels_pickle')
@@ -143,34 +182,5 @@ def get_raw_classifier(make_new_pickles=False, read_pickles=True, useTweet200=Fa
     print "returning mnb"
     return mnb
 
-
-def generate_predictions(userTestdata):
-    u"""Takes in a list of twitter users' last 200 tweets, formatted as
-    'blobs'. Returns a percent correct (if known), a list of all incorrect
-    guesses (or unknown), and a list of all the city predictions."""
-    mnb = picklers.load_pickle('classifier_pickle')
-    vocab = picklers.load_pickle('vocab_pickle')
-    X, user_array, user_cities = build_test_matrix(userTestdata, vocab)
-    correct = 0
-    incorrect = 0
-    got_wrong = []
-    all_results = []
-    predictions = mnb.predict_log_proba(X)
-    y = picklers.load_pickle('labels_pickle')
-    print user_array
-    print user_cities
-    print zip(tuple(y), tuple(predictions))
-    if len(predictions):
-        for idx, prediction in enumerate(predictions):
-            report = (user_array[idx], user_cities[idx], prediction)
-            if user_cities[idx] == prediction:
-                correct += 1
-            else:
-                incorrect += 1
-                got_wrong.append(report)
-            all_results.append(report)
-        percent_right = correct / (float(correct) + incorrect)
-        return percent_right, got_wrong, all_results, user_cities
-
 if __name__ == "__main__":
-    print get_raw_classifier(make_new_pickles=True, read_pickles=False, useTweet200=False)
+    print get_raw_classifier(make_new_pickles=True, read_pickles=False, useTweet200=True)

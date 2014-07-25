@@ -1,6 +1,6 @@
 import tweepy
 
-from send_data import query_db, send_user_queries_to_db, read_in_bb_file
+from query_db import query_db, send_user_queries_to_db, read_in_bb_file
 from our_keys.twitter_keys import my_keys
 from itertools import chain, repeat
 
@@ -93,7 +93,7 @@ def query_twitter_for_histories(users, city=None, cap=100, data_collection=True)
             print "Skipped user on stop list"
             continue
         history = []
-        tweet_history = []
+        # tweet_history = []
         try:
             history = api.user_timeline(screen_name=user, count=200)
         except tweepy.error.TweepError as err:
@@ -103,7 +103,7 @@ def query_twitter_for_histories(users, city=None, cap=100, data_collection=True)
         if len(history) >= 200 or not data_collection:
             user_count += 1
             tweet_history = format_tweet_history(history, user, city)
-        if len(tweet_history):
+        # if len(tweet_history):
             city_tweets.append(tweet_history)
             print user_count
         else:
@@ -128,7 +128,7 @@ def process_each_city():
             print "Now checking ", city
             handles = get_unique_handles(vals)
             print city, len(handles)
-            if len(handles) >= 250:
+            if len(handles) >= 300:
                 print "Now querying twitter for histories"
                 tweets = query_twitter_for_histories(handles, city)
                 if len(tweets) >= 100:

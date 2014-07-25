@@ -1,7 +1,13 @@
 from get_locations import get_locs
 import sys
 
-u"""Reads in the locations of interest from locs.txt, reads in the
+u"""Use this file to reset the number of target cities. This is a fundamental
+change. You may do it through the 'if name = main' block. Bear in mind that you
+will need to rebuild your database with the new cities to get an even data
+spread.
+
+Here are some details about the file:
+Reads in the locations of interest from locs.txt, reads in the
 bounding boxes from a csv file of bounding boxes as determined by the
 min/max latitudes and longitudes of all addresses located within each
 city, and prints the cities with their min/max latitudes
@@ -71,7 +77,7 @@ def write_to_file(our_bbs):
             fff.write("\r\n")
 
 
-def generate_new_bounding_boxes_list(n=100):
+def generate_new_target_cities(n=100):
     our_locs, bb_lines = read_in_input_files(n)
     found_it, our_bbs = extract_biggest_city_boxes(our_locs, bb_lines)
     report_accuracy(our_locs, found_it)
@@ -82,4 +88,4 @@ if __name__ == "__main__":
     n = sys.argv[1:2]
     if not n:
         n = 100
-    generate_new_bounding_boxes_list(n)
+    generate_new_target_cities(n)

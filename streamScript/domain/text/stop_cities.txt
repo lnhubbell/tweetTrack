@@ -1,7 +1,5 @@
-Milwaukee, WI
-Seattle, WA
-Washington, DC
-Atlanta, GA
+Fort Wayne, IN
+***
 Tulsa, OK
 El Paso, TX
 Phoenix, AZ
@@ -11,25 +9,75 @@ Fort Worth, TX
 San Diego, CA
 Detroit, MI
 Irving, TX
-Kansas City, MO
 Bakersfield, CA
 Reno, NV
 Chandler, AZ
 Henderson, NV
-Newark, NJ
 Saint Louis, MO
-Oklahoma City, OK
 Chesapeake, VA
 Stockton, CA
 Corpus Christi, TX
-Boston, MA
-Garland, TX
 Anaheim, CA
-Memphis, TN
 Norfolk, VA
-Omaha, NE
 Birmingham, AL
 Colorado Springs, CO
 Gilbert, AZ
 San Bernardino, CA
 Virginia Beach, VA
+Honolulu, HI
+Santa Ana, CA
+Plano, TX
+Indianapolis, IN
+Durham, NC
+Pittsburgh, PA
+Toledo, OH
+Dallas, TX
+Long Beach, CA
+Wichita, KS
+San Jose, CA
+San Francisco, CA
+Saint Petersburg, FL
+Baton Rouge, LA
+Philadelphia, PA
+Riverside, CA
+Milwaukee, WI
+Seattle, WA
+Washington, DC
+Atlanta, GA
+Kansas City, MO
+Newark, NJ
+Oklahoma City, OK
+Boston, MA
+Garland, TX
+Memphis, TN
+Omaha, NE
+Sacramento, CA
+Louisville, KY
+Jersey City, NJ
+Columbus, OH
+Cincinnati, OH
+Portland, OR
+Buffalo, NY
+Lexington, KY
+Arlington, TX
+Cleveland, OH
+Charlotte, NC
+Glendale, AZ
+Tucson, AZ
+Raleigh, NC
+Irvine, CA
+New York, NY
+Baltimore, MD
+Saint Paul, MN
+Minneapolis, MN
+Fresno, CA
+Tampa, FL
+Las Vegas, NV
+Scottsdale, AZ
+Oakland, CA
+Nashville, TN
+Miami, FL
+Chula Vista, CA
+Los Angeles, CA
+Austin, TX
+New Orleans, LA

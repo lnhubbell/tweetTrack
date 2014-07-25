@@ -2,16 +2,17 @@ import datetime
 from get_tweets_by_user import get_unique_handles
 from send_data import query_all_db, query_all_db_Tweet200
 
-u"""Generates a report on database stats"""
+u"""Generates a csv report on database stats. Currently set to
+query the Tweet200 database."""
 
 
 def write_report():
-    #print "Querying Tweet 200 table"
+    print "Querying Tweet 200 table"
     header = "Report generated: " + \
         datetime.datetime.now().strftime('%m/%d/%Y') + ", " +\
         datetime.datetime.now().strftime('%H:%M') + "\n\n"
     columns = "City,Users,Tweets\n"
-    with open("text/db_report.txt", "w") as f:
+    with open("text/db_Tweet200_report.txt", "w") as f:
         f.write(header)
         f.write(columns)
         total_tweets = 0
@@ -19,12 +20,11 @@ def write_report():
         out_list = []
         min_tweets = 0
         max_tweets = 0
-        for city, tweets in query_all_db().items():
+        for city, tweets in query_all_db_Tweet200().items():
             handles = len(get_unique_handles(tweets))
             city_tweets = len(tweets)
             if min_tweets == 0:
                 min_tweets = city_tweets
-                max_tweets = city_tweets
             if min_tweets > city_tweets:
                 min_tweets = city_tweets
             if max_tweets < city_tweets:

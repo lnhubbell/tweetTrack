@@ -1,0 +1,19 @@
+Welcome to TweetTrack. Please click on the "Track Me" button
+to enter your Twitter handle and we'll do our
+best to make a prediction of where most of your tweets are coming from. Click
+"yes" or "no" to let us know how we did!
+
+Our site builds on research carried out by a team at IBM (link: http://arxiv.org/ftp/arxiv/papers/1403/1403.2345.pdf)
+that analyzes the content of tweets to predict where users are tweeting from.
+
+We use a basic supervised machine learning approach to create our model. After collecting
+roughly 7 million tweets from users within the United States, we used the 2012
+US Census records to identify the 100 most populous cities in the United States.
+We then queried Twitter's API to get the 200 most
+recent tweets for 101 users for each city and trained a multinomial Naive Bayes
+classifier on the texts of those tweets. When you enter a twitter handle, we send
+a query to Twitter's API for the most recent 200 tweets. If we get at least 100 tweets
+back, our classifier analyzes your tweeting style and returns the city from our list
+which most closely matches the contents of your tweets.
+
+Read more about the project at our Github repository! (link: https://github.com/lnhubbell/tweetTrack)
