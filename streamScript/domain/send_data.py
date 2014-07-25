@@ -62,7 +62,7 @@ def query_db(city, values, limit=False):
     if limit:
         sql = """SELECT * FROM "Tweet" WHERE
             (location_lat BETWEEN %s AND %s)
-            AND (location_lng BETWEEN %s AND %s)LIMIT 3300;"""
+            AND (location_lng BETWEEN %s AND %s)LIMIT 3400;"""
     else:
         sql = """SELECT * FROM "Tweet" WHERE
             (location_lat BETWEEN %s AND %s)
@@ -71,8 +71,6 @@ def query_db(city, values, limit=False):
     print "Querying database for ", city
     data = execute_query(sql, vals, need_results=True)
     return data
-
-
 
 
 def send_user_queries_to_db(tweet_set, city):
@@ -202,4 +200,3 @@ def change_col_size():
 
 if __name__ == "__main__":
     pass
-
