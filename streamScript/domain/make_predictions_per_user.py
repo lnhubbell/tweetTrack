@@ -29,11 +29,6 @@ def make_prediction(names):
         else:
             user['prediction'] = pred[2]
         results.append(user)
-    # except Exception:
-    #     _error = {}
-    #     _error['name'] = "Error"
-    #     _error['prediction'] = "We couldn't make a prediction for this user."
-    #     results.append(_error)
     return results
 
 
@@ -43,7 +38,7 @@ def serve_predictions(names):
         yield result
 
 if __name__ == "__main__":
-    user_names = ['crisewing']
+    user_names = ['crisewing', 'TrustyJohn']
     results = make_prediction(user_names)
     for result in results:
         print "For the user: ", result['name'], " our predictions are: ", result['prediction']
