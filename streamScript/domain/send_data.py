@@ -217,7 +217,7 @@ def change_col_size():
 
 
 def drop_rows():
-    sql = """DELETE FROM "Tweet200" WHERE city = 'Omaha, NE';"""
+    sql = """DELETE FROM "Tweet200" WHERE city = 'Austin, TX';"""
     print "Querying database"
     execute_query(sql)
     print "deleted rows"
@@ -225,5 +225,5 @@ def drop_rows():
 if __name__ == "__main__":
     #query_all_db_Tweet200()
     #drop_rows()
-    print query_for_handles()
+    #print query_for_handles()
     pass

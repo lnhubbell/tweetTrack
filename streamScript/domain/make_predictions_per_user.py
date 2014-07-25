@@ -69,7 +69,7 @@ def predict_on_list(user_names):
         if results['success']:
             incorrect += 1
             got_wrong.append(results)
-        elif results['prediction'] == actual_city[0].upper():
+        elif results['prediction'] == actual_city.upper():
             correct += 1
             got_right.append(results)
     accuracy = correct / (float(correct) + incorrect)
@@ -88,6 +88,6 @@ def predict_on_list(user_names):
 if __name__ == "__main__":
     user_names = picklers.load_pickle('known_users_pickle')
     test_users = []
-    for i in range(50):
+    for i in range(10):
         test_users.append(random.choice(user_names))
     predict_on_list(test_users)
