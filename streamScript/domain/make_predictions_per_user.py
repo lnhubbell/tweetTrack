@@ -36,9 +36,9 @@ def make_prediction(name):
             user = {}
             user['name'] = user_name
             if user_city:
-                user['prediction'] = city
+                user['prediction'] = user_city.upper()
             else:
-                user['prediction'] = prediction
+                user['prediction'] = prediction.upper()
             user['success'] = True
             return user
 
@@ -52,18 +52,26 @@ def predict_on_list(user_names):
     incorrect = 0
     got_wrong = []
     got_right = []
-    for name, actual_city in user_names:
+    for name, actual_city in user_names.items():
         results = make_prediction(name)
         if results['success']:
             incorrect += 1
             got_wrong.append(results)
-        elif results['prediction'] == 
-
-
-
-        print "For the user: ", results['name'], " our predictions are: ", results['prediction']
-
+        elif results['prediction'] == actual_city.upper():
+            correct += 1
+            got_right.append(results)
+    accuracy = correct / (float(correct) + incorrect)
+    print "Our accuracy on this set is: ", accuracy
+    print "*" * 10
+    print "We made incorrect predictions for these ", incorrect, " users: "
+    for user in got_wrong:
+        print "For the user: ", user['name'], " our prediction was: ", user['prediction']
+    print "*" * 10
+    print "We made correct predictions for these ", correct, " users: "
+    for user in got_right:
+        print "For the user: ", user['name'], " our prediction was: ", user['prediction']
+    print "*" * 10
+    return accuracy
 
 if __name__ == "__main__":
-   pass
-
+   predict_on_list()
