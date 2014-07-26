@@ -3,9 +3,9 @@ tweetTrack
 
 A python based project that explores locating twitter users through their tweeting style.
 
-This project aims to replicate the research done by Mahmud, Nichols, & Drews (in press). http://arxiv.org/ftp/arxiv/papers/1403/1403.2345.pdf, and create a classifier to predict the geolocation of Twitter users based on analysis of the contents of their tweets. The project aims to create three classifiers: one bing fed all the words in the tweets in our training set, one being fed only place names, and one beig fed only hashtags. 
+This project aims to replicate the research done by Mahmud, Nichols, & Drews (in press). http://arxiv.org/ftp/arxiv/papers/1403/1403.2345.pdf, and create a classifier to predict the geolocation of Twitter users based on analysis of the contents of their tweets. The original project created three classifiers: one being fed all the words in the tweets in a training set, one being fed only place names, and one being fed only time stamps. For our week-long project, we replicated the first of these three classifiers. 
 
-Our user interface will be a website where users can log in via Twitter's OAuth, can feed in their tweet history, and can have us predict their location. If users do not wish to log in, we can still guess, but will only have access to their 200 most recent tweets. 
+Our user interface is a website where users can enter their Twitter handle; we run a query to Twitter's API and use their 200 most recent tweets to predict their location. 
 
 Right now, the best way for you to interact with this project is to view the live website:
 
