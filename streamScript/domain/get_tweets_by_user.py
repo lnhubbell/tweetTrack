@@ -38,7 +38,7 @@ def get_unique_handles(vals):
             users[name] = 1
     heavy_users = []
     for user in users:
-        if users[user] > 3:
+        if users[user] > 2:
             heavy_users.append(user)
     return heavy_users
 

@@ -33,8 +33,11 @@ def query_for_handles():
     bb_dict = read_in_bb_file()
     data_set = {}
     for key, values in bb_dict.items():
-        sql = """SELECT DISTINCT screen_name FROM "Tweet200" WHERE city = %s ORDER BY (screen_name) ASC LIMIT 10;"""
-        data = execute_query(sql, (key,), need_results=True)
+        vals = (values[0][0], values[0][1], values[1][0], values[1][1])
+        sql = """SELECT DISTINCT screen_name FROM "TweetTest" WHERE \
+            location_lat BETWEEN %s AND %s AND location_lng BETWEEN %s \
+            AND %s ORDER BY (screen_name) ASC LIMIT 10;"""
+        data = execute_query(sql, vals, need_results=True)
         data_set[key] = data
         print "Completed query on: " + str(key)
     name_city = []
