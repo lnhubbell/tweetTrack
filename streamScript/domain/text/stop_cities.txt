@@ -1,5 +1,3 @@
-Fort Wayne, IN
-***
 Tulsa, OK
 El Paso, TX
 Phoenix, AZ
@@ -33,8 +31,6 @@ Pittsburgh, PA
 Toledo, OH
 Dallas, TX
 Long Beach, CA
-Wichita, KS
-San Jose, CA
 San Francisco, CA
 Saint Petersburg, FL
 Baton Rouge, LA
@@ -44,43 +40,60 @@ Milwaukee, WI
 Seattle, WA
 Washington, DC
 Atlanta, GA
-Kansas City, MO
-Newark, NJ
-Oklahoma City, OK
 Boston, MA
 Garland, TX
-Memphis, TN
-Omaha, NE
 Sacramento, CA
 Louisville, KY
-Jersey City, NJ
-Columbus, OH
-Cincinnati, OH
 Portland, OR
 Buffalo, NY
-Lexington, KY
-Arlington, TX
 Cleveland, OH
-Charlotte, NC
 Glendale, AZ
 Tucson, AZ
 Raleigh, NC
 Irvine, CA
 New York, NY
-Baltimore, MD
 Saint Paul, MN
 Minneapolis, MN
-Fresno, CA
 Tampa, FL
-Las Vegas, NV
 Scottsdale, AZ
 Oakland, CA
 Nashville, TN
-Miami, FL
 Chula Vista, CA
-Austin, TX
 New Orleans, LA
 Denver, CO
 Albuquerque, NM
 Aurora, CO
 Chicago, IL
+Mesa, AZ
+Jacksonville, FL
+Hialeah, FL
+Greensboro, NC
+Orlando, FL
+Fort Wayne, IN
+Kansas City, MO
+Newark, NJ
+Oklahoma City, OK
+Memphis, TN
+Omaha, NE
+Wichita, KS
+San Jose, CA
+Jersey City, NJ
+Columbus, OH
+Cincinnati, OH
+Lexington, KY
+Arlington, TX
+Charlotte, NC
+Baltimore, MD
+Fresno, CA
+Las Vegas, NV
+Los Angeles, CA
+Austin, TX
+Miami, FL
+North Las Vegas, NV
+Winston Salem, NC
+Madison, WI
+Lubbock, TX
+Lincoln, NE
+Anchorage, AK
+Fremont, CA
+Boise, ID

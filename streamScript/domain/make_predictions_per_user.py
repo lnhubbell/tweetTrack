@@ -5,19 +5,19 @@ import picklers
 import random
 
 
-def generate_predictions(userTestdata):
+def generate_predictions(userTestdata, testing):
     u"""Takes in a list of twitter users' last 200 tweets, formatted as
     'blobs'. Returns a percent correct (if known), a list of all incorrect
     guesses (or unknown), and a list of all the city predictions."""
     mnb = picklers.load_pickle('classifier_pickle')
     vocab = picklers.load_pickle('vocab_pickle')
-    X, user_name, user_city = build_test_matrix(userTestdata, vocab)
+    X, user_name, user_city = build_test_matrix(userTestdata, vocab, testing)
     prediction = mnb.predict(X)
     report = (user_name, user_city, prediction[0])
     return report
 
 
-def make_prediction(name):
+def make_prediction(name, testing=False):
     u"""Takes in a list of Twitter user handles. Returns a list of
     single-entry dictionaries, with the keys being the user names
     and the values being the predictions."""
@@ -25,7 +25,7 @@ def make_prediction(name):
     name = [name]
     try:
         history = query_twitter_for_histories(name, data_collection=False)[0]
-        if len(history) < 100:
+        if len(history) < 50:
             can_predict = False
             print "length was too small"
         else:
@@ -35,7 +35,8 @@ def make_prediction(name):
         print "Twitter query failed."
         can_predict = False
     if can_predict:
-        user_name, user_city, prediction = generate_predictions(history)
+        user_name, user_city, prediction = \
+            generate_predictions(history, testing)
         user = {}
         user['name'] = user_name
         if user_city:
@@ -66,9 +67,13 @@ def predict_on_list(user_names):
     incorrect = 0
     got_wrong = []
     got_right = []
+    count = 0
     for name, actual_city in user_names:
-        results = make_prediction(name[0])
-        if (results['success']) and (results['prediction'] == actual_city.upper()):
+        count += 1
+        results = make_prediction(name[0], testing=True)
+        print count, "of ", len(user_names)
+        if (results['success']) and \
+                (results['prediction'] == actual_city.upper()):
             correct += 1
             got_right.append(results)
         else:
@@ -80,19 +85,21 @@ def predict_on_list(user_names):
     print "*" * 10
     print "We made incorrect predictions for these ", incorrect, " users: "
     for user in got_wrong:
-        print "For the user: ", user['name'], " our prediction was: ", user['prediction']
+        print "For the user: ", user['name'], \
+            " our prediction was: ", user['prediction']
         print "The actual city was: ", user['actual']
     print "*" * 10
     print "We made correct predictions for these ", correct, " users: "
     for user in got_right:
-        print "For the user: ", user['name'], " our prediction was: ", user['prediction']
+        print "For the user: ", user['name'], \
+            " our prediction was: ", user['prediction']
     print "*" * 10
     return accuracy
 
 if __name__ == "__main__":
     user_names = picklers.load_pickle('known_users_pickle')
     test_users = []
-    for i in range(5):
+    for i in range(100):
         test_users.append(random.choice(user_names))
-    test_users = [('crisewing', 'SEATTLE, WA'), ('TrustyJohn', 'SEATTLE, WA')]
-    predict_on_list(test_users)
+    #test_users = [('TrustyJohn', 'SEATTLE, WA')]
+    print predict_on_list(test_users)

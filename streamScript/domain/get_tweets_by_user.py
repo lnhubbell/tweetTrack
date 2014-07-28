@@ -38,7 +38,7 @@ def get_unique_handles(vals):
             users[name] = 1
     heavy_users = []
     for user in users:
-        if users[user] > 5:
+        if users[user] > 3:
             heavy_users.append(user)
     return heavy_users
 
@@ -52,6 +52,8 @@ def format_tweet_history(history, user, city):
     for tweet in history:
         screen_name = user
         text = tweet.text
+        if len(text) > 150:
+            print text
         created_at = tweet.created_at.strftime('%m/%d/%Y, %H:%M')
         location = tweet.geo
         location_lat = None
@@ -90,7 +92,6 @@ def query_twitter_for_histories(users, city=None, cap=100, data_collection=True)
         if user_count > cap:
             break
         if user in check_list_low_tweeters() and data_collection is True:
-            print "Skipped user on stop list"
             continue
         history = []
         # tweet_history = []
@@ -128,7 +129,7 @@ def process_each_city():
             print "Now checking ", city
             handles = get_unique_handles(vals)
             print city, len(handles)
-            if len(handles) >= 300:
+            if len(handles) >= 200:
                 print "Now querying twitter for histories"
                 tweets = query_twitter_for_histories(handles, city)
                 if len(tweets) >= 100:
