@@ -1,6 +1,6 @@
 from get_tweets_by_user import query_twitter_for_histories
 from create_classifier import build_test_matrix
-from send_data import query_for_handles
+from query_db import query_for_handles
 import picklers
 import random
 
@@ -97,12 +97,12 @@ def predict_on_list(user_names):
     return accuracy
 
 if __name__ == "__main__":
+    user_names = query_for_handles()
+    picklers.write_pickle(user_names, 'known_users_pickle')
     #user_names = picklers.load_pickle('known_users_pickle')
-    #user_names = query_for_handles()
-    #picklers.write_pickle(user_names, 'known_users_pickle1')
-    user_names = picklers.load_pickle('known_users_pickle1')
+    print len(user_names)
     test_users = []
-    for i in range(50):
+    for i in range(100):
         test_users.append(random.choice(user_names))
-    #test_users = [('TrustyJohn', 'SEATTLE, WA')]
+    # #test_users = [('TrustyJohn', 'SEATTLE, WA')]
     print predict_on_list(test_users)

@@ -35,16 +35,36 @@ def query_for_handles():
     for key, values in bb_dict.items():
         vals = (values[0][0], values[0][1], values[1][0], values[1][1])
         sql = """SELECT DISTINCT screen_name FROM "TweetTest" WHERE \
-            location_lat BETWEEN %s AND %s AND location_lng BETWEEN %s \
-            AND %s ORDER BY (screen_name) ASC LIMIT 10;"""
+        location_lat BETWEEN %s AND %s AND location_lng \
+        BETWEEN %s AND %s;"""
         data = execute_query(sql, vals, need_results=True)
         data_set[key] = data
         print "Completed query on: " + str(key)
     name_city = []
-    for key, vals in data_set.items():
-        for val in vals:
-            name_city.append((val, key))
+    with open("text/training_set_names.txt", 'r') as f:
+        names = f.read()
+        for key, vals in data_set.items():
+            print "Checking names for ", key
+            count = 0
+            for val in vals:
+                if unicode(val) not in names and count <= 9:
+                    name_city.append((val, key))
+                    count += 1
+    print "returning now"
     return name_city
+
+
+def get_unique_users_in_training_data():
+    bb_dict = read_in_bb_file()
+    for city in bb_dict:
+        sql = """SELECT DISTINCT screen_name FROM "Tweet200" WHERE city = %s;"""
+        names = execute_query(sql, (city,), need_results=True)
+        with open("text/training_set_names.txt", 'a') as f:
+            for name in names:
+                f.write(str(name))
+                f.write("\n")
+        print "Wrote names from ", city
+    print "Done!"
 
 
 def query_all_db(limit=False):
@@ -234,5 +254,6 @@ if __name__ == "__main__":
     #query_all_db_Tweet200()
     #drop_rows()
     #print query_for_handles()
-    change_col_size()
-    pass
+    #change_col_size()
+    get_unique_users_in_training_data()
+    #pass
