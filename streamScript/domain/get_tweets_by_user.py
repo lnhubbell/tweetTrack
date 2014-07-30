@@ -1,3 +1,4 @@
+import os
 import tweepy
 
 from query_db import query_db, send_user_queries_to_db, read_in_bb_file
@@ -9,6 +10,8 @@ database to get a list of all unique users who have tweeted from that
 city. Queries Twitter api to get 200 tweets from each user, then inserts
 200 tweets for up to 100 users per city into a separate database table
 called "Tweet200."""
+
+ROOT_DIR = os.path.abspath(os.getcwd())
 
 
 def get_twitter_api():
@@ -38,7 +41,7 @@ def get_unique_handles(vals):
             users[name] = 1
     heavy_users = []
     for user in users:
-        if users[user] > 5:
+        if users[user] > 2:
             heavy_users.append(user)
     return heavy_users
 
@@ -52,6 +55,8 @@ def format_tweet_history(history, user, city):
     for tweet in history:
         screen_name = user
         text = tweet.text
+        if len(text) > 150:
+            print text
         created_at = tweet.created_at.strftime('%m/%d/%Y, %H:%M')
         location = tweet.geo
         location_lat = None
@@ -70,7 +75,7 @@ def format_tweet_history(history, user, city):
 
 
 def check_list_low_tweeters():
-    with open("text/stop_names.txt", 'r') as a_file:
+    with open(ROOT_DIR + "text/stop_names.txt", 'r') as a_file:
         names = a_file.read().split("\n")
     return names
 
@@ -90,7 +95,6 @@ def query_twitter_for_histories(users, city=None, cap=100, data_collection=True)
         if user_count > cap:
             break
         if user in check_list_low_tweeters() and data_collection is True:
-            print "Skipped user on stop list"
             continue
         history = []
         # tweet_history = []
@@ -108,7 +112,7 @@ def query_twitter_for_histories(users, city=None, cap=100, data_collection=True)
             print user_count
         else:
             print "Too few tweets in this user's history."
-            with open("text/stop_names.txt", 'a') as a_file:
+            with open(ROOT_DIR + "text/stop_names.txt", 'a') as a_file:
                 a_file.write(user)
                 a_file.write("\n")
             too_low_count += 1
@@ -121,14 +125,14 @@ def process_each_city():
     u"""Calls functions to insert user data into Tweet200 table."""
     bb_dict = read_in_bb_file()
     for city, values in bb_dict.items():
-        with open("text/stop_cities.txt", "r") as ffff:
+        with open(ROOT_DIR + "text/stop_cities.txt", "r") as ffff:
             stop_cities = ffff.read()
         if city not in stop_cities:
             vals = query_db(city, values)
             print "Now checking ", city
             handles = get_unique_handles(vals)
             print city, len(handles)
-            if len(handles) >= 300:
+            if len(handles) >= 200:
                 print "Now querying twitter for histories"
                 tweets = query_twitter_for_histories(handles, city)
                 if len(tweets) >= 100:

@@ -1,7 +1,7 @@
-Report generated: 07/25/2014, 10:51
+Report generated: 07/25/2014, 22:04
 
 City,Users,Tweets
-Fort Wayne, IN,0,0
+Fort Wayne, IN,101,20200
 Tulsa, OK,101,20200
 Milwaukee, WI,101,20200
 El Paso, TX,101,20200
@@ -73,17 +73,17 @@ Oakland, CA,101,20200
 Anchorage, AK,0,0
 Nashville, TN,101,20200
 Chula Vista, CA,101,20200
-New Orleans, LA,0,0
-Denver, CO,0,0
-Albuquerque, NM,0,0
-Aurora, CO,0,0
-Chicago, IL,0,0
-Mesa, AZ,0,0
-Jacksonville, FL,0,0
+New Orleans, LA,101,20200
+Denver, CO,101,20200
+Albuquerque, NM,101,20200
+Aurora, CO,101,20200
+Chicago, IL,101,20200
+Mesa, AZ,101,20200
+Jacksonville, FL,101,20200
 North Las Vegas, NV,0,0
-Hialeah, FL,0,0
-Greensboro, NC,0,0
-Orlando, FL,0,0
+Hialeah, FL,101,20200
+Greensboro, NC,101,20200
+Orlando, FL,101,20200
 Newark, NJ,26,5201
 Jersey City, NJ,53,10601
 Lexington, KY,71,14031
@@ -95,13 +95,13 @@ Wichita, KS,90,17893
 Oklahoma City, OK,41,8184
 Memphis, TN,30,5934
 Kansas City, MO,32,6245
+Los Angeles, CA,23,4485
 Fresno, CA,31,6036
-Los Angeles, CA,29,5686
 San Jose, CA,99,19737
 Columbus, OH,20,3948
 Durham, NC,101,20199
 Austin, TX,5,849
 **********
-Totals,6839,1365922
+Totals,7944,1586921
 **********
-Min tweets: 0, Max tweets: 20200
+Min tweets: 20200, Max tweets: 20200
