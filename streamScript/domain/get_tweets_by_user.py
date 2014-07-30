@@ -1,3 +1,4 @@
+import os
 import tweepy
 
 from query_db import query_db, send_user_queries_to_db, read_in_bb_file
@@ -9,6 +10,8 @@ database to get a list of all unique users who have tweeted from that
 city. Queries Twitter api to get 200 tweets from each user, then inserts
 200 tweets for up to 100 users per city into a separate database table
 called "Tweet200."""
+
+ROOT_DIR = os.path.abspath(os.getcwd())
 
 
 def get_twitter_api():
@@ -72,7 +75,7 @@ def format_tweet_history(history, user, city):
 
 
 def check_list_low_tweeters():
-    with open("text/stop_names.txt", 'r') as a_file:
+    with open(ROOT_DIR + "text/stop_names.txt", 'r') as a_file:
         names = a_file.read().split("\n")
     return names
 
@@ -109,7 +112,7 @@ def query_twitter_for_histories(users, city=None, cap=100, data_collection=True)
             print user_count
         else:
             print "Too few tweets in this user's history."
-            with open("text/stop_names.txt", 'a') as a_file:
+            with open(ROOT_DIR + "text/stop_names.txt", 'a') as a_file:
                 a_file.write(user)
                 a_file.write("\n")
             too_low_count += 1
@@ -122,7 +125,7 @@ def process_each_city():
     u"""Calls functions to insert user data into Tweet200 table."""
     bb_dict = read_in_bb_file()
     for city, values in bb_dict.items():
-        with open("text/stop_cities.txt", "r") as ffff:
+        with open(ROOT_DIR + "text/stop_cities.txt", "r") as ffff:
             stop_cities = ffff.read()
         if city not in stop_cities:
             vals = query_db(city, values)
