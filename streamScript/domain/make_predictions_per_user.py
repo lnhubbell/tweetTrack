@@ -97,12 +97,12 @@ def predict_on_list(user_names):
     return accuracy
 
 if __name__ == "__main__":
-    user_names = query_for_handles()
-    picklers.write_pickle(user_names, 'known_users_pickle')
-    #user_names = picklers.load_pickle('known_users_pickle')
-    print len(user_names)
-    test_users = []
-    for i in range(100):
-        test_users.append(random.choice(user_names))
-    # #test_users = [('TrustyJohn', 'SEATTLE, WA')]
+    # user_names = query_for_handles()
+    # picklers.write_pickle(user_names, 'known_users_pickle')
+    # #user_names = picklers.load_pickle('known_users_pickle')
+    # print len(user_names)
+    # test_users = []
+    # for i in range(100):
+    #     test_users.append(random.choice(user_names))
+    test_users = [('crisewing', 'SEATTLE, WA')]
     print predict_on_list(test_users)

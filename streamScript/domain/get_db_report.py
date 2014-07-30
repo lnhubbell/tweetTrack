@@ -18,17 +18,9 @@ def write_report():
         total_tweets = 0
         total_users = 0
         out_list = []
-        min_tweets = 0
-        max_tweets = 0
         for city, tweets in query_all_db_Tweet200().items():
             handles = len(get_unique_handles(tweets))
             city_tweets = len(tweets)
-            if min_tweets == 0:
-                min_tweets = city_tweets
-            if min_tweets > city_tweets:
-                min_tweets = city_tweets
-            if max_tweets < city_tweets:
-                max_tweets = city_tweets
             total_tweets += city_tweets
             total_users += handles
             out = ",".join([str(city), str(handles), str(city_tweets)])
@@ -43,8 +35,6 @@ def write_report():
         f.write(totals)
         f.write("\n")
         f.write(star_line)
-        mins_maxs = "Min tweets: " + str(min_tweets) + ", Max tweets: " + str(max_tweets)
-        f.write(mins_maxs)
 
 if __name__ == "__main__":
     write_report()
